@@ -1,6 +1,8 @@
 package com.cryptescape.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -9,9 +11,11 @@ import com.badlogic.gdx.utils.ScreenUtils;
 
 public class MainCE extends ApplicationAdapter {
 	private SpriteBatch batch;
-	public Texture enemySheet;
-	private TextureRegion enemyRegion;
 	
+	public Texture enemySheet;
+	public TextureRegion enemyRegion;
+	
+	private Music ambiance;
 	
 	@Override
 	public void create () {
@@ -20,6 +24,11 @@ public class MainCE extends ApplicationAdapter {
 		enemySheet = new Texture("monster.png");
 		enemyRegion = new TextureRegion(enemySheet, 0, 0, 32, 32);
 		// xPos, yPos within texture. IE: 0,0 is Image1 32,0 is Image2, ect
+		
+		ambiance = Gdx.audio.newMusic(Gdx.files.internal("caveAmbiance.mp3"));
+		ambiance.setLooping(true);
+		ambiance.play();
+
 	}
 
 	@Override
