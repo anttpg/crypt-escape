@@ -1,0 +1,111 @@
+buildscript {
+    
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        gradlePluginPortal()
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        google()
+    }
+    dependencies {
+        classpath 'org.wisepersist:gwt-gradle-plugin:1.1.16'
+        classpath 'org.gretty:gretty:3.0.7'
+        classpath 'com.mobidevelop.robovm:robovm-gradle-plugin:2.3.16'
+        
+
+    }
+}
+
+allprojects {
+    apply plugin: "eclipse"
+
+    version = '1.0'
+    ext {
+        appName = "cryptescape"
+        gdxVersion = '1.11.0'
+        roboVMVersion = '2.3.16'
+        box2DLightsVersion = '1.5'
+        ashleyVersion = '1.7.4'
+        aiVersion = '1.8.2'
+        gdxControllersVersion = '2.2.1'
+    }
+
+    repositories {
+        mavenLocal()
+        mavenCentral()
+        google()
+        gradlePluginPortal()
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
+        maven { url "https://oss.sonatype.org/content/repositories/releases/" }
+        maven { url "https://jitpack.io" }
+    }
+}
+
+project(":desktop") {
+    apply plugin: "java-library"
+
+
+    dependencies {
+        implementation project(":core")
+        api "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
+        api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+        api "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-desktop"
+        api "com.badlogicgames.gdx-controllers:gdx-controllers-desktop:$gdxControllersVersion"
+        
+    }
+}
+
+project(":ios") {
+    apply plugin: "java-library"
+    apply plugin: "robovm"
+
+
+    dependencies {
+        implementation project(":core")
+        api "com.mobidevelop.robovm:robovm-rt:$roboVMVersion"
+        api "com.mobidevelop.robovm:robovm-cocoatouch:$roboVMVersion"
+        api "com.badlogicgames.gdx:gdx-backend-robovm:$gdxVersion"
+        api "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-ios"
+        api "com.badlogicgames.gdx:gdx-box2d-platform:$gdxVersion:natives-ios"
+        api "com.badlogicgames.gdx-controllers:gdx-controllers-ios:$gdxControllersVersion"
+        
+    }
+}
+
+project(":html") {
+    apply plugin: "java-library"
+    apply plugin: "gwt"
+    apply plugin: "war"
+    apply plugin: "org.gretty"
+
+
+    dependencies {
+        implementation project(":core")
+        api "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion"
+        api "com.badlogicgames.gdx:gdx:$gdxVersion:sources"
+        api "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion:sources"
+        api "com.badlogicgames.gdx:gdx-box2d:$gdxVersion:sources"
+        api "com.badlogicgames.gdx:gdx-box2d-gwt:$gdxVersion:sources"
+        api "com.badlogicgames.gdx-controllers:gdx-controllers-core:$gdxControllersVersion:sources"
+        api "com.badlogicgames.gdx-controllers:gdx-controllers-gwt:$gdxControllersVersion"
+        api "com.badlogicgames.gdx-controllers:gdx-controllers-gwt:$gdxControllersVersion:sources"
+        api "com.badlogicgames.box2dlights:box2dlights:$box2DLightsVersion:sources"
+        api "com.badlogicgames.gdx:gdx-ai:$aiVersion:sources"
+        
+    }
+}
+
+project(":core") {
+    apply plugin: "java-library"
+
+
+    dependencies {
+        api "com.badlogicgames.gdx:gdx:$gdxVersion"
+        api "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
+        api "com.badlogicgames.gdx-controllers:gdx-controllers-core:$gdxControllersVersion"
+        api "com.badlogicgames.box2dlights:box2dlights:$box2DLightsVersion"
+        api "com.badlogicgames.gdx:gdx-ai:$aiVersion"
+        
+    }
+}
