@@ -10,7 +10,7 @@ public class DesktopLauncher {
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 		config.setForegroundFPS(30);
 		config.setTitle("cryptescape-demo");
-		config.setWindowedMode(800, 480);
+		config.setWindowedMode(1600, 900);
 		config.useVsync(true);
 		//main window
 		new Lwjgl3Application(new MainCE(), config);

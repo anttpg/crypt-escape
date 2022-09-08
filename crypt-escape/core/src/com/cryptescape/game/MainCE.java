@@ -37,7 +37,7 @@ public class MainCE extends ApplicationAdapter {
 		ambiance.setLooping(true);
 		ambiance.play();
 
-		sqrImage = new Texture(Gdx.files.internal("testsqr.png"))
+		sqrImage = new Texture(Gdx.files.internal("testsqr.png"));
 		sqr = new Rectangle();
 		sqr.x = 800 / 2 - 64 / 2;
 		sqr.y = 20;
@@ -54,9 +54,10 @@ public class MainCE extends ApplicationAdapter {
 		
 		batch.begin();
 		batch.draw(sqrImage, sqr.x, sqr.y);
-		batch.draw(enemyRegion, 100, 100, 128, 128);
+		batch.draw(enemyRegion, 200, 200, 128, 128);
 		// draws at x, y from bottom left corner. Then stretches to fit 128x128 pixels
 		batch.end();
+		
 	}
 
 	@Override
