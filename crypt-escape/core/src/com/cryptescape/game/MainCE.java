@@ -18,14 +18,16 @@ public class MainCE extends ApplicationAdapter {
 		batch = new SpriteBatch();
 		//img = new Texture("badlogic.jpg");
 		enemySheet = new Texture("monster.png");
-		enemyRegion = new TextureRegion(enemySheet, 20, 20, 50, 50);
+		enemyRegion = new TextureRegion(enemySheet, 0, 0, 32, 32);
+		// xPos, yPos within texture. IE: 0,0 is Image1 32,0 is Image2, ect
 	}
 
 	@Override
 	public void render () {
 		ScreenUtils.clear(1, 0, 0, 1);
 		batch.begin();
-		batch.draw(enemySheet, 0, 0);
+		batch.draw(enemyRegion, 100, 100, 128, 128);
+		// draws at x, y from bottom left corner. Then stretches to fit 128x128 pixels
 		batch.end();
 	}
 	
