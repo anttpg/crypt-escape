@@ -9,9 +9,9 @@ public class Enemy extends Movables{
         super(x, y, 6.0, 24.0);
     }
 
-    public int chooseRoom()
+    public void chooseRoom()
     {
-        int randRoom = (Math.random() * 4);
+        int randRoom = (int)(Math.random() * 4);
         if(randRoom == 0){
             CurrentRoomX -=1; 
         }
