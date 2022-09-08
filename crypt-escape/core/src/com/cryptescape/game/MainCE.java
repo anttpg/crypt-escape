@@ -24,7 +24,7 @@ public class MainCE extends ApplicationAdapter {
 
 	@Override
 	public void render () {
-		ScreenUtils.clear(1, 0, 0, 1);
+		ScreenUtils.clear(1, 1, 1, 1);
 		batch.begin();
 		batch.draw(enemyRegion, 100, 100, 128, 128);
 		// draws at x, y from bottom left corner. Then stretches to fit 128x128 pixels
