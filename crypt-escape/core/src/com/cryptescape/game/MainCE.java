@@ -17,7 +17,7 @@ public class MainCE extends ApplicationAdapter {
 	public void create () {
 		batch = new SpriteBatch();
 		//img = new Texture("badlogic.jpg");
-		enemySheet = new Texture("Monster.png");
+		enemySheet = new Texture("monster.png");
 		enemyRegion = new TextureRegion(enemySheet, 20, 20, 50, 50);
 	}
 
