@@ -98,8 +98,4 @@ public class Movables {
 		pos[0]+= vel[0];
 		pos[1]+= vel[1];
 	}
-
-	public void changeSprite(int spriteNum){
-		sprite = spriteMap[spriteNum];
-	}
 }
