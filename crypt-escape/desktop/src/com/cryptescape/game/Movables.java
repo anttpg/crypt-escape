@@ -3,7 +3,9 @@
  */
 package com.cryptescape.game;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 /**
@@ -22,17 +24,26 @@ public class Movables {
 	public final double speed;
 	public final double maxVel;
 	
+	public int spritePos = -1;
+	public Texture spriteMap;
+	public TextureRegion spriteRegion;
+	int height;
+	int width;
 	//Jolt is deacceleration variable
 	//Normally Jolt = [0, 0, 0, 0], but when A[x] or A[y] == 0,
 	// EX:     Jolt = [-0.05, 30, 0, 0] and counts down
 	public double[] jolt = new double[4]; // [xD, xT, yD, yT]
 
 	// CONSTRUCTORS
-	public Movables(double x, double y, double s, double mv) {
+	public Movables(double x, double y, double s, double mv, String mapPath) {
 		pos[0] = x;
 		pos[1] = y;
 		speed = s;
 		maxVel = mv;
+		spriteMap = new Texture(mapPath);
+		spriteRegion = new TextureRegion(spriteMap, 0,0,32,32);
+		height = spriteMap.getHeight()/32;
+		width = spriteMap.getWidth()/32;
 	}
 
 	// METHODS
@@ -79,6 +90,9 @@ public class Movables {
 		return pos;
 	}
 		
+	public int getMapHeight() {
+		return width;
+	}
 	public void updateTick() {
 		vel[0] += acc[0] + jolt [0];
 		vel[1] += acc[1] + jolt [2];
@@ -98,8 +112,7 @@ public class Movables {
 		pos[0]+= vel[0];
 		pos[1]+= vel[1];
 	}
+	
+	
 
-	public void changeSprite(int spriteNum){
-		sprite = spriteMap[spriteNum];
-	}
 }
