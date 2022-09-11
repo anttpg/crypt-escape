@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.cryptescape.game;
 
 import com.badlogic.gdx.graphics.Texture;
@@ -112,10 +109,7 @@ public class Movables {
 		pos[0]+= vel[0];
 		pos[1]+= vel[1];
 	}
-<<<<<<< HEAD:crypt-escape/desktop/src/com/cryptescape/game/Movables.java
 	
 	
 
-=======
->>>>>>> e41deea95da670c36508bcb0d33b0d52753ee421:crypt-escape/core/src/com/cryptescape/game/Movables.java
 }
