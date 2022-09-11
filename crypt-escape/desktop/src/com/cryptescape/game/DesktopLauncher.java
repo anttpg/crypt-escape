@@ -13,6 +13,7 @@ public class DesktopLauncher {
 		config.setWindowedMode(1600, 900);
 		config.useVsync(true);
 		//main window
+		
 		new Lwjgl3Application(new MainCE(), config);
 	}
 }
