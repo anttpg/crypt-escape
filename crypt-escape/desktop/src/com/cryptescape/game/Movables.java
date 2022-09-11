@@ -3,6 +3,9 @@
  */
 package com.cryptescape.game;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+
 /**
  * @author
  *
@@ -10,6 +13,7 @@ package com.cryptescape.game;
 public class Movables {
 
 	// VARIABLES
+
 	public boolean visible;
 	public int[] room = new int[2]; // [roomX,roomY]
 	public double[] pos = new double[2]; // [x, y]
@@ -93,5 +97,9 @@ public class Movables {
 		}
 		pos[0]+= vel[0];
 		pos[1]+= vel[1];
+	}
+
+	public void changeSprite(int spriteNum){
+		sprite = spriteMap[spriteNum];
 	}
 }
