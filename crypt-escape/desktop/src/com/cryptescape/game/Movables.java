@@ -3,6 +3,9 @@
  */
 package com.cryptescape.game;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+
 /**
  * @author
  *
@@ -10,6 +13,11 @@ package com.cryptescape.game;
 public class Movables {
 
 	// VARIABLES
+	public int CurrentRoomX;
+	public int CurrentRoomY;
+	public int[][] CurrentRoom;
+	public String[] spriteMap;
+	public String sprite = "";
 	public double X;
 	public double Y;
 	public double[] pos = new double[2];
@@ -64,5 +72,9 @@ public class Movables {
 	public void updateTick() {
 		velocityX += acceleration;
 		velocityY += acceleration;
+	}
+
+	public void changeSprite(int spriteNum){
+		sprite = spriteMap[spriteNum];
 	}
 }
