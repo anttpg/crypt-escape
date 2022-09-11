@@ -2,6 +2,7 @@ package com.cryptescape.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -57,6 +58,12 @@ public class MainCE extends ApplicationAdapter {
 		batch.draw(enemyRegion, 200, 200, 128, 128);
 		// draws at x, y from bottom left corner. Then stretches to fit 128x128 pixels
 		batch.end();
+		
+		
+		if(Gdx.input.isKeyPressed(Input.Keys.W)) sqr.y += 200 * Gdx.graphics.getDeltaTime();
+		if(Gdx.input.isKeyPressed(Input.Keys.A)) sqr.x -= 200 * Gdx.graphics.getDeltaTime();
+		if(Gdx.input.isKeyPressed(Input.Keys.S)) sqr.y -= 200 * Gdx.graphics.getDeltaTime();
+		if(Gdx.input.isKeyPressed(Input.Keys.D)) sqr.x += 200 * Gdx.graphics.getDeltaTime();
 		
 	}
 
