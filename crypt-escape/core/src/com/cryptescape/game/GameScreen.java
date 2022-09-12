@@ -107,31 +107,24 @@ public class GameScreen implements Screen {
 	
 	@Override
 	public void render(float delta) {
-		ScreenUtils.clear(1, 1, 1, 1);
+		ScreenUtils.clear(0.5f, 0.5f, 0.5f, 1);
 		camera.update();
 		game.batch.setProjectionMatrix(camera.combined);
 
 		game.batch.begin();
 		game.batch.draw(player.spriteStage(), playerRect.x, playerRect.y, 64, 64);
 		game.batch.draw(enemyRegion, 200, 200, 128, 128);
+		
+		game.font.draw(game.batch, "Player xV: " + player.vel[0] + "Player yV: " + player.vel[1],  50, Gdx.graphics.getHeight()-50);
+		game.font.draw(game.batch, "Player xA: " + player.acc[0] + "Player yA: " + player.acc[1], 50, Gdx.graphics.getHeight()-80);
+		game.font.draw(game.batch, player.jolt[0] + "  " + player.jolt[1] + "  "+ player.jolt[2] + "  "+ player.jolt[3], 50, Gdx.graphics.getHeight()-110);
+		
+		
 		// draws at x, y from bottom left corner. Then stretches to fit 128x128 pixels
 		game.batch.end();
 		
 		
-		//handles movement 
-//		if (KEY_W && !KEY_S) { player.setAccel(player.acc[0], 0.1); } 
-//		else if(!KEY_S) { player.setAccel(player.acc[0], 0); }
-//		
-//		if (KEY_A && !KEY_D) { player.setAccel(-0.1, player.acc[1]);  } 
-//		else if(!KEY_D) { player.setAccel(0, player.acc[1]);  }
-//		//System.out.println("false"); //System.out.println("true");
-//		
-//		if (KEY_S && !KEY_W) { player.setAccel(player.acc[0], -0.1); } 
-//		else if(!KEY_W) { player.setAccel(player.acc[0], 0); }
-//		
-//		if (KEY_D && !KEY_A) { player.setAccel(0.1, player.acc[1]); } 
-//		else if(!KEY_A) { player.setAccel(0, player.acc[1]); }
-		
+		//handles movement 		
 		player.setAccel((wasd[3]-wasd[1])*0.1, (wasd[0]-wasd[2])*0.1);
 		player.updateTick();
 		
@@ -143,13 +136,7 @@ public class GameScreen implements Screen {
 //		} catch(InterruptedException ex) {
 //		    Thread.currentThread().interrupt();
 //		}
-		//System.out.println("X:" +player.acc[0] + "  Y:" + player.acc[1]);
-		//System.out.println("xV:" +player.jolt[0] + "  Yv:" + player.jolt[2]);
-//		System.out.println("");
-//		System.out.println("xV" + player.vel[0] + ", xA" + player.acc[0]);
-//		System.out.println("yV" + player.vel[1] + ", yA" + player.acc[1]);
-//		System.out.println(player.jolt[0] + "  " + player.jolt[1] + "  "+ player.jolt[2] + "  "+ player.jolt[3]);
-//		
+	
 		
 
 	}
