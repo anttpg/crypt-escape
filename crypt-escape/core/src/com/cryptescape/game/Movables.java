@@ -57,6 +57,8 @@ public class Movables {
 	public void setAccel(double x, double y) {
 		acc[0] = x;
 		acc[1] = y;
+		//Checks if the xAccel is zero, AND the velocity is not zero, 
+		//AND ((Jolt xT is zero) OR (Jolt xV and xAccel, have different signs))
 		if (x == 0 && vel[0] != 0 && (jolt[1] == 0 || !sameSign(jolt[0], x) )){
 			jolt[1] = 23;
 			jolt[0] = -(vel[0]/23);			
