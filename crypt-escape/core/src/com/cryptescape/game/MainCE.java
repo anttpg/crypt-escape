@@ -117,18 +117,20 @@ public class MainCE extends ApplicationAdapter {
 		
 		
 		//handles movement 
-		if (KEY_W && !KEY_S) { player.setAccel(player.acc[0], 0.1); } 
-		else if(!KEY_S) { player.setAccel(player.acc[0], 0); }
+//		if (KEY_W && !KEY_S) { player.setAccel(player.acc[0], 0.1); } 
+//		else if(!KEY_S) { player.setAccel(player.acc[0], 0); }
+//		
+//		if (KEY_A && !KEY_D) { player.setAccel(-0.1, player.acc[1]);  } 
+//		else if(!KEY_D) { player.setAccel(0, player.acc[1]);  }
+//		//System.out.println("false"); //System.out.println("true");
+//		
+//		if (KEY_S && !KEY_W) { player.setAccel(player.acc[0], -0.1); } 
+//		else if(!KEY_W) { player.setAccel(player.acc[0], 0); }
+//		
+//		if (KEY_D && !KEY_A) { player.setAccel(0.1, player.acc[1]); } 
+//		else if(!KEY_A) { player.setAccel(0, player.acc[1]); }
 		
-		if (KEY_A && !KEY_D) { player.setAccel(-0.1, player.acc[1]);  } 
-		else if(!KEY_D) { player.setAccel(0, player.acc[1]);  }
-		//System.out.println("false"); //System.out.println("true");
-		
-		if (KEY_S && !KEY_W) { player.setAccel(player.acc[0], -0.1); } 
-		else if(!KEY_W) { player.setAccel(player.acc[0], 0); }
-		
-		if (KEY_D && !KEY_A) { player.setAccel(0.1, player.acc[1]); } 
-		else if(!KEY_A) { player.setAccel(0, player.acc[1]); }
+		player.setAccel((wasd[3]-wasd[1])*0.1, (wasd[0]-wasd[2])*0.1);
 		player.updateTick();
 		
 		playerRect.x = (float) player.getPos()[0];
