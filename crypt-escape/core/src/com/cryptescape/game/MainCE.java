@@ -141,10 +141,11 @@ public class MainCE extends ApplicationAdapter {
 //		}
 		//System.out.println("X:" +player.acc[0] + "  Y:" + player.acc[1]);
 		//System.out.println("xV:" +player.jolt[0] + "  Yv:" + player.jolt[2]);
-		System.out.println("");
-		System.out.println("xV" + player.vel[0] + ", xA" + player.acc[0]);
-		System.out.println("yV" + player.vel[1] + ", yA" + player.acc[1]);
-		System.out.println(player.jolt[0] + "  " + player.jolt[1] + "  "+ player.jolt[2] + "  "+ player.jolt[3]);
+//		System.out.println("");
+//		System.out.println("xV" + player.vel[0] + ", xA" + player.acc[0]);
+//		System.out.println("yV" + player.vel[1] + ", yA" + player.acc[1]);
+//		System.out.println(player.jolt[0] + "  " + player.jolt[1] + "  "+ player.jolt[2] + "  "+ player.jolt[3]);
+//		
 		
 
 	}
