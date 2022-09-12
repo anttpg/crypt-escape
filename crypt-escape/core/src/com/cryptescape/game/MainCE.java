@@ -29,6 +29,7 @@ public class MainCE extends ApplicationAdapter {
 	private boolean KEY_W, KEY_A, KEY_S, KEY_D;
 	private Texture playerSheet;
 	private Player player;
+	private int[] wasd = new int[] {0,0,0,0};
 
 
 	
@@ -65,13 +66,13 @@ public class MainCE extends ApplicationAdapter {
 			@Override
 			public boolean keyDown(int keycode) {
 				if (keycode == Input.Keys.W)
-					KEY_W = true;
+					wasd[0] = 1;
 				if (keycode == Input.Keys.A)
-					KEY_A = true;
+					wasd[1] = 1;
 				if (keycode == Input.Keys.S)
-					KEY_S = true;
+					wasd[2] = 1;
 				if (keycode == Input.Keys.D)
-					KEY_D = true;
+					wasd[3] = 1;
 //				if (keycode == Input.Keys.SPACE)
 //					KEY_SPACE = true;
 //				if (keycode == Input.Keys.X)
@@ -84,13 +85,13 @@ public class MainCE extends ApplicationAdapter {
 			@Override
 			public boolean keyUp(int keycode) {
 				if (keycode == Input.Keys.W)
-					KEY_W = false;
+					wasd[0] = 0;
 				if (keycode == Input.Keys.A)
-					KEY_A = false;
+					wasd[1] = 0;
 				if (keycode == Input.Keys.S)
-					KEY_S = false;
+					wasd[2] = 0;
 				if (keycode == Input.Keys.D)
-					KEY_D = false;
+					wasd[3] = 0;
 //				if (keycode == Input.Keys.SPACE)
 //					KEY_SPACE = false;
 //				if (keycode == Input.Keys.X)
