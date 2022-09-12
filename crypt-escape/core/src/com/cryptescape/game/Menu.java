@@ -17,7 +17,7 @@ public class Menu implements Screen {
 		game = gam;
 
 		camera = new OrthographicCamera();
-		camera.setToOrtho(false, 800, 480);
+		camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	}
 
 	@Override
@@ -28,8 +28,9 @@ public class Menu implements Screen {
 		game.batch.setProjectionMatrix(camera.combined);
 
 		game.batch.begin();
-		game.font.draw(game.batch, "Crypt Escape V1.1", Gdx.graphics.getWidth()/2, 100);
-		game.font.draw(game.batch, "Click anywhere to begin!", Gdx.graphics.getWidth()/2, 150);
+		game.font.draw(game.batch, "Crypt Escape V1.1", Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()-300);
+		game.font.draw(game.batch, "Click anywhere to begin!", Gdx.graphics.getWidth()/2, Gdx.graphics.getHeight()-400);
+		game.font.draw(game.batch, Integer.toString(Gdx.graphics.getWidth()), 100, 100);
 		game.batch.end();
 
 		if (Gdx.input.isTouched()) {

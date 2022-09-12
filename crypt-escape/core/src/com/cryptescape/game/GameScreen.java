@@ -44,7 +44,7 @@ public class GameScreen implements Screen {
 		player = new Player(200,200, playerSheet);
 		
 		camera = new OrthographicCamera();
-		camera.setToOrtho(false, 1600, 900);
+		camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
 		enemySheet = new Texture("monster.png");
 		enemyRegion = new TextureRegion(enemySheet, 0, 0, 32, 32);
