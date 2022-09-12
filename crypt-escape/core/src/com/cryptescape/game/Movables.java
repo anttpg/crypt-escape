@@ -76,11 +76,11 @@ public class Movables {
 		vel[0] += jolt [0];
 		vel[1] += jolt [2];
 		
-		if(jolt[0] != 0 && jolt[1] == 0) {
+		if(jolt[0] != 0 && jolt[1] == 0) { //if and timer 0, clear jolt 
 			jolt[0] = 0;
 			vel[0] = 0;
 		} else if(jolt[0] != 0) { 
-			jolt[1] -= 1;
+			jolt[1] -= 1; 
 		}
 			
 		if(jolt[2] != 0 && jolt[3] == 0) {
