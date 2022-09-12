@@ -1,5 +1,6 @@
 package com.cryptescape.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -26,24 +27,73 @@ public class Movables {
 	public TextureRegion spriteRegion;
 	int height;
 	int width;
-	//Jolt is deacceleration variable
+	
+	//Jolt is the deacceleration variable
 	//Normally Jolt = [0, 0, 0, 0], but when A[x] or A[y] == 0,
 	// EX:     Jolt = [-0.05, 30, 0, 0] and counts down
-	public double[] jolt = new double[4]; // [xD, xT, yD, yT]
+	public double[] jolt = new double[] {0,0,0,0}; // [xD, xT, yD, yT]
 
 	// CONSTRUCTORS
-	public Movables(double x, double y, double s, double mv, String mapPath) {
+	public Movables(double x, double y, double s, double mv, Texture mapPath) {
 		pos[0] = x;
 		pos[1] = y;
 		speed = s;
 		maxVel = mv;
-		spriteMap = new Texture(mapPath);
+		spriteMap = mapPath;
 		spriteRegion = new TextureRegion(spriteMap, 0,0,32,32);
 		height = spriteMap.getHeight()/32;
 		width = spriteMap.getWidth()/32;
 	}
+	
+	private boolean sameSign(double num1, double num2)
+	{
+	    if (num1 > 0 && num2 < 0)
+	        return false;
+	    if (num1 < 0 && num2 > 0)
+	        return false;
+	    return true;
+	}
 
-	// METHODS
+	public void setAccel(double x, double y) {
+		acc[0] = x;
+		acc[1] = y;
+		if (x == 0 && vel[0] != 0 && (jolt[1] == 0 || !sameSign(jolt[0], x) )){
+			jolt[1] = 23;
+			jolt[0] = -(vel[0]/23);			
+		}
+		if (y == 0 && vel[1] != 0 && (jolt[3] == 0 || !sameSign(jolt[1], y) )){
+			jolt[3] = 23;
+			jolt[2] = -(vel[1]/23);
+		}
+	}
+		
+
+	public void updateTick() {
+		if(-maxVel < vel[0] && vel[0] < maxVel) vel[0] += acc[0];
+		if(-maxVel < vel[1] && vel[1] < maxVel) vel[1] += acc[1];
+		vel[0] += jolt [0];
+		vel[1] += jolt [2];
+		
+		if(jolt[0] != 0 && jolt[1] == 0) {
+			jolt[0] = 0;
+			vel[0] = 0;
+		} else if(jolt[0] != 0) { 
+			jolt[1] -= 1;
+		}
+			
+		if(jolt[2] != 0 && jolt[3] == 0) {
+			jolt[2] = 0;
+			vel[1] = 0;
+		} else if(jolt[2] != 0) { 
+			jolt[3] -= 1;
+		}
+		
+		pos[0]+= vel[0]*speed;
+		pos[1]+= vel[1]*speed;
+	}
+	
+	
+	// OTHER METHODS
 	public void move(double x, double y) {
 		pos[0] += x;
 		pos[1] += y;
@@ -60,21 +110,6 @@ public class Movables {
 		pos[0] = x;
 		pos[1] = y;
 	}
-
-	public void setAccel(double x, double y) {
-		acc[0] = x;
-		acc[1] = y;
-		if (acc[0] == 0){
-			jolt[1] = 60;
-			jolt[0] = -(vel[0]/60);
-			
-		}
-		if (acc[1] == 0){
-			jolt[3] = 60;
-			jolt[2] = -(vel[1]/60);
-		}
-	}
-
 	public double getX() {
 		return pos[0];
 	}
@@ -86,30 +121,10 @@ public class Movables {
 	public double[] getPos() {
 		return pos;
 	}
-		
+	
 	public int getMapHeight() {
 		return width;
 	}
-	public void updateTick() {
-		vel[0] += acc[0] + jolt [0];
-		vel[1] += acc[1] + jolt [2];
-		if(jolt[0] != 0 && jolt[1] == 0) {
-			jolt[0] = 0;
-			vel[0] = 0;
-		} else if(jolt[0] != 0) { 
-			jolt[1] -= 1;
-		}
-			
-		if(jolt[2] != 0 && jolt[3] == 0) {
-			jolt[2] = 0;
-			vel[1] = 0;
-		} else if(jolt[2] != 0) { 
-			jolt[3] -= 1;
-		}
-		pos[0]+= vel[0];
-		pos[1]+= vel[1];
-	}
-	
 	
 
 }

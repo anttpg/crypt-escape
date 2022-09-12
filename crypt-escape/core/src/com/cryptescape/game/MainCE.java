@@ -14,21 +14,32 @@ import com.badlogic.gdx.math.Rectangle;
 
 //import com.badlogic.gdx.graphics.
 
+
+
 public class MainCE extends ApplicationAdapter {
 	private OrthographicCamera camera;
 	private SpriteBatch batch;
 
 	public Texture enemySheet;
 	public TextureRegion enemyRegion;
-	private Rectangle sqr;
-	private Texture sqrImage;
+	private Rectangle playerRect;
+	private Texture playerRectImage;
 
 	private Music ambiance;
 	private boolean KEY_W, KEY_A, KEY_S, KEY_D;
-	private Player player = new Player(200,200);
+	private Texture playerSheet;
+	private Player player;
 
+
+	
 	@Override
 	public void create() {
+		//System.out.println(Gdx.files.internal("player.png"));
+		
+		//System.out.println(Gdx.files.local("player.png").path());
+		playerSheet = new Texture("player.png");
+		player = new Player(200,200, playerSheet);
+		
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, 1600, 900);
 
@@ -44,12 +55,10 @@ public class MainCE extends ApplicationAdapter {
 		
 		
 		
-		sqrImage = new Texture(Gdx.files.internal("testsqr.png"));
-		sqr = new Rectangle();
-		sqr.x = 800 / 2 - 64 / 2;
-		sqr.y = 20;
-		sqr.width = 64;
-		sqr.height = 64;
+		
+		playerRect = new Rectangle();
+		playerRect.width = 32;
+		playerRect.height = 32;
 
 		
 		Gdx.input.setInputProcessor(new InputAdapter() {	
@@ -101,29 +110,41 @@ public class MainCE extends ApplicationAdapter {
 		batch.setProjectionMatrix(camera.combined);
 
 		batch.begin();
-		batch.draw(sqrImage, sqr.x, sqr.y);
+		batch.draw(player.spriteStage(), playerRect.x, playerRect.y, 64, 64);
 		batch.draw(enemyRegion, 200, 200, 128, 128);
 		// draws at x, y from bottom left corner. Then stretches to fit 128x128 pixels
 		batch.end();
 		
 		
 		//handles movement 
-		if (KEY_W) { player.setAccel(player.acc[0], 0.1); } 
-		else { player.setAccel(player.acc[0], 0); }
+		if (KEY_W && !KEY_S) { player.setAccel(player.acc[0], 0.1); } 
+		else if(!KEY_S) { player.setAccel(player.acc[0], 0); }
 		
-		if (KEY_A) { player.setAccel(-0.1, player.acc[1]); } 
-		else { player.setAccel(0, player.acc[1]); }
+		if (KEY_A && !KEY_D) { player.setAccel(-0.1, player.acc[1]);  } 
+		else if(!KEY_D) { player.setAccel(0, player.acc[1]);  }
+		//System.out.println("false"); //System.out.println("true");
 		
-		if (KEY_S) { player.setAccel(player.acc[0], -0.1); } 
-		else { player.setAccel(player.acc[0], 0); }
+		if (KEY_S && !KEY_W) { player.setAccel(player.acc[0], -0.1); } 
+		else if(!KEY_W) { player.setAccel(player.acc[0], 0); }
 		
-		if (KEY_D) { player.setAccel(0.1, player.acc[1]); } 
-		else { player.setAccel(0, player.acc[1]); }
-		
+		if (KEY_D && !KEY_A) { player.setAccel(0.1, player.acc[1]); } 
+		else if(!KEY_A) { player.setAccel(0, player.acc[1]); }
 		player.updateTick();
 		
-		sqr.x = (float) player.getPos()[0];
-		sqr.y = (float) player.getPos()[1];
+		playerRect.x = (float) player.getPos()[0];
+		playerRect.y = (float) player.getPos()[1];
+		
+//		try {
+//		    Thread.sleep(300);                 //2000 milliseconds is one second.
+//		} catch(InterruptedException ex) {
+//		    Thread.currentThread().interrupt();
+//		}
+		//System.out.println("X:" +player.acc[0] + "  Y:" + player.acc[1]);
+		//System.out.println("xV:" +player.jolt[0] + "  Yv:" + player.jolt[2]);
+		System.out.println("");
+		System.out.println("xV" + player.vel[0] + ", xA" + player.acc[0]);
+		System.out.println("yV" + player.vel[1] + ", yA" + player.acc[1]);
+		System.out.println(player.jolt[0] + "  " + player.jolt[1] + "  "+ player.jolt[2] + "  "+ player.jolt[3]);
 		
 
 	}

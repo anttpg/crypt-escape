@@ -1,12 +1,13 @@
 package com.cryptescape.game;
 
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Player extends Movables{
     public boolean isRunning = false;
 
-    public Player(double x,double y){
-        super(x, y, 2.0, 8.0, "Player.png");
+    public Player(double x,double y, Texture t){
+        super(x, y, 1.0, 5.0, t);
     }
     public TextureRegion spriteStage() {
     	if (spritePos < width) {
