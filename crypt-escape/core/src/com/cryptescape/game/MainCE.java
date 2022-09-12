@@ -37,7 +37,7 @@ public class MainCE extends ApplicationAdapter {
 		//System.out.println(Gdx.files.internal("player.png"));
 		
 		//System.out.println(Gdx.files.local("player.png").path());
-		playerSheet = new Texture("player.png");
+		playerSheet = new Texture("player2.png");
 		player = new Player(200,200, playerSheet);
 		
 		camera = new OrthographicCamera();
