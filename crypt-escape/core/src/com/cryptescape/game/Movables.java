@@ -19,6 +19,7 @@ public class Movables {
 	public double[] pos = new double[2]; // [x, y]
 	public double[] vel = new double[2]; // [xV, yV]
 	public double[] acc = new double[2]; // [xA, yA]
+	public double[] velBACKUP = new double[2]; //wtf java
 	public final double speed;
 	public final double maxVel;
 	
@@ -76,22 +77,31 @@ public class Movables {
 		vel[0] += jolt [0];
 		vel[1] += jolt [2];
 		
-		if(jolt[0] != 0 && jolt[1] == 0) { //if and timer 0, clear jolt 
+		if(jolt[0] != 0 && jolt[1] == 0) { //if and timer 0, clear jolt
 			jolt[0] = 0;
 			vel[0] = 0;
 		} else if(jolt[0] != 0) { 
 			jolt[1] -= 1; 
+			System.out.println("jolt[0]" + jolt[0]);
 		}
 			
-		if(jolt[2] != 0 && jolt[3] == 0) {
+		if(jolt[2] != 0 && jolt[3] == 0) {	
 			jolt[2] = 0;
 			vel[1] = 0;
 		} else if(jolt[2] != 0) { 
 			jolt[3] -= 1;
+			System.out.println("jolt[2] " + jolt[2]);
 		}
 		
 		pos[0]+= vel[0]*speed;
 		pos[1]+= vel[1]*speed;
+//		if(-0.000005 < jolt[0] && jolt[0] > 0.000005) {
+//			jolt[1] = 0;
+//		}
+//		if(-0.000005 < jolt[2] && jolt[2] > 0.000005) {
+//			jolt[3] = 0;
+//		}
+//		
 	}
 	
 	
