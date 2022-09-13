@@ -122,7 +122,7 @@ public class GameScreen implements Screen {
 		game.font.draw(game.batch, "Player xV: " + player.vel[0] + "Player yV: " + player.vel[1],  50, Gdx.graphics.getHeight()-50);
 		game.font.draw(game.batch, "Player xA: " + player.acc[0] + "Player yA: " + player.acc[1], 50, Gdx.graphics.getHeight()-80);
 		game.font.draw(game.batch, player.jolt[0] + "  " + player.jolt[1] + "  "+ player.jolt[2] + "  "+ player.jolt[3], 50, Gdx.graphics.getHeight()-110);
-		
+		game.font.draw(game.batch, Integer.toString(player.spriteStage().getRegionX()), 50, Gdx.graphics.getHeight()-140);
 		
 		// draws at x, y from bottom left corner. Then stretches to fit 128x128 pixels
 		game.batch.end();
