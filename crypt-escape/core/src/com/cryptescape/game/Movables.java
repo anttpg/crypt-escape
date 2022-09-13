@@ -83,7 +83,6 @@ public class Movables {
 			vel[0] = 0;
 		} else if(jolt[0] != 0) { 
 			jolt[1] -= 1; 
-			System.out.println("jolt[0]" + jolt[0]);
 		}
 			
 		if(jolt[2] != 0 && jolt[3] == 0) {	
@@ -91,7 +90,6 @@ public class Movables {
 			vel[1] = 0;
 		} else if(jolt[2] != 0) { 
 			jolt[3] -= 1;
-			System.out.println("jolt[2] " + jolt[2]);
 		}
 		
 		pos[0]+= vel[0]*speed;
