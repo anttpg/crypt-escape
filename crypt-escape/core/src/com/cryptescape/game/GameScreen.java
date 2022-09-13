@@ -35,7 +35,7 @@ public class GameScreen implements Screen {
 	private Music ambiance;
 	private int[] wasd = new int[] {0,0,0,0};
 
-
+	float playerCounter = 0;
 	
 	public GameScreen(final MainCE gam) {
 		this.game = gam;
@@ -112,7 +112,11 @@ public class GameScreen implements Screen {
 		game.batch.setProjectionMatrix(camera.combined);
 
 		game.batch.begin();
+		
 		game.batch.draw(player.spriteStage(), playerRect.x, playerRect.y, 64, 64);
+
+		
+		
 		game.batch.draw(enemyRegion, 200, 200, 128, 128);
 		// draws at x, y from bottom left corner. Then stretches to fit 128x128 pixels
 		game.batch.end();
@@ -132,7 +136,7 @@ public class GameScreen implements Screen {
 //		if (KEY_D && !KEY_A) { player.setAccel(0.1, player.acc[1]); } 
 //		else if(!KEY_A) { player.setAccel(0, player.acc[1]); }
 		
-		player.setAccel((wasd[3]-wasd[1])*0.1, (wasd[0]-wasd[2])*0.1);
+		player.setAccel((wasd[3]-wasd[1])*0.5, (wasd[0]-wasd[2])*0.5);
 		player.updateTick();
 		
 		playerRect.x = (float) player.getPos()[0];
