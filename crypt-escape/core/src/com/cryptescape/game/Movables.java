@@ -19,6 +19,7 @@ public class Movables {
 	public double[] pos = new double[2]; // [x, y]
 	public double[] vel = new double[2]; // [xV, yV]
 	public double[] acc = new double[2]; // [xA, yA]
+	public double[] velBACKUP = new double[2]; //wtf java
 	public final double speed;
 	public final double maxVel;
 	
@@ -59,11 +60,12 @@ public class Movables {
 		acc[1] = y;
 		//Checks if the xAccel is zero, AND the velocity is not zero, 
 		//AND ((Jolt xT is zero) OR (Jolt xV and xAccel, have different signs))
-		if (x == 0 && vel[0] != 0 && (jolt[1] == 0 || !sameSign(jolt[0], x) )){
+		if (x == 0 && ((double) Math.round(vel[0] * 100) / 100) != 0 && (jolt[1] == 0 || !sameSign(jolt[0], x) )){
 			jolt[1] = 23;
-			jolt[0] = -(vel[0]/23);			
+			jolt[0] = -(vel[0]/23);	
+			//PROBLEM IS HERE, WITH JOLT[1] == 0. ROUNDOFF ERROR WHEN ADDING TO V
 		}
-		if (y == 0 && vel[1] != 0 && (jolt[3] == 0 || !sameSign(jolt[1], y) )){
+		if (y == 0 && ((double) Math.round(vel[1] * 100) / 100) != 0 && (jolt[3] == 0 || !sameSign(jolt[1], y) )){
 			jolt[3] = 23;
 			jolt[2] = -(vel[1]/23);
 		}
@@ -73,25 +75,34 @@ public class Movables {
 	public void updateTick() {
 		if(-maxVel < vel[0] && vel[0] < maxVel) vel[0] += acc[0];
 		if(-maxVel < vel[1] && vel[1] < maxVel) vel[1] += acc[1];
-		vel[0] += jolt [0];
-		vel[1] += jolt [2];
+		vel[0] = vel[0] + jolt[0];
+		vel[1] = vel[1] + jolt[2];
 		
-		if(jolt[0] != 0 && jolt[1] == 0) { //if and timer 0, clear jolt 
+		if(jolt[0] != 0 && jolt[1] == 0) { //if and timer 0, clear jolt
 			jolt[0] = 0;
 			vel[0] = 0;
 		} else if(jolt[0] != 0) { 
 			jolt[1] -= 1; 
+			System.out.println("jolt[0]" + jolt[0]);
 		}
 			
-		if(jolt[2] != 0 && jolt[3] == 0) {
+		if(jolt[2] != 0 && jolt[3] == 0) {	
 			jolt[2] = 0;
 			vel[1] = 0;
 		} else if(jolt[2] != 0) { 
 			jolt[3] -= 1;
+			System.out.println("jolt[2] " + jolt[2]);
 		}
 		
 		pos[0]+= vel[0]*speed;
 		pos[1]+= vel[1]*speed;
+//		if(-0.000005 < jolt[0] && jolt[0] > 0.000005) {
+//			jolt[1] = 0;
+//		}
+//		if(-0.000005 < jolt[2] && jolt[2] > 0.000005) {
+//			jolt[3] = 0;
+//		}
+//		
 	}
 	
 	
