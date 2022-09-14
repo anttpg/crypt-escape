@@ -8,9 +8,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class Player extends Movables {
 	public boolean isRunning = false;
 	private TextureRegion spriteRegion;
-
 	private float counter = 0f;
 	private boolean changeAnimation = true;
+	
 	public Player(double x, double y, Texture t) {
 		super(x, y, 1.0, 3.0, t);
 		spriteRegion = new TextureRegion(spriteMap);

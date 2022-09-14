@@ -23,7 +23,14 @@ public class Enemy extends Movables {
 		//decides the direction of the enemy to go in.
 	}
 	
-	//Add methods to help build complex behavior from simple actions
+	//Add more methods to help build complex behavior from simple actions IE:
+	public double[] sniff() {
+		double[]
+		
+		
+		return 
+	}
+	
 
 	
 	public TextureRegion spriteStage() {
