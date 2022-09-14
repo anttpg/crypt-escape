@@ -17,8 +17,6 @@ public class Player extends Movables {
 	}
 
 	public TextureRegion spriteStage() {
-		
-		
 		//Gdx.graphics.getDeltaTime();
 		if (changeAnimation == true) {
 			changeAnimation = false;
