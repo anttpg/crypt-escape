@@ -14,12 +14,16 @@ public class Interactables {
 	int height;
 	int width;
 	
-	public Interactables(boolean v, int[] r, int[] position) {
+	public Interactables(boolean v, int[] r, int[] position, Texture mapPath) {
 		pos[0] = position[0];
 		pos[1] = position[1];
 		visible = v;
 		room[0] = r[0];
 		room[1] = r[1];
+		spriteMap = mapPath;
+		spriteRegion = new TextureRegion(spriteMap, 0,0,32,32);
+		height = spriteMap.getHeight()/32;
+		width = spriteMap.getWidth()/32;
 		
 		
 	}

@@ -7,7 +7,7 @@ public class Enemy extends Movables{
 
     int[][] previousRoom;
     public Enemy(double x,double y){
-        //super(x, y, 6.0, 24.0, "monster2.png");
+        //super(x, y, 6.0, 24.0, "monster.png");
     }
 
     public TextureRegion spriteStage() {
@@ -30,4 +30,6 @@ public class Enemy extends Movables{
 		}
 		
 	}
+    
+    
 }
