@@ -73,8 +73,8 @@ public class Movables {
 		
 
 	public void updateTick() {
-		if(-maxVel < vel[0] && vel[0] < maxVel) vel[0] += acc[0];
-		if(-maxVel < vel[1] && vel[1] < maxVel) vel[1] += acc[1];
+		if(-maxVel < vel[0]+acc[0] && vel[0]+acc[0] < maxVel) vel[0] += acc[0];
+		if(-maxVel < vel[1]+acc[1] && vel[1]+acc[1] < maxVel) vel[1] += acc[1];
 		vel[0] = vel[0] + jolt[0];
 		vel[1] = vel[1] + jolt[2];
 		
