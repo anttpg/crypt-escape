@@ -19,7 +19,6 @@ public class Movables {
 	public double[] pos = new double[2]; // [x, y]
 	public double[] vel = new double[2]; // [xV, yV]
 	public double[] acc = new double[2]; // [xA, yA]
-	public double[] velBACKUP = new double[2]; //wtf java
 	public final double speed;
 	public final double maxVel;
 	
@@ -61,7 +60,7 @@ public class Movables {
 		//Checks if the xAccel is zero, AND the velocity is not zero, 
 		//AND ((Jolt xT is zero) OR (Jolt xV and xAccel, have different signs))
 		if (x == 0 && ((double) Math.round(vel[0] * 100) / 100) != 0 && (jolt[1] == 0 || !sameSign(jolt[0], x) )){
-			jolt[1] = 23;
+			jolt[1] = 23;                   //wtf java
 			jolt[0] = -(vel[0]/23);	
 			//PROBLEM IS HERE, WITH JOLT[1] == 0. ROUNDOFF ERROR WHEN ADDING TO V
 		}

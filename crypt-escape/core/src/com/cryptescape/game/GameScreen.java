@@ -110,20 +110,19 @@ public class GameScreen implements Screen {
 		ScreenUtils.clear(0.5f, 0.5f, 0.5f, 1);
 		camera.update();
 		game.batch.setProjectionMatrix(camera.combined);
-
 		game.batch.begin();
 		
-		game.batch.draw(player.spriteStage(), playerRect.x, playerRect.y, 96, 96);
-
 		
-		
+		game.batch.disableBlending();
 		game.batch.draw(enemyRegion, 200, 200, 128, 128);
-		
 		game.font.draw(game.batch, "Player xV: " + player.vel[0] + "Player yV: " + player.vel[1],  50, Gdx.graphics.getHeight()-50);
 		game.font.draw(game.batch, "Player xA: " + player.acc[0] + "Player yA: " + player.acc[1], 50, Gdx.graphics.getHeight()-80);
 		game.font.draw(game.batch, player.jolt[0] + "  " + player.jolt[1] + "  "+ player.jolt[2] + "  "+ player.jolt[3], 50, Gdx.graphics.getHeight()-110);
 		game.font.draw(game.batch, Integer.toString(player.spriteStage().getRegionX()), 50, Gdx.graphics.getHeight()-140);
 		
+		
+		game.batch.enableBlending();
+		game.batch.draw(player.spriteStage(), playerRect.x, playerRect.y, 96, 96);
 		// draws at x, y from bottom left corner. Then stretches to fit 128x128 pixels
 		game.batch.end();
 		
