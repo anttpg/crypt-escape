@@ -40,7 +40,7 @@ public class GameScreen implements Screen {
 	public GameScreen(final MainCE gam) {
 		this.game = gam;
 		
-		playerSheet = new Texture("player2.png");
+		playerSheet = new Texture("player3.png");
 		player = new Player(200,200, playerSheet);
 		
 		camera = new OrthographicCamera();
