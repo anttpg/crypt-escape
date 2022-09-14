@@ -57,13 +57,13 @@ public class Player extends Movables {
 			}
 			
 		}
-		if (counter >=3*Gdx.graphics.getDeltaTime()) {
+		if (counter >=30*Gdx.graphics.getDeltaTime()) {
 			changeAnimation = true;
 			counter =0;
 		}
 		counter+=Gdx.graphics.getDeltaTime();
 		// else return Error Section
-		spriteRegion.setRegion(0 + 32 * spritePos, 160, 32, 32);
+		//spriteRegion.setRegion(0 + 32 * spritePos, 160, 32, 32);
 		return spriteRegion;
 	}
 }
