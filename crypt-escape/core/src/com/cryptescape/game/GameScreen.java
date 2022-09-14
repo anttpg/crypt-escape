@@ -113,7 +113,7 @@ public class GameScreen implements Screen {
 
 		game.batch.begin();
 		
-		game.batch.draw(player.spriteStage(), playerRect.x, playerRect.y, 64, 64);
+		game.batch.draw(player.spriteStage(), playerRect.x, playerRect.y, 96, 96);
 
 		
 		
