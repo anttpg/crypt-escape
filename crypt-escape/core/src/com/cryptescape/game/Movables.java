@@ -28,7 +28,7 @@ public class Movables {
 	int height;
 	int width;
 	
-	//Jolt is the deacceleration variable
+	//Jolt is the deceleration variable
 	//Normally Jolt = [0, 0, 0, 0], but when A[x] or A[y] == 0,
 	// EX:     Jolt = [-0.05, 30, 0, 0] and counts down
 	public double[] jolt = new double[] {0,0,0,0}; // [xD, xT, yD, yT]
