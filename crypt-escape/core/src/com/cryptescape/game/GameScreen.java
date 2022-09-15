@@ -9,7 +9,10 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.math.Rectangle;
@@ -23,12 +26,13 @@ public class GameScreen implements Screen {
 	
 	private OrthographicCamera camera;
 	public BitmapFont font;
+	public TextureAtlas atlas;
 
-	public Texture enemySheet;
-	public TextureRegion enemyRegion;
+	private Texture enemySheet;
+	public Enemy enemy;
 	
 	private Texture playerSheet;
-	private Player player;
+	public Player player;
 	private Rectangle playerRect;
 	
 	private Music ambiance;
@@ -39,21 +43,21 @@ public class GameScreen implements Screen {
 	public GameScreen(final MainCE gam) {
 		this.game = gam;
 		
+		atlas = new TextureAtlas(Gdx.files.internal("packedImages/pack.atlas"));
+		//AtlasRegion region = atlas.findRegion("imagename");
+		Sprite sprite = atlas.createSprite("player");
+		
 		playerSheet = new Texture("player3.png");
 		player = new Player(200,200, playerSheet);
+		
+		enemySheet = new Texture("monster2.png");
+		enemy = new Enemy(400, 400, enemySheet);
 		
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-		enemySheet = new Texture("monster.png");
-		enemyRegion = new TextureRegion(enemySheet, 0, 0, 32, 32);
-
-		// xPos, yPos within texture. IE: 0,0 is Image1 32,0 is Image2, ect
-
 		ambiance = Gdx.audio.newMusic(Gdx.files.internal("caveAmbiance.mp3"));
 		ambiance.setLooping(true);
-		
-		
 		
 		
 		

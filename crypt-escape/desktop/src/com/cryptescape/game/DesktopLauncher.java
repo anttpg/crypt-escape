@@ -1,6 +1,7 @@
 package com.cryptescape.game;
 
 import java.io.IOException;
+import java.util.Scanner;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
@@ -21,8 +22,14 @@ public class DesktopLauncher {
 		config.setTitle("cryptescape-demo");
 		config.setWindowedMode(1600, 900);
 		config.useVsync(true);
-		TexturePacker.process("../assets", "../assets", "packedImages");
-		// ../assets sets path back one folder, then reads from the general assets folder
+		
+		System.out.println("Do you want to repack assets? (y/n)");
+		Scanner s = new Scanner(System.in);
+		if (s.nextLine().equals("y")) {
+			TexturePacker.process("../assets/imageAssets", "../assets/packedImages", "pack");
+			// ../assets sets path back one folder, then reads from the general assets folder
+		}
+		s.close();
 		
 		//main window
 		new Lwjgl3Application(new MainCE(), config);
