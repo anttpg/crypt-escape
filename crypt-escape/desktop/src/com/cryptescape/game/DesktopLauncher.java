@@ -20,7 +20,7 @@ public class DesktopLauncher {
 		config.setTitle("cryptescape-demo");
 		config.setWindowedMode(1600, 900);
 		config.useVsync(true);
-		TexturePacker.process("../assets", "../assets", "packedImages");
+		TexturePacker.process("../assets/imageAssets", "../assets", "packedImages");
 		// ../assets sets path back one folder, then reads from the general assets folder
 		
 		//main window
