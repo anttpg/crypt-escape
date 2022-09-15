@@ -54,8 +54,6 @@ public class GameScreen implements Screen {
 		
 		
 		
-		
-		
 		playerRect = new Rectangle();
 		playerRect.width = 32;
 		playerRect.height = 32;
