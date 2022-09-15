@@ -2,11 +2,15 @@ package com.cryptescape.game;
 
 import java.io.IOException;
 
-
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
-//import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 import com.cryptescape.game.MainCE;
+
+import com.badlogic.gdx.tools.texturepacker.TexturePacker; //FUCK THIS TOOK FOREVER
+//Trying to add to the gradle build path took so long to figure out :(
+
+
 
 // Please note that on macOS your application needs to be started with the -XstartOnFirstThread JVM argument
 public class DesktopLauncher {
@@ -16,7 +20,8 @@ public class DesktopLauncher {
 		config.setTitle("cryptescape-demo");
 		config.setWindowedMode(1600, 900);
 		config.useVsync(true);
-		//TexturePacker.process(settings, "../images", "../game-android/assets", "game");
+		TexturePacker.process("../assets", "../assets", "packedImages");
+		// ../assets sets path back one folder, then reads from the general assets folder
 		
 		//main window
 		new Lwjgl3Application(new MainCE(), config);

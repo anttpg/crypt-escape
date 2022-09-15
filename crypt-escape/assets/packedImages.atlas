@@ -1,0 +1,55 @@
+
+packedImages.png
+size: 1024, 512
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+badlogic
+  rotate: false
+  xy: 2, 198
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+monster
+  rotate: false
+  xy: 2, 2
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
+monster2
+  rotate: false
+  xy: 2, 68
+  size: 256, 128
+  orig: 256, 128
+  offset: 0, 0
+  index: -1
+player
+  rotate: false
+  xy: 390, 294
+  size: 192, 160
+  orig: 192, 160
+  offset: 0, 0
+  index: -1
+player2
+  rotate: false
+  xy: 584, 294
+  size: 192, 160
+  orig: 192, 160
+  offset: 0, 0
+  index: -1
+player3
+  rotate: false
+  xy: 260, 198
+  size: 128, 256
+  orig: 128, 256
+  offset: 0, 0
+  index: -1
+testsqr
+  rotate: false
+  xy: 260, 132
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: -1
