@@ -25,10 +25,8 @@ public class Enemy extends Movables {
 	
 	//Add more methods to help build complex behavior from simple actions IE:
 	public double[] sniff() {
-		double[]
-		
-		
-		return 
+		double[] temp1 = new double[1];
+		return temp1;
 	}
 	
 
