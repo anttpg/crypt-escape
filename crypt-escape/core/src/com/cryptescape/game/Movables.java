@@ -1,6 +1,7 @@
 package com.cryptescape.game;
 
 import com.badlogic.gdx.Gdx;
+
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -136,5 +137,10 @@ public class Movables {
 		return width;
 	}
 	
+	public double distance(Movables a, Movables b) {
+		double xSquared = Math.pow(a.getX()-b.getX(), 2);
+		double ySquared = Math.pow(a.getX()-b.getX(), 2);
+		return(Math.pow( xSquared + ySquared, .5));
+	}
 
 }
