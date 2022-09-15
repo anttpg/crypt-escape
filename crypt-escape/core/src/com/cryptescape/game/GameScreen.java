@@ -9,7 +9,10 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.math.Rectangle;
@@ -23,6 +26,7 @@ public class GameScreen implements Screen {
 	
 	private OrthographicCamera camera;
 	public BitmapFont font;
+	public TextureAtlas atlas;
 
 	private Texture enemySheet;
 	public Enemy enemy;
@@ -39,6 +43,10 @@ public class GameScreen implements Screen {
 	
 	public GameScreen(final MainCE gam) {
 		this.game = gam;
+		
+		atlas = new TextureAtlas(Gdx.files.internal("packedImages/pack.atlas"));
+		//AtlasRegion region = atlas.findRegion("imagename");
+		Sprite sprite = atlas.createSprite("player");
 		
 		playerSheet = new Texture("player3.png");
 		player = new Player(200,200, playerSheet);
