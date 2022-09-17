@@ -7,10 +7,10 @@ public class Room {
 	
 	public boolean discovered;
 	public boolean[] doors; //sets which doors are useable
-	public String[][] seed;
-	public String roomType;
+	public int[] roomLocation = new int[2]; // [roomX,roomY] on the map
+	public String[][] seed; 
+	public String roomType; 
 	
-	public int[] roomLocation = new int[2]; // [roomX,roomY]
 	public Texture spriteMap;
 	public TextureRegion spriteRegion;
 	

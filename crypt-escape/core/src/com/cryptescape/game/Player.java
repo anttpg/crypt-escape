@@ -11,8 +11,8 @@ public class Player extends Movables {
 	private float counter = 0f;
 	private boolean changeAnimation = true;
 	
-	public Player(double x, double y, Texture t) {
-		super(x, y, 1.0, 3.0, t);
+	public Player(double x, double y, AnimationHandler h) {
+		super(x, y, 1.0, 3.0, h);
 		spriteRegion = new TextureRegion(spriteMap);
 	}
 
