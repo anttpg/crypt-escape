@@ -40,7 +40,6 @@ public class GameScreen implements Screen {
 	
 	private Rectangle playerRect;
 	
-
 	private Music ambiance;
 	private int[] wasd = new int[] {0,0,0,0};
 
@@ -144,7 +143,7 @@ public class GameScreen implements Screen {
 		
 		
 		//handles movement 		
-		player.setAccel((wasd[3]-wasd[1])*0.1, (wasd[0]-wasd[2])*0.1);
+		player.setAccel((wasd[3]-wasd[1])*0.2, (wasd[0]-wasd[2])*0.2);
 		player.updateTick();
 		
 		playerRect.x = (float) player.getPos()[0];

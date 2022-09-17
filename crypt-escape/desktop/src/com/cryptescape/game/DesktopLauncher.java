@@ -8,7 +8,8 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.cryptescape.game.MainCE;
 
-import com.badlogic.gdx.tools.texturepacker.TexturePacker; //FUCK THIS TOOK FOREVER
+import com.badlogic.gdx.tools.texturepacker.TexturePacker;
+//FUCK THIS TOOK FOREVER
 //Trying to add to the gradle build path took so long to figure out :(
 
 
