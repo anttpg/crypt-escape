@@ -17,13 +17,45 @@ public class Enemy extends Movables {
 	}
 	
 	//this will be the base of the AI
-	public void decideDirection() {
+	public void evaluate() {
 		this.setAccel(0.1, 0.1);
-		//this sort of stuff. Want to make a method that somehow
-		//decides the direction of the enemy to go in.
+		//Calculates mathematical outcome of each movement 
+		//Chooses highest score for enemy
+		//Selects correct
+		
+	}
+
+	
+	public void circle() {
+		//Accepts player position
+		//
+	}
+	public void dash(int[] playerPos) {
+		//Accepts player position
+		//Incloses to player position
+	}
+	public void cutOff() {
+		//Accepts a door object
+		//Block off position in front of that door
+		
+	}
+	
+	public void search() {
+		//
 	}
 	
 	//Add methods to help build complex behavior from simple actions
+	
+	public void decidePath() {
+		
+	}
+	
+	public void seek() {
+		
+	}
+	
+	public 
+	
 
 	
 	public TextureRegion spriteStage() {
