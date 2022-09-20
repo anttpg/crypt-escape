@@ -61,25 +61,25 @@ public class Enemy extends Movables {
 				animate.setCurrent("enemyW");
 				
 			} else if (((vel[0] <= 1) && (vel[0] >= -1) ) && (vel[1] >= 1)) { // North
-				animate.setCurrent("enemyN");
+				animate.setCurrent("error");
 				
 			} else if (((vel[0] <= 1) && (vel[0] >= -1) ) && (vel[1] <= -1)) { // South
-				animate.setCurrent("enemyS");
+				animate.setCurrent("error");
 				
 			} else if ((vel[0] > 0) && (vel[1] > 0)) { // Northeast
-				animate.setCurrent("enemyNE");
+				animate.setCurrent("error");
 				
 			} else if ((vel[0] > 0) && (vel[1] < 0)) { // Southeast
-				animate.setCurrent("enemySE");
+				animate.setCurrent("error");
 				
 			} else if ((vel[0] < 0) && (vel[1] > 0)) { // Northwest
-				animate.setCurrent("enemyNW");
+				animate.setCurrent("error");
 				
 			} else if ((vel[0] < 0) && (vel[1] < 0)) { // Southwest
-				animate.setCurrent("enemySW");
+				animate.setCurrent("error");
 				
 			} else if ((vel[0] == 0) && (vel[1] == 0)) { // Standing still 
-				animate.setCurrent("enemyS");
+				animate.setCurrent("error");
 				animate.setAnimationDuration(10000);
 			}
 			
