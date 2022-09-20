@@ -1,71 +1,56 @@
 package com.cryptescape.game;
 
-import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-
-/**
- * @author
- *
- */
 public class Movables {
 
 	// VARIABLES
 
 	public boolean visible;
 	public int[] room = new int[2]; // [roomX,roomY]
-	public double[] pos = new double[2]; // [x, y]
-	public double[] vel = new double[2]; // [xV, yV]
-	public double[] acc = new double[2]; // [xA, yA]
-	public final double speed;
-	public final double maxVel;
+	public float[] pos = new float[2]; // [x, y]
+	public float[] vel = new float[2]; // [xV, yV]
+	public float[] acc = new float[2]; // [xA, yA]
+	public final float speed;
+	public final float maxVel;
 	
-	public int spritePos = -1;
-	public Texture spriteMap;
-	public TextureRegion spriteRegion;
 	int height;
 	int width;
 	
 	//Jolt is the deceleration variable
 	//Normally Jolt = [0, 0, 0, 0], but when A[x] or A[y] == 0,
 	// EX:     Jolt = [-0.05, 30, 0, 0] and counts down
-	public double[] jolt = new double[] {0,0,0,0}; // [xD, xT, yD, yT]
+	public float[] jolt = new float[] {0,0,0,0}; // [xD, xT, yD, yT]
 
 	// CONSTRUCTORS
-	public Movables(double x, double y, double s, double mv, Texture mapPath) {
+	public Movables(float x, float y, float s, float mv) {
 		pos[0] = x;
 		pos[1] = y;
 		speed = s;
 		maxVel = mv;
-		spriteMap = mapPath;
-		spriteRegion = new TextureRegion(spriteMap, 0,0,32,32);
-		height = spriteMap.getHeight()/32;
-		width = spriteMap.getWidth()/32;
 	}
+		
 	
-	private boolean sameSign(double num1, double num2)
-	{
+	private boolean sameSign(float num1, float num2) {
 	    if (num1 > 0 && num2 < 0)
 	        return false;
 	    if (num1 < 0 && num2 > 0)
 	        return false;
 	    return true;
 	}
-
-	public void setAccel(double x, double y) {
+	
+	
+	public void setAcceleration(float x, float y) {
 		acc[0] = x;
 		acc[1] = y;
 		//Checks if the xAccel is zero, AND the velocity is not zero, 
 		//AND ((Jolt xT is zero) OR (Jolt xV and xAccel, have different signs))
-		if (x == 0 && ((double) Math.round(vel[0] * 100) / 100) != 0 && (jolt[1] == 0 || !sameSign(jolt[0], x) )){
+		if (x == 0 && ((float) Math.round(vel[0] * 100) / 100) != 0 && (jolt[1] == 0 || !sameSign(jolt[0], x) )){
 			jolt[1] = 23;                   //wtf java
 			jolt[0] = -(vel[0]/23);	
 			//PROBLEM IS HERE, WITH JOLT[1] == 0. ROUNDOFF ERROR WHEN ADDING TO V
 		}
-		if (y == 0 && ((double) Math.round(vel[1] * 100) / 100) != 0 && (jolt[3] == 0 || !sameSign(jolt[1], y) )){
+		if (y == 0 && ((float) Math.round(vel[1] * 100) / 100) != 0 && (jolt[3] == 0 || !sameSign(jolt[1], y) )){
 			jolt[3] = 23;
 			jolt[2] = -(vel[1]/23);
 		}
@@ -93,54 +78,14 @@ public class Movables {
 		}
 		
 		pos[0]+= vel[0]*speed;
-		pos[1]+= vel[1]*speed;
-//		if(-0.000005 < jolt[0] && jolt[0] > 0.000005) {
-//			jolt[1] = 0;
-//		}
-//		if(-0.000005 < jolt[2] && jolt[2] > 0.000005) {
-//			jolt[3] = 0;
-//		}
-//		
+		pos[1]+= vel[1]*speed;		
 	}
 	
-	
-	// OTHER METHODS
-	public void move(double x, double y) {
-		pos[0] += x;
-		pos[1] += y;
-	}
-
-	public void setVisible(boolean b) {
-		visible = b;
+	public void draw(SpriteBatch batch) {
+		return;
 	}
 	
-	public boolean getVisible() {
-		return visible;
-	}
-	public void setPos(double x, double y) {
-		pos[0] = x;
-		pos[1] = y;
-	}
-	public double getX() {
-		return pos[0];
-	}
-
-	public double getY() {
-		return pos[1];
-	}
-
-	public double[] getPos() {
+	public float[] getPos() {
 		return pos;
 	}
-	
-	public int getMapHeight() {
-		return width;
-	}
-	
-	public double distance(Movables a, Movables b) {
-		double xSquared = Math.pow(a.getX()-b.getX(), 2);
-		double ySquared = Math.pow(a.getX()-b.getX(), 2);
-		return(Math.pow( xSquared + ySquared, .5));
-	}
-
 }

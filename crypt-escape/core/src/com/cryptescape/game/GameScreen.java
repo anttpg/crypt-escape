@@ -36,7 +36,6 @@ public class GameScreen implements Screen {
 	private Texture playerSheet;
 	public Player player;
 	private AnimationHandler playerAnimation;
-	private String pN, pE, pS, pW, pNE, pNW, pSE, pSW;
 	
 	private Rectangle playerRect;
 	
@@ -51,18 +50,19 @@ public class GameScreen implements Screen {
 		atlas = new TextureAtlas(Gdx.files.internal("packedImages/pack.atlas"));
 		
 		playerAnimation = new AnimationHandler();
-		playerAnimation.add(pN, new Animation<TextureRegion>(FRAME_SPEED, atlas.findRegions("playerN")));
-		playerAnimation.add(pS, new Animation<TextureRegion>(FRAME_SPEED, atlas.findRegions("playerS")));
-		playerAnimation.add(pE, new Animation<TextureRegion>(FRAME_SPEED, atlas.findRegions("playerE")));
-		playerAnimation.add(pW, new Animation<TextureRegion>(FRAME_SPEED, atlas.findRegions("playerW")));
-		playerAnimation.add(pNE, new Animation<TextureRegion>(FRAME_SPEED, atlas.findRegions("playerNE")));
-		playerAnimation.add(pNW, new Animation<TextureRegion>(FRAME_SPEED, atlas.findRegions("playerNW")));
-		playerAnimation.add(pSE, new Animation<TextureRegion>(FRAME_SPEED, atlas.findRegions("playerSE")));
-		playerAnimation.add(pSW, new Animation<TextureRegion>(FRAME_SPEED, atlas.findRegions("playerSW")));
+		playerAnimation.add("playerN", new Animation<TextureRegion>(FRAME_SPEED, atlas.findRegions("playerN")));
+		playerAnimation.add("playerS", new Animation<TextureRegion>(FRAME_SPEED, atlas.findRegions("playerS")));
+		playerAnimation.add("playerE", new Animation<TextureRegion>(FRAME_SPEED, atlas.findRegions("playerE")));
+		playerAnimation.add("playerW", new Animation<TextureRegion>(FRAME_SPEED, atlas.findRegions("playerW")));
+		playerAnimation.add("playerNE", new Animation<TextureRegion>(FRAME_SPEED, atlas.findRegions("playerNE")));
+		playerAnimation.add("playerNW", new Animation<TextureRegion>(FRAME_SPEED, atlas.findRegions("playerNW")));
+		playerAnimation.add("playerSE", new Animation<TextureRegion>(FRAME_SPEED, atlas.findRegions("playerSE")));
+		playerAnimation.add("playerSW", new Animation<TextureRegion>(FRAME_SPEED, atlas.findRegions("playerSW")));
+		playerAnimation.setCurrent("playerS");
 		player = new Player(200, 200, playerAnimation); 
 		
-		enemySheet = new Texture("monster2.png");
-		enemy = new Enemy(400, 400, enemySheet);
+		//enemySheet = new Texture("monster2.png");
+		//enemy = new Enemy(400, 400, enemySheet);
 		
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -127,30 +127,30 @@ public class GameScreen implements Screen {
 		game.batch.begin();
 		
 		
-		game.batch.disableBlending();
+		//game.batch.disableBlending();
 		//game.batch.draw(enemyRegion, 200, 200, 128, 128);
 		game.font.draw(game.batch, "FPS: "+ Gdx.graphics.getFramesPerSecond(), 50, Gdx.graphics.getHeight()-180);
 		game.font.draw(game.batch, "Player xV: " + player.vel[0] + "Player yV: " + player.vel[1],  50, Gdx.graphics.getHeight()-50);
 		game.font.draw(game.batch, "Player xA: " + player.acc[0] + "Player yA: " + player.acc[1], 50, Gdx.graphics.getHeight()-80);
 		game.font.draw(game.batch, player.jolt[0] + "  " + player.jolt[1] + "  "+ player.jolt[2] + "  "+ player.jolt[3], 50, Gdx.graphics.getHeight()-110);
-		game.font.draw(game.batch, Integer.toString(player.spriteStage().getRegionX()), 50, Gdx.graphics.getHeight()-140);
+		game.font.draw(game.batch, playerAnimation.toString(), 50, Gdx.graphics.getHeight()-140);
 		
 		
-		game.batch.enableBlending();
-		game.batch.draw(player.spriteStage(), playerRect.x, playerRect.y, 96, 96);
+		//game.batch.enableBlending();
+		player.draw(game.batch);
 		// draws at x, y from bottom left corner. Then stretches to fit 128x128 pixels
 		game.batch.end();
 		
 		
 		//handles movement 		
-		player.setAccel((wasd[3]-wasd[1])*0.2, (wasd[0]-wasd[2])*0.2);
+		player.setAcceleration((wasd[3]-wasd[1])*0.2f, (wasd[0]-wasd[2])*0.2f);
 		player.updateTick();
 		
-		playerRect.x = (float) player.getPos()[0];
-		playerRect.y = (float) player.getPos()[1];
-		
+		playerRect.x = player.getPos()[0];
+		playerRect.y = player.getPos()[1];
+	
 //		try {
-//		    Thread.sleep(300);                 //2000 milliseconds is one second.
+//		    Thread.sleep(100);                 //2000 milliseconds is one second.
 //		} catch(InterruptedException ex) {
 //		    Thread.currentThread().interrupt();
 //		}
