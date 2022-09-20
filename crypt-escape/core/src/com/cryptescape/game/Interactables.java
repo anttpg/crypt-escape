@@ -24,9 +24,5 @@ public class Interactables {
 		spriteRegion = new TextureRegion(spriteMap, 0,0,32,32);
 		height = spriteMap.getHeight()/32;
 		width = spriteMap.getWidth()/32;
-		
-		
 	}
-	
-
 }

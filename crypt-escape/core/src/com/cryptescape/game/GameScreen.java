@@ -8,8 +8,12 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.badlogic.gdx.math.Rectangle;
@@ -23,15 +27,19 @@ public class GameScreen implements Screen {
 	
 	private OrthographicCamera camera;
 	public BitmapFont font;
+	public TextureAtlas atlas;
+	public float FRAME_SPEED = 1/60f;
 
-	public Texture enemySheet;
-	public TextureRegion enemyRegion;
+	private Texture enemySheet;
+	public Enemy enemy;
 	
 	private Texture playerSheet;
-	private Player player;
+	public Player player;
+	private AnimationHandler playerAnimation;
+	private AnimationHandler enemyAnimation;
+	
 	private Rectangle playerRect;
 	
-
 	private Music ambiance;
 	private int[] wasd = new int[] {0,0,0,0};
 
@@ -40,21 +48,31 @@ public class GameScreen implements Screen {
 	public GameScreen(final MainCE gam) {
 		this.game = gam;
 		
-		playerSheet = new Texture("player3.png");
-		player = new Player(200,200, playerSheet);
+		atlas = new TextureAtlas(Gdx.files.internal("packedImages/pack.atlas"));
+		
+		playerAnimation = new AnimationHandler();
+		playerAnimation.add("playerN", new Animation<TextureRegion>(FRAME_SPEED, atlas.findRegions("playerN")));
+		playerAnimation.add("playerS", new Animation<TextureRegion>(FRAME_SPEED, atlas.findRegions("playerS")));
+		playerAnimation.add("playerE", new Animation<TextureRegion>(FRAME_SPEED, atlas.findRegions("playerE")));
+		playerAnimation.add("playerW", new Animation<TextureRegion>(FRAME_SPEED, atlas.findRegions("playerW")));
+		playerAnimation.add("playerNE", new Animation<TextureRegion>(FRAME_SPEED, atlas.findRegions("playerNE")));
+		playerAnimation.add("playerNW", new Animation<TextureRegion>(FRAME_SPEED, atlas.findRegions("playerNW")));
+		playerAnimation.add("playerSE", new Animation<TextureRegion>(FRAME_SPEED, atlas.findRegions("playerSE")));
+		playerAnimation.add("playerSW", new Animation<TextureRegion>(FRAME_SPEED, atlas.findRegions("playerSW")));
+		playerAnimation.setCurrent("playerS");
+		player = new Player(200, 200, playerAnimation); 
+		
+		enemyAnimation = new AnimationHandler();
+		enemyAnimation.add("enemyE", new Animation<TextureRegion>(FRAME_SPEED, atlas.findRegions("monsterE")));
+		enemyAnimation.add("enemyW", new Animation<TextureRegion>(FRAME_SPEED, atlas.findRegions("monsterW")));
+		enemyAnimation.setCurrent("enemyE");
+		enemy = new Enemy(400, 400, enemyAnimation);
 		
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-		enemySheet = new Texture("monster.png");
-		enemyRegion = new TextureRegion(enemySheet, 0, 0, 32, 32);
-
-		// xPos, yPos within texture. IE: 0,0 is Image1 32,0 is Image2, ect
-
 		ambiance = Gdx.audio.newMusic(Gdx.files.internal("caveAmbiance.mp3"));
 		ambiance.setLooping(true);
-		
-		
 		
 		
 		
@@ -114,32 +132,38 @@ public class GameScreen implements Screen {
 		
 		
 		game.batch.disableBlending();
-		game.batch.draw(enemyRegion, 200, 200, 128, 128);
+		//game.batch.draw(enemyRegion, 200, 200, 128, 128);
+		game.font.draw(game.batch, "FPS: "+ Gdx.graphics.getFramesPerSecond(), 50, Gdx.graphics.getHeight()-180);
 		game.font.draw(game.batch, "Player xV: " + player.vel[0] + "Player yV: " + player.vel[1],  50, Gdx.graphics.getHeight()-50);
 		game.font.draw(game.batch, "Player xA: " + player.acc[0] + "Player yA: " + player.acc[1], 50, Gdx.graphics.getHeight()-80);
 		game.font.draw(game.batch, player.jolt[0] + "  " + player.jolt[1] + "  "+ player.jolt[2] + "  "+ player.jolt[3], 50, Gdx.graphics.getHeight()-110);
-		game.font.draw(game.batch, Integer.toString(player.spriteStage().getRegionX()), 50, Gdx.graphics.getHeight()-140);
+		game.font.draw(game.batch, playerAnimation.toString(), 50, Gdx.graphics.getHeight()-140);
 		
 		
 		game.batch.enableBlending();
-		game.batch.draw(player.spriteStage(), playerRect.x, playerRect.y, 96, 96);
-		// draws at x, y from bottom left corner. Then stretches to fit 128x128 pixels
+		
+		//handles movement 		
+		player.setAcceleration((wasd[3]-wasd[1])*0.13f, (wasd[0]-wasd[2])*0.13f);
+		player.draw(game.batch);
+		
+		enemy.decideDirection();
+		enemy.draw(game.batch);
+		
 		game.batch.end();
 		
 		
-		//handles movement 		
-		player.setAccel((wasd[3]-wasd[1])*0.1, (wasd[0]-wasd[2])*0.1);
-		player.updateTick();
 		
-		playerRect.x = (float) player.getPos()[0];
-		playerRect.y = (float) player.getPos()[1];
 		
+		
+		playerRect.x = player.getPos()[0];
+		playerRect.y = player.getPos()[1];
+	
 //		try {
-//		    Thread.sleep(300);                 //2000 milliseconds is one second.
+//		    Thread.sleep(50);                 //2000 milliseconds is one second.
 //		} catch(InterruptedException ex) {
 //		    Thread.currentThread().interrupt();
 //		}
-	
+//	
 		
 
 	}
