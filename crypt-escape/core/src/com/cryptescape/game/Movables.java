@@ -11,11 +11,7 @@ public class Movables {
 	public float[] pos = new float[2]; // [x, y]
 	public float[] vel = new float[2]; // [xV, yV]
 	public float[] acc = new float[2]; // [xA, yA]
-	public final float speed;
 	public final float maxVel;
-	
-	int height;
-	int width;
 	
 	//Jolt is the deceleration variable
 	//Normally Jolt = [0, 0, 0, 0], but when A[x] or A[y] == 0,
@@ -23,10 +19,9 @@ public class Movables {
 	public float[] jolt = new float[] {0,0,0,0}; // [xD, xT, yD, yT]
 
 	// CONSTRUCTORS
-	public Movables(float x, float y, float s, float mv) {
+	public Movables(float x, float y, float mv) {
 		pos[0] = x;
 		pos[1] = y;
-		speed = s;
 		maxVel = mv;
 	}
 		
@@ -49,10 +44,19 @@ public class Movables {
 			jolt[1] = 23;                   //wtf java
 			jolt[0] = -(vel[0]/23);	
 			//PROBLEM IS HERE, WITH JOLT[1] == 0. ROUNDOFF ERROR WHEN ADDING TO V
+		} 
+		else if (x != 0) { 
+			jolt[0] = 0;
+			jolt[1] = 0;
 		}
+		
 		if (y == 0 && ((float) Math.round(vel[1] * 100) / 100) != 0 && (jolt[3] == 0 || !sameSign(jolt[1], y) )){
 			jolt[3] = 23;
 			jolt[2] = -(vel[1]/23);
+		}
+		else if (y != 0) { 
+			jolt[2] = 0;
+			jolt[3] = 0;
 		}
 	}
 		
@@ -77,8 +81,8 @@ public class Movables {
 			jolt[3] -= 1;
 		}
 		
-		pos[0]+= vel[0]*speed;
-		pos[1]+= vel[1]*speed;		
+		pos[0]+= vel[0];
+		pos[1]+= vel[1];	
 	}
 	
 	public void draw(SpriteBatch batch) {

@@ -36,6 +36,7 @@ public class GameScreen implements Screen {
 	private Texture playerSheet;
 	public Player player;
 	private AnimationHandler playerAnimation;
+	private AnimationHandler enemyAnimation;
 	
 	private Rectangle playerRect;
 	
@@ -61,8 +62,11 @@ public class GameScreen implements Screen {
 		playerAnimation.setCurrent("playerS");
 		player = new Player(200, 200, playerAnimation); 
 		
-		//enemySheet = new Texture("monster2.png");
-		//enemy = new Enemy(400, 400, enemySheet);
+		enemyAnimation = new AnimationHandler();
+		enemyAnimation.add("enemyE", new Animation<TextureRegion>(FRAME_SPEED, atlas.findRegions("monsterE")));
+		enemyAnimation.add("enemyW", new Animation<TextureRegion>(FRAME_SPEED, atlas.findRegions("monsterW")));
+		enemyAnimation.setCurrent("enemyE");
+		enemy = new Enemy(400, 400, enemyAnimation);
 		
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -127,7 +131,7 @@ public class GameScreen implements Screen {
 		game.batch.begin();
 		
 		
-		//game.batch.disableBlending();
+		game.batch.disableBlending();
 		//game.batch.draw(enemyRegion, 200, 200, 128, 128);
 		game.font.draw(game.batch, "FPS: "+ Gdx.graphics.getFramesPerSecond(), 50, Gdx.graphics.getHeight()-180);
 		game.font.draw(game.batch, "Player xV: " + player.vel[0] + "Player yV: " + player.vel[1],  50, Gdx.graphics.getHeight()-50);
@@ -136,25 +140,30 @@ public class GameScreen implements Screen {
 		game.font.draw(game.batch, playerAnimation.toString(), 50, Gdx.graphics.getHeight()-140);
 		
 		
-		//game.batch.enableBlending();
+		game.batch.enableBlending();
+		
+		//handles movement 		
+		player.setAcceleration((wasd[3]-wasd[1])*0.13f, (wasd[0]-wasd[2])*0.13f);
 		player.draw(game.batch);
-		// draws at x, y from bottom left corner. Then stretches to fit 128x128 pixels
+		
+		enemy.decideDirection();
+		enemy.draw(game.batch);
+		
 		game.batch.end();
 		
 		
-		//handles movement 		
-		player.setAcceleration((wasd[3]-wasd[1])*0.2f, (wasd[0]-wasd[2])*0.2f);
-		player.updateTick();
+		
+		
 		
 		playerRect.x = player.getPos()[0];
 		playerRect.y = player.getPos()[1];
 	
 //		try {
-//		    Thread.sleep(100);                 //2000 milliseconds is one second.
+//		    Thread.sleep(50);                 //2000 milliseconds is one second.
 //		} catch(InterruptedException ex) {
 //		    Thread.currentThread().interrupt();
 //		}
-	
+//	
 		
 
 	}

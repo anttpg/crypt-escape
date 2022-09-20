@@ -14,40 +14,41 @@ public class Player extends Movables {
 	private boolean changeAnimation = true;
 	
 	public Player(float x, float y, AnimationHandler h) {
-		super(x, y, 1.0f, 3.0f);
+		super(x, y, 2.0f);
 		animate = h;
 	}
-	
+		
 	@Override
 	public void draw(SpriteBatch batch) {
+		this.updateTick();
 		//Gdx.graphics.getDeltaTime();
 		if (elapsedTime > 0.3) {
 			elapsedTime = 0;
 			animate.setAnimationDuration(1000);
 			
 			
-			if (!animate.isCurrent("playerE") && (vel[0] >= 1) && ((vel[1] <= 1) && (vel[1] >= -1)) ) { // East
+			if ((vel[0] >= 1) && ((vel[1] <= 1) && (vel[1] >= -1)) ) { // East
 				animate.setCurrent("playerE");
 				
-			} else if (!animate.isCurrent("playerW") && (vel[0] <= -1) && ((vel[1] <= 1) && (vel[1] >= -1)) ) { // West
+			} else if ((vel[0] <= -1) && ((vel[1] <= 1) && (vel[1] >= -1)) ) { // West
 				animate.setCurrent("playerW");
 				
-			} else if (!animate.isCurrent("playerN") && ((vel[0] <= 1) && (vel[0] >= -1) ) && (vel[1] >= 1)) { // North
+			} else if (((vel[0] <= 1) && (vel[0] >= -1) ) && (vel[1] >= 1)) { // North
 				animate.setCurrent("playerN");
 				
-			} else if (!animate.isCurrent("playerS") && ((vel[0] <= 1) && (vel[0] >= -1) ) && (vel[1] <= -1)) { // South
+			} else if (((vel[0] <= 1) && (vel[0] >= -1) ) && (vel[1] <= -1)) { // South
 				animate.setCurrent("playerS");
 				
-			} else if (!animate.isCurrent("playerNE") && (vel[0] > 0) && (vel[1] > 0)) { // Northeast
+			} else if ((vel[0] > 0) && (vel[1] > 0)) { // Northeast
 				animate.setCurrent("playerNE");
 				
-			} else if (!animate.isCurrent("playerSE") && (vel[0] > 0) && (vel[1] < 0)) { // Southeast
+			} else if ((vel[0] > 0) && (vel[1] < 0)) { // Southeast
 				animate.setCurrent("playerSE");
 				
-			} else if (!animate.isCurrent("playerNW") && (vel[0] < 0) && (vel[1] > 0)) { // Northwest
+			} else if ((vel[0] < 0) && (vel[1] > 0)) { // Northwest
 				animate.setCurrent("playerNW");
 				
-			} else if (!animate.isCurrent("playerSW") && (vel[0] < 0) && (vel[1] < 0)) { // Southwest
+			} else if ((vel[0] < 0) && (vel[1] < 0)) { // Southwest
 				animate.setCurrent("playerSW");
 				
 			} else if ((vel[0] == 0) && (vel[1] == 0)) { // Standing still 
