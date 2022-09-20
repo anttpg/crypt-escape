@@ -4,58 +4,65 @@ size: 1024, 128
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
-monsterE
+error
   rotate: false
   xy: 2, 36
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: 0
+  index: -1
 monsterE
   rotate: false
   xy: 68, 36
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: 1
+  index: 0
 monsterE
   rotate: false
   xy: 134, 36
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: 2
+  index: 1
 monsterE
   rotate: false
   xy: 200, 36
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: 3
-monsterW
+  index: 2
+monsterE
   rotate: false
   xy: 266, 36
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: 0
+  index: 3
 monsterW
   rotate: false
   xy: 332, 36
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: 1
+  index: 0
 monsterW
   rotate: false
   xy: 398, 36
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
-  index: 2
+  index: 1
 monsterW
   rotate: false
   xy: 464, 36
+  size: 64, 64
+  orig: 64, 64
+  offset: 0, 0
+  index: 2
+monsterW
+  rotate: false
+  xy: 530, 36
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
@@ -69,7 +76,7 @@ playerE
   index: 0
 playerE
   rotate: false
-  xy: 530, 68
+  xy: 596, 68
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -83,7 +90,7 @@ playerE
   index: 2
 playerE
   rotate: false
-  xy: 564, 68
+  xy: 630, 68
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -97,7 +104,7 @@ playerN
   index: 1
 playerN
   rotate: false
-  xy: 734, 68
+  xy: 800, 68
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -111,7 +118,7 @@ playerNE
   index: 0
 playerNE
   rotate: false
-  xy: 598, 68
+  xy: 664, 68
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -125,7 +132,7 @@ playerNE
   index: 2
 playerNE
   rotate: false
-  xy: 632, 68
+  xy: 698, 68
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -146,7 +153,7 @@ playerN
   index: 0
 playerNW
   rotate: false
-  xy: 666, 68
+  xy: 732, 68
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -167,7 +174,7 @@ playerN
   index: 2
 playerNW
   rotate: false
-  xy: 700, 68
+  xy: 766, 68
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -181,7 +188,7 @@ playerS
   index: 0
 playerS
   rotate: false
-  xy: 870, 68
+  xy: 936, 68
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -195,7 +202,7 @@ playerS
   index: 2
 playerS
   rotate: false
-  xy: 904, 68
+  xy: 970, 68
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -216,7 +223,7 @@ playerSE
   index: 2
 playerSE
   rotate: false
-  xy: 768, 68
+  xy: 834, 68
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -230,14 +237,14 @@ playerSE
   index: 3
 playerSW
   rotate: false
-  xy: 802, 68
+  xy: 868, 68
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 0
 playerSW
   rotate: false
-  xy: 802, 68
+  xy: 868, 68
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -251,7 +258,7 @@ playerSW
   index: 1
 playerSW
   rotate: false
-  xy: 836, 68
+  xy: 902, 68
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -265,21 +272,21 @@ playerW
   index: 0
 playerW
   rotate: false
-  xy: 938, 68
+  xy: 444, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 1
 playerW
   rotate: false
-  xy: 444, 2
+  xy: 478, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 2
 playerW
   rotate: false
-  xy: 972, 68
+  xy: 512, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0

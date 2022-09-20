@@ -59,14 +59,14 @@ public class GameScreen implements Screen {
 		playerAnimation.add("playerNW", new Animation<TextureRegion>(FRAME_SPEED, atlas.findRegions("playerNW")));
 		playerAnimation.add("playerSE", new Animation<TextureRegion>(FRAME_SPEED, atlas.findRegions("playerSE")));
 		playerAnimation.add("playerSW", new Animation<TextureRegion>(FRAME_SPEED, atlas.findRegions("playerSW")));
-		playerAnimation.add("playerSW", new Animation<TextureRegion>(FRAME_SPEED, atlas.findRegions("error")));
+		playerAnimation.add("error", new Animation<TextureRegion>(FRAME_SPEED, atlas.findRegions("error")));
 		playerAnimation.setCurrent("playerS");
 		player = new Player(200, 200, playerAnimation); 
 		
 		enemyAnimation = new AnimationHandler();
 		enemyAnimation.add("enemyE", new Animation<TextureRegion>(FRAME_SPEED, atlas.findRegions("monsterE")));
 		enemyAnimation.add("enemyW", new Animation<TextureRegion>(FRAME_SPEED, atlas.findRegions("monsterW")));
-		enemyAnimation.add("enemyW", new Animation<TextureRegion>(FRAME_SPEED, atlas.findRegions("error")));
+		enemyAnimation.add("error", new Animation<TextureRegion>(FRAME_SPEED, atlas.findRegions("error")));
 		enemyAnimation.setCurrent("enemyE");
 		enemy = new Enemy(400, 400, enemyAnimation);
 		
