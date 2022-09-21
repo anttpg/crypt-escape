@@ -92,8 +92,7 @@ public class GameScreen implements Screen {
 		stage.addActor(enemy);
 		
 		
-		
-		
+
 		Gdx.input.setInputProcessor(new InputAdapter() {	
 			@Override
 			public boolean keyDown(int keycode) {
@@ -158,12 +157,14 @@ public class GameScreen implements Screen {
 		//handles movement 		
 		player.setAcceleration((wasd[3]-wasd[1])*0.13f, (wasd[0]-wasd[2])*0.13f);
 		player.draw(game.batch);
-		
 		enemy.implementAction();
 		enemy.draw(game.batch);
-		
+        stage.act();
+        stage.draw();
+        
 		game.batch.end();
 		
+
 		debugRenderer.render(world, camera.combined);
 		world.step(FRAME_SPEED, 6, 2);
 		
@@ -186,6 +187,9 @@ public class GameScreen implements Screen {
 		// start the playback of the background music
 		// when the screen is shown
 		ambiance.play();
+		
+		//log 
+		Gdx.app.log("MainScreen","show");
 	}
 
 	@Override

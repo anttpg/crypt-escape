@@ -4,6 +4,14 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
+
+/* A movables object is anything on the screen that should be able to move,
+ * and intereact with other objects. Movables extends Image, and all movable
+ * instances will be dynamic bodies
+ * 
+ * 
+ */
+
 public abstract class Movables extends Actor{
 
 	// VARIABLES
