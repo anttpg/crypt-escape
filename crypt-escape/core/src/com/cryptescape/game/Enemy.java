@@ -34,8 +34,21 @@ public class Enemy extends Movables {
 			this.setAcceleration(0.1f, 0.0f);
 		}
 		
+		
 		//this sort of stuff. Want to make a method that somehow
 		//decides the direction of the enemy to go in.
+	}
+	
+	public void cCircle(float[] playerPos) {
+		float x = playerPos[0];
+		float y = playerPos[1];
+		float x2 = this.pos[0];
+		float y2 = this.pos[1];
+		float distance = (float)Math.sqrt(Math.pow((x2-x),2.0)+Math.pow((y2-y),2.0));
+		double angle = (float)Math.atan2(y2-y, x2-x)*(180/Math.PI);
+		this.pos[0] = (float) (x + Math.cos(angle)*distance/2);
+		this.pos[1] = (float) (y + Math.sin(angle)*distance/2);
+		
 	}
 	
 	//Add more methods to help build complex behavior from simple actions IE:
