@@ -43,8 +43,10 @@ public class Player extends Movables {
 		
         effect = new ParticleEffect();
         effect.load(Gdx.files.internal("Old Assets/notusable/bubleNote.p"), textureAtlas);
-        effect.start();
+        effect.scaleEffect(2, 1);
+        effect.setDuration(3);
         effect.setPosition(this.getWidth()/2+this.getX(),this.getHeight()/2+this.getY());
+        effect.start();
         
         
         //physics body definitions
@@ -121,6 +123,7 @@ public class Player extends Movables {
 		
 		frame = animate.getFrame();
 		batch.draw(frame, pos[0], pos[1], this.getWidth(), this.getHeight());
+		effect.draw(batch);
 	}
 	
 	

@@ -159,12 +159,11 @@ public class GameScreen implements Screen {
 		player.draw(game.batch);
 		enemy.implementAction();
 		enemy.draw(game.batch);
-        stage.act();
-        stage.draw();
-        
+		
 		game.batch.end();
 		
-
+        stage.act();
+        stage.draw();
 		debugRenderer.render(world, camera.combined);
 		world.step(FRAME_SPEED, 6, 2);
 		
