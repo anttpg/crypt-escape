@@ -2,8 +2,9 @@ package com.cryptescape.game;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 
-public abstract class Movables {
+public abstract class Movables extends Actor{
 
 	// VARIABLES
 	
