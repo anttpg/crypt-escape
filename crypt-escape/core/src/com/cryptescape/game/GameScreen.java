@@ -39,11 +39,14 @@ public class GameScreen implements Screen {
 	private AnimationHandler enemyAnimation;
 	
 	private Rectangle playerRect;
+	private Rectangle enemyRect;
 	
 	private Music ambiance;
 	private int[] wasd = new int[] {0,0,0,0};
 
 	float playerCounter = 0;
+
+	
 	
 	public GameScreen(final MainCE gam) {
 		this.game = gam;
@@ -69,7 +72,8 @@ public class GameScreen implements Screen {
 		enemyAnimation.add("enemyW", new Animation<TextureRegion>(FRAME_SPEED, atlas.findRegions("monsterW")));
 		enemyAnimation.add("error", new Animation<TextureRegion>(FRAME_SPEED, atlas.findRegions("error")));
 		enemyAnimation.setCurrent("enemyE");
-		enemy = new Enemy(400, 400, enemyAnimation);
+		enemyRect = new Rectangle();
+		enemy = new Enemy(400, 400, enemyAnimation, enemyRect);
 		
 		camera = new OrthographicCamera();
 		camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());

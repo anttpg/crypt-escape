@@ -5,6 +5,7 @@ import com.badlogic.gdx.ai.btree.decorator.Random;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 
 public class Enemy extends Movables {
 	public boolean hasSwitched = false;
