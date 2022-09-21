@@ -61,7 +61,8 @@ public class GameScreen implements Screen {
 		playerAnimation.add("playerSW", new Animation<TextureRegion>(FRAME_SPEED, atlas.findRegions("playerSW")));
 		playerAnimation.add("error", new Animation<TextureRegion>(FRAME_SPEED, atlas.findRegions("error")));
 		playerAnimation.setCurrent("playerS");
-		player = new Player(200, 200, playerAnimation); 
+		playerRect = new Rectangle();
+		player = new Player(200, 200, playerAnimation, playerRect); 
 		
 		enemyAnimation = new AnimationHandler();
 		enemyAnimation.add("enemyE", new Animation<TextureRegion>(FRAME_SPEED, atlas.findRegions("monsterE")));
@@ -78,9 +79,7 @@ public class GameScreen implements Screen {
 		
 		
 		
-		playerRect = new Rectangle();
-		playerRect.width = 32;
-		playerRect.height = 32;
+
 
 		
 		Gdx.input.setInputProcessor(new InputAdapter() {	
@@ -152,13 +151,7 @@ public class GameScreen implements Screen {
 		enemy.draw(game.batch);
 		
 		game.batch.end();
-		
-		
-		
-		
-		
-		playerRect.x = player.getPos()[0];
-		playerRect.y = player.getPos()[1];
+
 	
 //		try {
 //		    Thread.sleep(50);                 //2000 milliseconds is one second.

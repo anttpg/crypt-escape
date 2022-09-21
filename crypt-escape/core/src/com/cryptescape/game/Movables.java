@@ -1,8 +1,9 @@
 package com.cryptescape.game;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
 
-public class Movables {
+public abstract class Movables {
 
 	// VARIABLES
 
@@ -11,29 +12,23 @@ public class Movables {
 	public float[] pos = new float[2]; // [x, y]
 	public float[] vel = new float[2]; // [xV, yV]
 	public float[] acc = new float[2]; // [xA, yA]
-	public final float maxVel;
-	
+	public final float maxVel; // pixels/tick
+	private Rectangle collisonBox;
+
 	//Jolt is the deceleration variable
 	//Normally Jolt = [0, 0, 0, 0], but when A[x] or A[y] == 0,
 	// EX:     Jolt = [-0.05, 30, 0, 0] and counts down
 	public float[] jolt = new float[] {0,0,0,0}; // [xD, xT, yD, yT]
 
 	// CONSTRUCTORS
-	public Movables(float x, float y, float mv) {
+	public Movables(float x, float y, float mv, Rectangle r) {
 		pos[0] = x;
 		pos[1] = y;
 		maxVel = mv;
+		collisonBox = r;
 	}
 		
-	
-	private boolean sameSign(float num1, float num2) {
-	    if (num1 > 0 && num2 < 0)
-	        return false;
-	    if (num1 < 0 && num2 > 0)
-	        return false;
-	    return true;
-	}
-	
+	abstract void draw(SpriteBatch batch);
 	
 	public void setAcceleration(float x, float y) {
 		acc[0] = x;
@@ -85,10 +80,15 @@ public class Movables {
 		pos[1]+= vel[1];	
 	}
 	
-	public void draw(SpriteBatch batch) {
-		return;
+	private boolean sameSign(float num1, float num2) {
+	    if (num1 > 0 && num2 < 0)
+	        return false;
+	    if (num1 < 0 && num2 > 0)
+	        return false;
+	    return true;
 	}
 	
+	//Get methods 
 	public float[] getPos() {
 		return pos;
 	}

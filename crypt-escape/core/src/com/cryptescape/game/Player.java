@@ -13,8 +13,8 @@ public class Player extends Movables {
 	private float elapsedTime = 1f;
 	private boolean changeAnimation = true;
 	
-	public Player(float x, float y, AnimationHandler h) {
-		super(x, y, 2.0f);
+	public Player(float x, float y, AnimationHandler h, Rectangle r) {
+		super(x, y, 2.0f, r);
 		animate = h;
 	}
 		

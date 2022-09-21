@@ -23,7 +23,7 @@ public class DesktopLauncher {
 		config.setWindowedMode(1600, 900);
 		config.useVsync(true);
 		
-		System.out.println("Do you want to repack assets? (y/n)");
+		System.out.println("Do you want to repack assets? If unsure what this means, type no. (y/n)");
 		Scanner s = new Scanner(System.in);
 		if (s.nextLine().equals("y")) {
 			TexturePacker.process("../assets/imageAssets", "../assets/packedImages", "pack");
