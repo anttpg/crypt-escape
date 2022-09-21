@@ -5,6 +5,13 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.physics.box2d.World;
 
 
 public class Player extends Movables {
@@ -14,9 +21,40 @@ public class Player extends Movables {
 	private float elapsedTime = 1f;
 	private boolean changeAnimation = true;
 	
-	public Player(float x, float y, AnimationHandler h, Rectangle r) {
-		super(x, y, 2.0f, r);
-		animate = h;
+    private Body body;
+    private World world;
+	
+	public Player(float x, float y, float w, float h, AnimationHandler anima, Rectangle r, World wrld) {
+		super(x, y, w, h, 2.0f, r);
+		animate = anima;
+        world = wrld;
+        
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.DynamicBody;
+        bodyDef.position.set(x, y);
+
+        // Create a body in the world using our definition
+        body = world.createBody(bodyDef);
+
+        // Now define the dimensions of the physics shape
+        PolygonShape shape = new PolygonShape();
+        // We are a box, so this makes sense, no?
+        // Basically set the physics polygon to a box with the same dimensions as our sprite
+        shape.setAsBox(this.getWidth()/2, this.getHeight()/2);
+
+        // FixtureDef is a confusing expression for physical properties
+        // Basically this is where you, in addition to defining the shape of the body
+        // you also define it's properties like density, restitution and others we will see shortly
+        // If you are wondering, density and area are used to calculate over all mass
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = shape;
+        fixtureDef.density = 5f;
+        fixtureDef.friction = 0f;
+        fixtureDef.restitution= 1f;
+        Fixture fixture = body.createFixture(fixtureDef);
+
+        // Shape is the only disposable of the lot, so get rid of it
+        shape.dispose();
 	}
 		
 	@Override
@@ -61,6 +99,6 @@ public class Player extends Movables {
 		elapsedTime += Gdx.graphics.getDeltaTime();
 		
 		frame = animate.getFrame();
-		batch.draw(frame, pos[0], pos[1], 96, 96);
+		batch.draw(frame, pos[0], pos[1], this.getWidth(), this.getHeight());
 	}
 }

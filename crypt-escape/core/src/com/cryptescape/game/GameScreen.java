@@ -16,30 +16,38 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 
 //import com.badlogic.gdx.*;
 
 
 
 public class GameScreen implements Screen {
+	
 	final MainCE game;
+	private Stage stage = new Stage(new ScreenViewport());
+	private World world = new World(new Vector2(0, 0), true);
+	private Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
 	
 	private OrthographicCamera camera;
-	public BitmapFont font;
-	public TextureAtlas atlas;
+	private BitmapFont font;
+	private TextureAtlas atlas;
 	public float FRAME_SPEED = 1/60f;
 
 	private Texture enemySheet;
+	private Rectangle enemyRect;
+	private AnimationHandler enemyAnimation;
 	public Enemy enemy;
 	
 	private Texture playerSheet;
-	public Player player;
-	private AnimationHandler playerAnimation;
-	private AnimationHandler enemyAnimation;
-	
 	private Rectangle playerRect;
-	private Rectangle enemyRect;
+	private AnimationHandler playerAnimation;
+	public Player player;
 	
 	private Music ambiance;
 	private int[] wasd = new int[] {0,0,0,0};
@@ -50,6 +58,12 @@ public class GameScreen implements Screen {
 	
 	public GameScreen(final MainCE gam) {
 		this.game = gam;
+		
+		camera = new OrthographicCamera();
+		camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		
+		ambiance = Gdx.audio.newMusic(Gdx.files.internal("caveAmbiance.mp3"));
+		ambiance.setLooping(true);
 		
 		atlas = new TextureAtlas(Gdx.files.internal("packedImages/pack.atlas"));
 		
@@ -65,7 +79,8 @@ public class GameScreen implements Screen {
 		playerAnimation.add("error", new Animation<TextureRegion>(FRAME_SPEED, atlas.findRegions("error")));
 		playerAnimation.setCurrent("playerS");
 		playerRect = new Rectangle();
-		player = new Player(200, 200, playerAnimation, playerRect); 
+		player = new Player(200, 200, 96, 96, playerAnimation, playerRect, world); 
+		stage.addActor(player);
 		
 		enemyAnimation = new AnimationHandler();
 		enemyAnimation.add("enemyE", new Animation<TextureRegion>(FRAME_SPEED, atlas.findRegions("monsterE")));
@@ -73,18 +88,11 @@ public class GameScreen implements Screen {
 		enemyAnimation.add("error", new Animation<TextureRegion>(FRAME_SPEED, atlas.findRegions("error")));
 		enemyAnimation.setCurrent("enemyE");
 		enemyRect = new Rectangle();
-		enemy = new Enemy(400, 400, enemyAnimation, enemyRect);
-		
-		camera = new OrthographicCamera();
-		camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-
-		ambiance = Gdx.audio.newMusic(Gdx.files.internal("caveAmbiance.mp3"));
-		ambiance.setLooping(true);
+		enemy = new Enemy(400, 400, 128, 128, enemyAnimation, enemyRect, world);
+		stage.addActor(enemy);
 		
 		
 		
-
-
 		
 		Gdx.input.setInputProcessor(new InputAdapter() {	
 			@Override
@@ -155,8 +163,10 @@ public class GameScreen implements Screen {
 		enemy.draw(game.batch);
 		
 		game.batch.end();
-
-	
+		
+		debugRenderer.render(world, camera.combined);
+		world.step(FRAME_SPEED, 6, 2);
+		
 //		try {
 //		    Thread.sleep(50);                 //2000 milliseconds is one second.
 //		} catch(InterruptedException ex) {
@@ -193,5 +203,6 @@ public class GameScreen implements Screen {
 	@Override
 	public void dispose() {
 		enemySheet.dispose();
+	
 	}
 }

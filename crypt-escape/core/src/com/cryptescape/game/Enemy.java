@@ -88,6 +88,6 @@ public class Enemy extends Movables {
 		elapsedTime += Gdx.graphics.getDeltaTime();
 		
 		frame = animate.getFrame();
-		batch.draw(frame, pos[0], pos[1], 128, 128);
+		batch.draw(frame, pos[0], pos[1], this.getWidth(), this.getHeight());
 	}
 }

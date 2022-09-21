@@ -6,6 +6,11 @@ import com.badlogic.gdx.math.Rectangle;
 public abstract class Movables {
 
 	// VARIABLES
+	
+	//Jolt is the deceleration variable
+	//Normally Jolt = [0, 0, 0, 0], but when A[x] or A[y] == 0,
+	// EX:     Jolt = [-0.05, 30, 0, 0] and counts down
+	public float[] jolt = new float[] {0,0,0,0}; // [xD, xT, yD, yT]
 
 	public boolean visible;
 	public int[] room = new int[2]; // [roomX,roomY]
@@ -15,17 +20,17 @@ public abstract class Movables {
 	public final float maxVel; // pixels/tick
 	private Rectangle collisonBox;
 
-	//Jolt is the deceleration variable
-	//Normally Jolt = [0, 0, 0, 0], but when A[x] or A[y] == 0,
-	// EX:     Jolt = [-0.05, 30, 0, 0] and counts down
-	public float[] jolt = new float[] {0,0,0,0}; // [xD, xT, yD, yT]
+	private float width;
+	private float height;
 
 	// CONSTRUCTORS
-	public Movables(float x, float y, float mv, Rectangle r) {
+	public Movables(float x, float y, float w, float h, float mv, Rectangle r) {
 		pos[0] = x;
 		pos[1] = y;
 		maxVel = mv;
 		collisonBox = r;
+		width = w;
+		height = h;
 	}
 		
 	abstract void draw(SpriteBatch batch);
@@ -91,5 +96,21 @@ public abstract class Movables {
 	//Get methods 
 	public float[] getPos() {
 		return pos;
+	}
+	
+	public float getWidth() {
+		return width;
+	}
+	
+	public float getHeight() {
+		return height;
+	}
+	
+	public float getX() {
+		return pos[0];
+	}
+	
+	public float getY() {
+		return pos[1];
 	}
 }
