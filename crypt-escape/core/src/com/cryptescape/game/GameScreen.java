@@ -159,7 +159,7 @@ public class GameScreen implements Screen {
 		player.setAcceleration((wasd[3]-wasd[1])*0.13f, (wasd[0]-wasd[2])*0.13f);
 		player.draw(game.batch);
 		
-		enemy.decideDirection();
+		enemy.implementAction();
 		enemy.draw(game.batch);
 		
 		game.batch.end();
