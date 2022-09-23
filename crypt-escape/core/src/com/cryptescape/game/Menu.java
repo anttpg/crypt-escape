@@ -26,10 +26,12 @@ public class Menu implements Screen {
 	public Menu(final MainCE gam) {
 		game = gam;
 		stage = new Stage(new ScreenViewport());
-
-		camera = new OrthographicCamera();
-		camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		
+		
+		
+		camera = new OrthographicCamera(Constants.VIEWPORT_WIDTH, Constants.VIEWPORT_HEIGHT);
+		camera.position.set(Constants.VIEWPORT_WIDTH/2, Constants.VIEWPORT_HEIGHT/2, 0);
+		camera.update();
 		
 		//All this is a temp menu start screen.
 		Skin skin = new Skin(Gdx.files.internal("Old Assets/skin/glassy-ui.json"));

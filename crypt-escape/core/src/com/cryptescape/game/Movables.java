@@ -92,6 +92,8 @@ public abstract class Movables extends Actor{
 		
 		pos[0]+= vel[0];
 		pos[1]+= vel[1];	
+		super.setX(pos[0]);
+		super.setY(pos[1]);
 	}
 	
 	private boolean sameSign(float num1, float num2) {

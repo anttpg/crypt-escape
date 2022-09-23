@@ -3,6 +3,7 @@ package com.cryptescape.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.btree.decorator.Random;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
@@ -15,26 +16,29 @@ import com.badlogic.gdx.physics.box2d.World;
 
 public class Enemy extends Movables {
 	public boolean hasSwitched = false;
-	private AnimationHandler animate;
+	private AnimationHandler enemyAnimation;
 	private TextureRegion frame;
 	private float elapsedTime = 1f;
 	int[][] previousRoom;
 	
     private Body body;
-    private World world;
 
 
-	public Enemy(float x, float y, float w, float h, AnimationHandler anima, Rectangle r, World wrld) {
+	public Enemy(float x, float y, float w, float h, Rectangle r) {
 		super(x, y, w, h, 3.5f, r);
-		animate = anima;
-		world = wrld;
+		
+		enemyAnimation = new AnimationHandler(); //Adds all animations for the enemy manager
+		enemyAnimation.add("enemyE", new Animation<TextureRegion>(Constants.FRAME_SPEED, GameScreen.atlas.findRegions("monsterE")));
+		enemyAnimation.add("enemyW", new Animation<TextureRegion>(Constants.FRAME_SPEED, GameScreen.atlas.findRegions("monsterW")));
+		enemyAnimation.add("error", new Animation<TextureRegion>(Constants.FRAME_SPEED, GameScreen.atlas.findRegions("error")));
+		enemyAnimation.setCurrent("enemyE");
 		
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.position.set(x, y);
 
         // Create a body in the world using our definition
-        body = world.createBody(bodyDef);
+        body = GameScreen.world.createBody(bodyDef);
 
         // Now define the dimensions of the physics shape
         PolygonShape shape = new PolygonShape();

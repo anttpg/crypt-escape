@@ -2,6 +2,7 @@ package com.cryptescape.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.ParticleEffect;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
@@ -21,25 +22,33 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 public class Player extends Movables {
 	public boolean isRunning = false;
 	private TextureRegion frame;
-	private AnimationHandler animate;
+	private AnimationHandler playerAnimation;
 	private float elapsedTime = 1f;
 	private boolean changeAnimation = true;
 	
     private Body body;
-    private World world;
     private ParticleEffect effect;
 	private TextureAtlas textureAtlas;
 
 	
-	public Player(float x, float y, float w, float h, AnimationHandler anima, Rectangle r, World wrld) {
+	public Player(float x, float y, float w, float h, Rectangle r) {
 		super(x, y, w, h, 2.0f, r);
-		animate = anima;
-        world = wrld;
-        
-        
+		
         //effects
 		textureAtlas = new TextureAtlas();
 		textureAtlas.addRegion("note",new TextureRegion(new Texture("Old Assets/notusable/note.png")));
+		
+		playerAnimation = new AnimationHandler(); //Adds all the animations for the player
+		playerAnimation.add("playerN", new Animation<TextureRegion>(Constants.FRAME_SPEED, GameScreen.atlas.findRegions("playerN")));
+		playerAnimation.add("playerS", new Animation<TextureRegion>(Constants.FRAME_SPEED, GameScreen.atlas.findRegions("playerS")));
+		playerAnimation.add("playerE", new Animation<TextureRegion>(Constants.FRAME_SPEED, GameScreen.atlas.findRegions("playerE")));
+		playerAnimation.add("playerW", new Animation<TextureRegion>(Constants.FRAME_SPEED, GameScreen.atlas.findRegions("playerW")));
+		playerAnimation.add("playerNE", new Animation<TextureRegion>(Constants.FRAME_SPEED, GameScreen.atlas.findRegions("playerNE")));
+		playerAnimation.add("playerNW", new Animation<TextureRegion>(Constants.FRAME_SPEED, GameScreen.atlas.findRegions("playerNW")));
+		playerAnimation.add("playerSE", new Animation<TextureRegion>(Constants.FRAME_SPEED, GameScreen.atlas.findRegions("playerSE")));
+		playerAnimation.add("playerSW", new Animation<TextureRegion>(Constants.FRAME_SPEED, GameScreen.atlas.findRegions("playerSW")));
+		playerAnimation.add("error", new Animation<TextureRegion>(Constants.FRAME_SPEED, GameScreen.atlas.findRegions("error")));
+		playerAnimation.setCurrent("playerS");
 		
         effect = new ParticleEffect();
         effect.load(Gdx.files.internal("Old Assets/notusable/bubleNote.p"), textureAtlas);
@@ -55,7 +64,7 @@ public class Player extends Movables {
         bodyDef.position.set(x, y);
 
         // Create a body in the world using our definition
-        body = world.createBody(bodyDef);
+        body = GameScreen.world.createBody(bodyDef);
 
         // Now define the dimensions of the physics shape
         PolygonShape shape = new PolygonShape();
