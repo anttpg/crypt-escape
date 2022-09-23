@@ -52,6 +52,7 @@ public class GameScreen implements Screen {
 	
 	private Music ambiance;
 	private int[] wasd = new int[] {0,0,0,0};
+	public float sprint = 1; //changes when sprinting
 
 	float playerCounter = 0;
 
@@ -60,8 +61,8 @@ public class GameScreen implements Screen {
 	public GameScreen(final MainCE gam) {
 		this.game = gam;
 		
-		camera = new OrthographicCamera();
-		camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		camera = new OrthographicCamera(Constants.WIDTH, Constants.HEIGHT);
+		camera.position.set(Constants.WIDTH/2, Constants.HEIGHT/2, 0);
 		
 		ambiance = Gdx.audio.newMusic(Gdx.files.internal("caveAmbiance.mp3"));
 		ambiance.setLooping(true);
@@ -69,12 +70,12 @@ public class GameScreen implements Screen {
 		atlas = new TextureAtlas(Gdx.files.internal("packedImages/pack.atlas")); //loads images
 	
 		playerRect = new Rectangle();
-		player = new Player(1, 1, 2.5f, 2.5f, playerRect); 
+		player = new Player(1, 1, 0.85f, 0.85f, playerRect, 100f); 
 		stage.addActor(player);
 		
 
 		enemyRect = new Rectangle();
-		enemy = new Enemy(1, 1, 2.5f, 2.5f, enemyRect);
+		enemy = new Enemy(1, 1, 0.5f, 0.5f, enemyRect, 100f);
 		stage.addActor(enemy);
 		
 
@@ -92,8 +93,8 @@ public class GameScreen implements Screen {
 					wasd[2] = 1;
 				if (keycode == Input.Keys.D)
 					wasd[3] = 1;
-//				if (keycode == Input.Keys.SPACE)
-//					KEY_SPACE = true;
+				if (keycode == Input.Keys.SHIFT_LEFT)
+					sprint = 1.6f;
 //				if (keycode == Input.Keys.X)
 //					KEY_X = true;
 //				if (keycode == Input.Keys.Z)
@@ -111,8 +112,8 @@ public class GameScreen implements Screen {
 					wasd[2] = 0;
 				if (keycode == Input.Keys.D)
 					wasd[3] = 0;
-//				if (keycode == Input.Keys.SPACE)
-//					KEY_SPACE = false;
+				if (keycode == Input.Keys.SHIFT_LEFT)
+					sprint = 1;
 //				if (keycode == Input.Keys.X)
 //					KEY_X = false;
 //				if (keycode == Input.Keys.Z)
@@ -134,17 +135,18 @@ public class GameScreen implements Screen {
 		game.batch.disableBlending(); //save resources when not needed
 		
 		//debugging tools ->
-		game.font.draw(game.batch, "FPS: "+ Gdx.graphics.getFramesPerSecond(), 50, Gdx.graphics.getHeight()-180);
-		game.font.draw(game.batch, "Player xV: " + player.vel[0] + "Player yV: " + player.vel[1],  50, Gdx.graphics.getHeight()-50);
-		game.font.draw(game.batch, "Player xA: " + player.acc[0] + "Player yA: " + player.acc[1], 50, Gdx.graphics.getHeight()-80);
-		game.font.draw(game.batch, player.jolt[0] + "  " + player.jolt[1] + "  "+ player.jolt[2] + "  "+ player.jolt[3], 50, Gdx.graphics.getHeight()-110);
-		game.font.draw(game.batch, playerAnimation.toString(), 50, Gdx.graphics.getHeight()-140);
+		game.font.draw(game.batch, "FPS: "+ Gdx.graphics.getFramesPerSecond(), 1f, Constants.HEIGHT-1f);
+		game.font.draw(game.batch, "Player xV: " + player.vel[0] + "Player yV: " + player.vel[1],  1f, Constants.HEIGHT-1.5f);
+		game.font.draw(game.batch, "Player xA: " + player.acc[0] + "Player yA: " + player.acc[1], 1f, Constants.HEIGHT-2f);
+		game.font.draw(game.batch, player.jolt[0] + "  " + player.jolt[1] + "  "+ player.jolt[2] + "  "+ player.jolt[3], 1f, Constants.HEIGHT-2.5f);
+		game.font.draw(game.batch, player.debugAnimation(), 1f, Constants.HEIGHT-3f);
 		
+		//System.out.println("Player xV: " + player.vel[0] + "Player yV: " + player.vel[1]);
 		
 		game.batch.enableBlending();
 		
 		
-		player.setAcceleration((wasd[3]-wasd[1])*0.13f, (wasd[0]-wasd[2])*0.13f); //handles player movement
+		player.setAcceleration((wasd[3]-wasd[1])*0.0013f, (wasd[0]-wasd[2])*0.0013f, sprint); //handles player movement
 		player.draw(game.batch);
 		
 		enemy.implementAction(); //decides what the enemy will do
@@ -171,7 +173,7 @@ public class GameScreen implements Screen {
 	public void resize(int width, int height) {
 		//resize() can be called anytime you change your screen size(eg: when you screen orientation changes). 
 		//resize() takes the actual width and height (320x480 etc), which is the pixel value, and converts it
-        camera.viewportHeight = (Constants.VIEWPORT_WIDTH / width) * height;
+        camera.viewportHeight = (Constants.WIDTH / width) * height;
         camera.update();
 	}
 

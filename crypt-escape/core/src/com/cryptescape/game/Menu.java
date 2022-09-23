@@ -29,8 +29,8 @@ public class Menu implements Screen {
 		
 		
 		
-		camera = new OrthographicCamera(Constants.VIEWPORT_WIDTH, Constants.VIEWPORT_HEIGHT);
-		camera.position.set(Constants.VIEWPORT_WIDTH/2, Constants.VIEWPORT_HEIGHT/2, 0);
+		camera = new OrthographicCamera(Constants.WIDTH, Constants.HEIGHT);
+		camera.position.set(Constants.WIDTH/2, Constants.HEIGHT/2, 0);
 		camera.update();
 		
 		//All this is a temp menu start screen.

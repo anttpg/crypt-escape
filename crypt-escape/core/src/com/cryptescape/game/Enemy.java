@@ -23,9 +23,15 @@ public class Enemy extends Movables {
 	
     private Body body;
 
-
-	public Enemy(float x, float y, float w, float h, Rectangle r) {
-		super(x, y, w, h, 3.5f, r);
+	/**
+	* Defines a Enemy object. Enemy extends Movables. 
+	* X, Y represent where the enemy will show on the map.
+	* W, H scale the sprite of the enemy respectivly. t scales all
+	* math/tolerances within the function. All values must be given with respect 
+	* to meters, not pixels. 
+	*/
+	public Enemy(float x, float y, float w, float h, Rectangle r, float t) {
+		super(x, y, w, h, 0.07f, r, t);
 		
 		enemyAnimation = new AnimationHandler(); //Adds all animations for the enemy manager
 		enemyAnimation.add("enemyE", new Animation<TextureRegion>(Constants.FRAME_SPEED, GameScreen.atlas.findRegions("monsterE")));
@@ -92,7 +98,7 @@ public class Enemy extends Movables {
 		double angle = (float)Math.atan2(y2-y, x2-x)*(180/Math.PI);
 		x = (float) (x + -1*Math.cos(angle)*distance/2);
 		y = (float) (y + -1*Math.sin(angle)*distance/2);
-		this.setAcceleration(x, y);
+		this.setAcceleration(x, y, 1);
 	}
 	
 	//Add more methods to help build complex behavior from simple actions IE:

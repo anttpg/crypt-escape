@@ -27,29 +27,34 @@ public abstract class Movables extends Actor{
 	public float[] vel = new float[2]; // [xV, yV]
 	public float[] acc = new float[2]; // [xA, yA]
 	public final float maxVel; // pixels/tick
+	public float speed = 1; //changes when sprinting
 	private Rectangle collisonBox;
+	private float tc;
 
 	private float width;
 	private float height;
 
 	// CONSTRUCTORS
-	public Movables(float x, float y, float w, float h, float mv, Rectangle r) {
+	public Movables(float x, float y, float w, float h, float mv, Rectangle r, float t) {
 		pos[0] = x;
 		pos[1] = y;
-		maxVel = mv;
+		maxVel = mv/t;
 		collisonBox = r;
 		width = w;
 		height = h;
+		tc = t;
 	}
 		
 	abstract void draw(SpriteBatch batch);
 	
-	public void setAcceleration(float x, float y) {
-		acc[0] = x;
-		acc[1] = y;
+	public void setAcceleration(float x, float y, float s) {
+		acc[0] = x*s;
+		acc[1] = y*s;
+		speed = s;
+		
 		//Checks if the xAccel is zero, AND the velocity is not zero, 
 		//AND ((Jolt xT is zero) OR (Jolt xV and xAccel, have different signs))
-		if (x == 0 && ((float) Math.round(vel[0] * 100) / 100) != 0 && (jolt[1] == 0 || !sameSign(jolt[0], x) )){
+		if (x == 0 && ((float) Math.round(vel[0] * (100*tc)) / (100*tc)) != 0 && (jolt[1] == 0 || !sameSign(jolt[0], x) )){
 			jolt[1] = 23;                   //wtf java
 			jolt[0] = -(vel[0]/23);	
 			//PROBLEM IS HERE, WITH JOLT[1] == 0. ROUNDOFF ERROR WHEN ADDING TO V
@@ -59,7 +64,7 @@ public abstract class Movables extends Actor{
 			jolt[1] = 0;
 		}
 		
-		if (y == 0 && ((float) Math.round(vel[1] * 100) / 100) != 0 && (jolt[3] == 0 || !sameSign(jolt[1], y) )){
+		if (y == 0 && ((float) Math.round(vel[1] * (100*tc)) / (100*tc)) != 0 && (jolt[3] == 0 || !sameSign(jolt[1], y) )){
 			jolt[3] = 23;
 			jolt[2] = -(vel[1]/23);
 		}
@@ -71,8 +76,11 @@ public abstract class Movables extends Actor{
 		
 
 	public void updateTick() {
-		if(-maxVel < vel[0]+acc[0] && vel[0]+acc[0] < maxVel) vel[0] += acc[0];
-		if(-maxVel < vel[1]+acc[1] && vel[1]+acc[1] < maxVel) vel[1] += acc[1];
+		if(-maxVel*speed < vel[0]+acc[0] && vel[0]+acc[0] < maxVel*speed) vel[0] += acc[0];
+		if(-maxVel*speed < vel[1]+acc[1] && vel[1]+acc[1] < maxVel*speed) vel[1] += acc[1];
+		if(!(-maxVel*speed < vel[0] && vel[0] < maxVel*speed)) vel[0] -= acc[0];
+		if(!(-maxVel*speed < vel[1] && vel[1] < maxVel*speed)) vel[1] -= acc[1];
+		
 		vel[0] = vel[0] + jolt[0];
 		vel[1] = vel[1] + jolt[2];
 		

@@ -25,14 +25,22 @@ public class Player extends Movables {
 	private AnimationHandler playerAnimation;
 	private float elapsedTime = 1f;
 	private boolean changeAnimation = true;
+	private float tc;
 	
     private Body body;
     private ParticleEffect effect;
 	private TextureAtlas textureAtlas;
 
-	
-	public Player(float x, float y, float w, float h, Rectangle r) {
-		super(x, y, w, h, 2.0f, r);
+	/**
+	* Defines a Player object. Player extends Movables. 
+	* X, Y represent where the player will show on the map.
+	* W, H scale the sprite of the player respectivly. t scales all
+	* math/tolerances within the function. All values must be given with respect 
+	* to meters, not pixels. 
+	*/
+	public Player(float x, float y, float w, float h, Rectangle r, float t) {
+		super(x, y, w, h, 2.1f, r, t);
+		tc = t;
 		
         //effects
 		textureAtlas = new TextureAtlas();
@@ -95,19 +103,26 @@ public class Player extends Movables {
 		//Gdx.graphics.getDeltaTime();
 		if (elapsedTime > 0.3) {
 			elapsedTime = 0;
-			playerAnimation.setAnimationDuration(1000);
+			System.out.println("V: " + vel[0]*48 + "     " + (1/(48*(Math.abs(this.vel[0])))));
+			System.out.println("Player xV: " + vel[0] + "Player yV: " + vel[1]);
 			
+			if(vel[0] > 0) {
+				playerAnimation.setAnimationDuration((long) (1/(48*(Math.abs(this.vel[0])))) );
+			}
+			else {
+				playerAnimation.setAnimationDuration(10000);
+			}
 			
-			if ((vel[0] >= 1) && ((vel[1] <= 1) && (vel[1] >= -1)) ) { // East
+			if ((vel[0] >= (1/tc)) && ((vel[1] <= (1/tc)) && (vel[1] >= -(1/tc))) ) { // East
 				playerAnimation.setCurrent("playerE");
 				
-			} else if ((vel[0] <= -1) && ((vel[1] <= 1) && (vel[1] >= -1)) ) { // West
+			} else if ((vel[0] <= -(1/tc)) && ((vel[1] <= (1/tc)) && (vel[1] >= -(1/tc))) ) { // West
 				playerAnimation.setCurrent("playerW");
 				
-			} else if (((vel[0] <= 1) && (vel[0] >= -1) ) && (vel[1] >= 1)) { // North
+			} else if (((vel[0] <= (1/tc)) && (vel[0] >= -(1/tc)) ) && (vel[1] >= (1/tc))) { // North
 				playerAnimation.setCurrent("playerN");
 				
-			} else if (((vel[0] <= 1) && (vel[0] >= -1) ) && (vel[1] <= -1)) { // South
+			} else if (((vel[0] <= (1/tc)) && (vel[0] >= -(1/tc)) ) && (vel[1] <= -(1/tc))) { // South
 				playerAnimation.setCurrent("playerS");
 				
 			} else if ((vel[0] > 0) && (vel[1] > 0)) { // Northeast
@@ -124,7 +139,6 @@ public class Player extends Movables {
 				
 			} else if ((vel[0] == 0) && (vel[1] == 0)) { // Standing still 
 				playerAnimation.setCurrent("playerS");
-				playerAnimation.setAnimationDuration(10000);
 			}
 			
 		}		
@@ -144,6 +158,10 @@ public class Player extends Movables {
         this.setPosition(body.getPosition().x-this.getWidth()/2,body.getPosition().y-this.getHeight()/2);
         effect.setPosition(this.getWidth()/2+this.getX(),this.getHeight()/2+this.getY());
         effect.update(delta);
+    }
+    
+    public String debugAnimation() {
+    	return playerAnimation.toString();
     }
     
 }

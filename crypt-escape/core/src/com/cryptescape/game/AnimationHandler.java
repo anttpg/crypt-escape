@@ -32,7 +32,7 @@ public class AnimationHandler {
         this.looping = looping;
     }
     public void setAnimationDuration(long duration){
-        animations.get(current).setFrameDuration(duration / ((float) animations.get(current).getKeyFrames().length * 1000));
+        animations.get(current).setFrameDuration(duration);
     }
  
     public boolean isCurrent(String name){

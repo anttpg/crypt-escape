@@ -27,7 +27,7 @@ public class DesktopLauncher {
 		Scanner s = new Scanner(System.in);
 		if (s.nextLine().equals("y")) {
 			TexturePacker.process("../assets/imageAssets", "../assets/packedImages", "pack");
-			// ../assets sets path back one folder, then reads from the general assets folder
+			// ../ sets path back one folder, then reads from the general assets folder
 		}
 		s.close();
 		
