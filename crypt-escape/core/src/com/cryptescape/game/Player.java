@@ -95,42 +95,42 @@ public class Player extends Movables {
 		//Gdx.graphics.getDeltaTime();
 		if (elapsedTime > 0.3) {
 			elapsedTime = 0;
-			animate.setAnimationDuration(1000);
+			playerAnimation.setAnimationDuration(1000);
 			
 			
 			if ((vel[0] >= 1) && ((vel[1] <= 1) && (vel[1] >= -1)) ) { // East
-				animate.setCurrent("playerE");
+				playerAnimation.setCurrent("playerE");
 				
 			} else if ((vel[0] <= -1) && ((vel[1] <= 1) && (vel[1] >= -1)) ) { // West
-				animate.setCurrent("playerW");
+				playerAnimation.setCurrent("playerW");
 				
 			} else if (((vel[0] <= 1) && (vel[0] >= -1) ) && (vel[1] >= 1)) { // North
-				animate.setCurrent("playerN");
+				playerAnimation.setCurrent("playerN");
 				
 			} else if (((vel[0] <= 1) && (vel[0] >= -1) ) && (vel[1] <= -1)) { // South
-				animate.setCurrent("playerS");
+				playerAnimation.setCurrent("playerS");
 				
 			} else if ((vel[0] > 0) && (vel[1] > 0)) { // Northeast
-				animate.setCurrent("playerNE");
+				playerAnimation.setCurrent("playerNE");
 				
 			} else if ((vel[0] > 0) && (vel[1] < 0)) { // Southeast
-				animate.setCurrent("playerSE");
+				playerAnimation.setCurrent("playerSE");
 				
 			} else if ((vel[0] < 0) && (vel[1] > 0)) { // Northwest
-				animate.setCurrent("playerNW");
+				playerAnimation.setCurrent("playerNW");
 				
 			} else if ((vel[0] < 0) && (vel[1] < 0)) { // Southwest
-				animate.setCurrent("playerSW");
+				playerAnimation.setCurrent("playerSW");
 				
 			} else if ((vel[0] == 0) && (vel[1] == 0)) { // Standing still 
-				animate.setCurrent("playerS");
-				animate.setAnimationDuration(10000);
+				playerAnimation.setCurrent("playerS");
+				playerAnimation.setAnimationDuration(10000);
 			}
 			
 		}		
 		elapsedTime += Gdx.graphics.getDeltaTime();
 		
-		frame = animate.getFrame();
+		frame = playerAnimation.getFrame();
 		batch.draw(frame, pos[0], pos[1], this.getWidth(), this.getHeight());
 		effect.draw(batch);
 	}

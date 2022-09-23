@@ -109,42 +109,42 @@ public class Enemy extends Movables {
 		//Gdx.graphics.getDeltaTime();
 		if (elapsedTime > 0.3) {
 			elapsedTime = 0;
-			animate.setAnimationDuration(1000);
+			enemyAnimation.setAnimationDuration(1000);
 			
 			
 			if ((vel[0] >= 1) && ((vel[1] <= 1) && (vel[1] >= -1)) ) { // East
-				animate.setCurrent("enemyE");
+				enemyAnimation.setCurrent("enemyE");
 				
 			} else if ((vel[0] <= -1) && ((vel[1] <= 1) && (vel[1] >= -1)) ) { // West
-				animate.setCurrent("enemyW");
+				enemyAnimation.setCurrent("enemyW");
 				
 			} else if (((vel[0] <= 1) && (vel[0] >= -1) ) && (vel[1] >= 1)) { // North
-				animate.setCurrent("error");
+				enemyAnimation.setCurrent("error");
 				
 			} else if (((vel[0] <= 1) && (vel[0] >= -1) ) && (vel[1] <= -1)) { // South
-				animate.setCurrent("error");
+				enemyAnimation.setCurrent("error");
 				
 			} else if ((vel[0] > 0) && (vel[1] > 0)) { // Northeast
-				animate.setCurrent("error");
+				enemyAnimation.setCurrent("error");
 				
 			} else if ((vel[0] > 0) && (vel[1] < 0)) { // Southeast
-				animate.setCurrent("error");
+				enemyAnimation.setCurrent("error");
 				
 			} else if ((vel[0] < 0) && (vel[1] > 0)) { // Northwest
-				animate.setCurrent("error");
+				enemyAnimation.setCurrent("error");
 				
 			} else if ((vel[0] < 0) && (vel[1] < 0)) { // Southwest
-				animate.setCurrent("error");
+				enemyAnimation.setCurrent("error");
 				
 			} else if ((vel[0] == 0) && (vel[1] == 0)) { // Standing still 
-				animate.setCurrent("error");
-				animate.setAnimationDuration(10000);
+				enemyAnimation.setCurrent("error");
+				enemyAnimation.setAnimationDuration(10000);
 			}
 			
 		}		
 		elapsedTime += Gdx.graphics.getDeltaTime();
 		
-		frame = animate.getFrame();
+		frame = enemyAnimation.getFrame();
 		batch.draw(frame, pos[0], pos[1], this.getWidth(), this.getHeight());
 	}
 }

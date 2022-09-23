@@ -72,13 +72,9 @@ public class GameScreen implements Screen {
 		player = new Player(1, 1, 2.5f, 2.5f, playerRect); 
 		stage.addActor(player);
 		
-		enemyAnimation = new AnimationHandler(); //Adds all animations for the enemy manager
-		enemyAnimation.add("enemyE", new Animation<TextureRegion>(Constants.FRAME_SPEED, atlas.findRegions("monsterE")));
-		enemyAnimation.add("enemyW", new Animation<TextureRegion>(Constants.FRAME_SPEED, atlas.findRegions("monsterW")));
-		enemyAnimation.add("error", new Animation<TextureRegion>(Constants.FRAME_SPEED, atlas.findRegions("error")));
-		enemyAnimation.setCurrent("enemyE");
+
 		enemyRect = new Rectangle();
-		enemy = new Enemy(1, 1, 2.5f, 2.5f, enemyAnimation, enemyRect);
+		enemy = new Enemy(1, 1, 2.5f, 2.5f, enemyRect);
 		stage.addActor(enemy);
 		
 
