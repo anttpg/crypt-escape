@@ -103,11 +103,12 @@ public class Player extends Movables {
 		//Gdx.graphics.getDeltaTime();
 		if (elapsedTime > 0.3) {
 			elapsedTime = 0;
-			System.out.println("V: " + vel[0]*48 + "     " + (1/(48*(Math.abs(this.vel[0])))));
+			System.out.println("dT: " + (-15.217*Math.abs(this.vel[0]) + 0.6522));
+			System.out.println(debugAnimation());
 			System.out.println("Player xV: " + vel[0] + "Player yV: " + vel[1]);
 			
-			if(vel[0] > 0) {
-				playerAnimation.setAnimationDuration((long) (1/(48*(Math.abs(this.vel[0])))) );
+			if(vel[0] > 0.0001) {
+				playerAnimation.setAnimationDuration((long) (-15.217*Math.abs(this.vel[0]) + 0.6522));
 			}
 			else {
 				playerAnimation.setAnimationDuration(10000);
