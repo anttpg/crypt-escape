@@ -106,12 +106,12 @@ public class Player extends Movables {
 			System.out.println("dT: " + (-15.217*Math.abs(this.vel[0]) + 0.6522));
 			System.out.println(debugAnimation());
 			System.out.println("Player xV: " + vel[0] + "Player yV: " + vel[1]);
-			
-			if(vel[0] > 0.0001) {
+			//playerAnimation.setAnimationDuration(1);
+			if(Math.abs(vel[0]) > 0.0001) {
 				playerAnimation.setAnimationDuration((long) (-15.217*Math.abs(this.vel[0]) + 0.6522));
 			}
 			else {
-				playerAnimation.setAnimationDuration(10000);
+				//playerAnimation.setAnimationDuration(10000);
 			}
 			
 			if ((vel[0] >= (1/tc)) && ((vel[1] <= (1/tc)) && (vel[1] >= -(1/tc))) ) { // East
