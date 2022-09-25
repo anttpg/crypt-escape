@@ -159,11 +159,11 @@ public class GameScreen implements Screen {
 		debugRenderer.render(world, camera.combined);
 		world.step(Constants.FRAME_SPEED, 6, 2);
 		
-		try {
-		    Thread.sleep(50);                 //2000 milliseconds is one second.
-		} catch(InterruptedException ex) {
-		    Thread.currentThread().interrupt();
-		}
+//		try {
+//		    Thread.sleep(50);                 //2000 milliseconds is one second.
+//		} catch(InterruptedException ex) {
+//		    Thread.currentThread().interrupt();
+//		}
 //	
 		
 

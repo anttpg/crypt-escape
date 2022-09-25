@@ -115,7 +115,7 @@ public class Enemy extends Movables {
 		//Gdx.graphics.getDeltaTime();
 		if (elapsedTime > 0.3) {
 			elapsedTime = 0;
-			enemyAnimation.setAnimationDuration(1000);
+			//enemyAnimation.setAnimationDuration(1000);
 			
 			
 			if ((vel[0] >= 1) && ((vel[1] <= 1) && (vel[1] >= -1)) ) { // East
@@ -144,7 +144,7 @@ public class Enemy extends Movables {
 				
 			} else if ((vel[0] == 0) && (vel[1] == 0)) { // Standing still 
 				enemyAnimation.setCurrent("error");
-				enemyAnimation.setAnimationDuration(10000);
+				//enemyAnimation.setAnimationDuration(10000);
 			}
 			
 		}		
