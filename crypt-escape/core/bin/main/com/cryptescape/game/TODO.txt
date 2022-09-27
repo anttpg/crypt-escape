@@ -1,0 +1,4 @@
+
+
+-Player sprinting/slow walking (increases noise)
+-Door based opening ranging

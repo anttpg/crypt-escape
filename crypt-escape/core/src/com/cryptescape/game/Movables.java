@@ -1,5 +1,6 @@
 package com.cryptescape.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -21,23 +22,29 @@ public abstract class Movables extends Actor{
 	// EX:     Jolt = [-0.05, 30, 0, 0] and counts down
 	public float[] jolt = new float[] {0,0,0,0}; // [xD, xT, yD, yT]
 
-	public boolean visible;
+
+	
 	public int[] room = new int[2]; // [roomX,roomY]
-	public float[] pos = new float[2]; // [x, y]
-	public float[] vel = new float[2]; // [xV, yV]
-	public float[] acc = new float[2]; // [xA, yA]
+	public float xPos; // x
+	public float yPos; // y
+	public float xVel; // xY
+	public float yVel; // yV
+	public float xAcc; // xA
+	public float yAcc; // yA
 	public final float maxVel; // pixels/tick
 	public float speed = 1; //changes when sprinting
+	public float tc; //totalChange (used for scaling to new Box2D meters)
+	
 	private Rectangle collisonBox;
-	private float tc;
+	public boolean visible;
 
-	private float width;
-	private float height;
+	private float width; // Of the room
+	private float height; // Of the room
 
 	// CONSTRUCTORS
 	public Movables(float x, float y, float w, float h, float mv, Rectangle r, float t) {
-		pos[0] = x;
-		pos[1] = y;
+		xPos = x;
+		yPos = y;
 		maxVel = mv/t;
 		collisonBox = r;
 		width = w;
@@ -48,25 +55,25 @@ public abstract class Movables extends Actor{
 	abstract void draw(SpriteBatch batch);
 	
 	public void setAcceleration(float x, float y, float s) {
-		acc[0] = x*s;
-		acc[1] = y*s;
+		xAcc = x*s;
+		yAcc = y*s;
 		speed = s;
 		
 		//Checks if the xAccel is zero, AND the velocity is not zero, 
 		//AND ((Jolt xT is zero) OR (Jolt xV and xAccel, have different signs))
-		if (x == 0 && ((float) Math.round(vel[0] * (100*tc)) / (100*tc)) != 0 && (jolt[1] == 0 || !sameSign(jolt[0], x) )){
+		if (x == 0 && ((float) Math.round(xVel * (100*tc)) / (100*tc)) != 0 && (jolt[1] == 0 || !sameSign(jolt[0], x) )){
 			jolt[1] = 23;                   //wtf java
-			jolt[0] = -(vel[0]/23);	
-			//PROBLEM IS HERE, WITH JOLT[1] == 0. ROUNDOFF ERROR WHEN ADDING TO V
+			jolt[0] = -(xVel/23);	
+			//Solved issue
 		} 
 		else if (x != 0) { 
 			jolt[0] = 0;
 			jolt[1] = 0;
 		}
 		
-		if (y == 0 && ((float) Math.round(vel[1] * (100*tc)) / (100*tc)) != 0 && (jolt[3] == 0 || !sameSign(jolt[1], y) )){
+		if (y == 0 && ((float) Math.round(yVel * (100*tc)) / (100*tc)) != 0 && (jolt[3] == 0 || !sameSign(jolt[1], y) )){
 			jolt[3] = 23;
-			jolt[2] = -(vel[1]/23);
+			jolt[2] = -(yVel/23);
 		}
 		else if (y != 0) { 
 			jolt[2] = 0;
@@ -76,32 +83,32 @@ public abstract class Movables extends Actor{
 		
 
 	public void updateTick() {
-		if(-maxVel*speed < vel[0]+acc[0] && vel[0]+acc[0] < maxVel*speed) vel[0] += acc[0];
-		if(-maxVel*speed < vel[1]+acc[1] && vel[1]+acc[1] < maxVel*speed) vel[1] += acc[1];
-		if(!(-maxVel*speed < vel[0] && vel[0] < maxVel*speed)) vel[0] -= acc[0];
-		if(!(-maxVel*speed < vel[1] && vel[1] < maxVel*speed)) vel[1] -= acc[1];
+		if(-maxVel*speed < xVel+xAcc && xVel+xAcc < maxVel*speed) xVel += xAcc;
+		if(-maxVel*speed < yVel+yAcc && yVel+yAcc < maxVel*speed) yVel += yAcc;
+		if(!(-maxVel*speed < xVel && xVel < maxVel*speed) && jolt[1] == 0) xVel -= xVel/10; //Checks for fucky problem when switching sides
+		if(!(-maxVel*speed < yVel && yVel < maxVel*speed) && jolt[3] == 0) yVel -= yVel/10; // If maxspeed eclipsed, and not deaccell do this
 		
-		vel[0] = vel[0] + jolt[0];
-		vel[1] = vel[1] + jolt[2];
+		xVel = xVel + jolt[0];
+		yVel = yVel + jolt[2];
 		
 		if(jolt[0] != 0 && jolt[1] == 0) { //if and timer 0, clear jolt
 			jolt[0] = 0;
-			vel[0] = 0;
+			xVel = 0;
 		} else if(jolt[0] != 0) { 
 			jolt[1] -= 1; 
 		}
 			
 		if(jolt[2] != 0 && jolt[3] == 0) {	
 			jolt[2] = 0;
-			vel[1] = 0;
+			yVel = 0;
 		} else if(jolt[2] != 0) { 
 			jolt[3] -= 1;
 		}
 		
-		pos[0]+= vel[0];
-		pos[1]+= vel[1];	
-		super.setX(pos[0]);
-		super.setY(pos[1]);
+		xPos+= xVel;
+		yPos+= yVel;	
+		super.setX(xPos);
+		super.setY(yPos);
 	}
 	
 	private boolean sameSign(float num1, float num2) {
@@ -112,9 +119,9 @@ public abstract class Movables extends Actor{
 	    return true;
 	}
 	
-	//Get methods 
-	public float[] getPos() {
-		return pos;
+	public void debugMovable() {
+		// debugging tools ->
+
 	}
 	
 	public float getWidth() {
@@ -126,10 +133,10 @@ public abstract class Movables extends Actor{
 	}
 	
 	public float getX() {
-		return pos[0];
+		return xPos;
 	}
 	
 	public float getY() {
-		return pos[1];
+		return yPos;
 	}
 }

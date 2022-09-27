@@ -25,7 +25,6 @@ public class Player extends Movables {
 	private AnimationHandler playerAnimation;
 	private float elapsedTime = 1f;
 	private boolean changeAnimation = true;
-	private float tc;
 	
     private Body body;
     private ParticleEffect effect;
@@ -40,7 +39,6 @@ public class Player extends Movables {
 	*/
 	public Player(float x, float y, float w, float h, Rectangle r, float t) {
 		super(x, y, w, h, 2.1f, r, t);
-		tc = t;
 		
         //effects
 		textureAtlas = new TextureAtlas();
@@ -60,9 +58,9 @@ public class Player extends Movables {
 		
         effect = new ParticleEffect();
         effect.load(Gdx.files.internal("Old Assets/notusable/bubleNote.p"), textureAtlas);
-        effect.scaleEffect(2, 1);
+        effect.scaleEffect(1, 1);
         effect.setDuration(3);
-        effect.setPosition(this.getWidth()/2+this.getX(),this.getHeight()/2+this.getY());
+        effect.setPosition(this.getWidth()/2 + this.getX(),this.getHeight()/2+ this.getY());
         effect.start();
         
         
@@ -100,44 +98,44 @@ public class Player extends Movables {
 	@Override
 	public void draw(SpriteBatch batch) {
 		this.updateTick();
+		
+		//this.debugPlayer();
 		//Gdx.graphics.getDeltaTime();
 		if (elapsedTime > 0.3) {
 			elapsedTime = 0;
-			//System.out.println(debugAnimation());
-			//System.out.println("Player xV: " + vel[0] + "Player yV: " + vel[1]);
-			//playerAnimation.setAnimationDuration(1);
-			if(Math.abs(vel[0]) > 0.0001) {
-				playerAnimation.setAnimationDuration((-15.217f*Math.abs(this.vel[0]) + 0.6522f));
+			
+			if(Math.abs(xVel) > 0.0001 || Math.abs(yVel) > 0.0001) {
+				playerAnimation.setAnimationDuration(Math.abs(-15.217f*Math.abs(this.xVel) + 0.6522f));
 			}
 			else {
-				//playerAnimation.setAnimationDuration(10000);
+				playerAnimation.setAnimationDuration(10000);
 			}
 			
-			if ((vel[0] >= (1/tc)) && ((vel[1] <= (1/tc)) && (vel[1] >= -(1/tc))) ) { // East
+			if ((xVel >= (1/tc)) && ((yVel <= (1/tc)) && (yVel >= -(1/tc))) ) { // East
 				playerAnimation.setCurrent("playerE");
 				
-			} else if ((vel[0] <= -(1/tc)) && ((vel[1] <= (1/tc)) && (vel[1] >= -(1/tc))) ) { // West
+			} else if ((xVel <= -(1/tc)) && ((yVel <= (1/tc)) && (yVel >= -(1/tc))) ) { // West
 				playerAnimation.setCurrent("playerW");
 				
-			} else if (((vel[0] <= (1/tc)) && (vel[0] >= -(1/tc)) ) && (vel[1] >= (1/tc))) { // North
+			} else if (((xVel <= (1/tc)) && (xVel >= -(1/tc)) ) && (yVel >= (1/tc))) { // North
 				playerAnimation.setCurrent("playerN");
 				
-			} else if (((vel[0] <= (1/tc)) && (vel[0] >= -(1/tc)) ) && (vel[1] <= -(1/tc))) { // South
+			} else if (((xVel <= (1/tc)) && (xVel >= -(1/tc)) ) && (yVel <= -(1/tc))) { // South
 				playerAnimation.setCurrent("playerS");
 				
-			} else if ((vel[0] > 0) && (vel[1] > 0)) { // Northeast
+			} else if ((xVel > 0) && (yVel > 0)) { // Northeast
 				playerAnimation.setCurrent("playerNE");
 				
-			} else if ((vel[0] > 0) && (vel[1] < 0)) { // Southeast
+			} else if ((xVel > 0) && (yVel < 0)) { // Southeast
 				playerAnimation.setCurrent("playerSE");
 				
-			} else if ((vel[0] < 0) && (vel[1] > 0)) { // Northwest
+			} else if ((xVel < 0) && (yVel > 0)) { // Northwest
 				playerAnimation.setCurrent("playerNW");
 				
-			} else if ((vel[0] < 0) && (vel[1] < 0)) { // Southwest
+			} else if ((xVel < 0) && (yVel < 0)) { // Southwest
 				playerAnimation.setCurrent("playerSW");
 				
-			} else if ((vel[0] == 0) && (vel[1] == 0)) { // Standing still 
+			} else if ((xVel == 0) && (yVel == 0)) { // Standing still 
 				playerAnimation.setCurrent("playerS");
 			}
 			
@@ -145,7 +143,7 @@ public class Player extends Movables {
 		elapsedTime += Gdx.graphics.getDeltaTime();
 		
 		frame = playerAnimation.getFrame();
-		batch.draw(frame, pos[0], pos[1], this.getWidth(), this.getHeight());
+		batch.draw(frame, xPos, yPos, this.getWidth(), this.getHeight());
 		effect.draw(batch);
 	}
 	
@@ -153,15 +151,21 @@ public class Player extends Movables {
     @Override
     public void act(float delta) {
         super.act(delta);
-        this.setRotation(body.getAngle()*  MathUtils.radiansToDegrees);
+        this.setRotation(body.getAngle() *  MathUtils.radiansToDegrees);
 
         this.setPosition(body.getPosition().x-this.getWidth()/2,body.getPosition().y-this.getHeight()/2);
         effect.setPosition(this.getWidth()/2+this.getX(),this.getHeight()/2+this.getY());
         effect.update(delta);
     }
     
-    public String debugAnimation() {
-    	return playerAnimation.toString();
+    public void debugPlayer() {
+    	System.out.println(playerAnimation.toString());
+    	System.out.println("Player X: " + this.getX() + " PlayerY: " + this.getY());
+		System.out.println("Player xV: " + xVel + " Player yV: " + yVel);
+		System.out.println("Player xA: " + xAcc + " Player yA: " + yAcc);
+		System.out.println("Jolt: " + jolt[0] + "  " + jolt[1] + "  " + jolt[2] + "  " + jolt[3]);
+		System.out.println(Math.abs(-15.217f*Math.abs(this.xVel) + 0.6522f));
+		System.out.println("");
     }
     
 }

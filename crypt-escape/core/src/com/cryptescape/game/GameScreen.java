@@ -70,7 +70,7 @@ public class GameScreen implements Screen {
 		atlas = new TextureAtlas(Gdx.files.internal("packedImages/pack.atlas")); //loads images
 	
 		playerRect = new Rectangle();
-		player = new Player(1, 1, 0.85f, 0.85f, playerRect, 100f); 
+		player = new Player(1f, 1f, 0.85f, 0.85f, playerRect, 100f); 
 		stage.addActor(player);
 		
 
@@ -136,12 +136,12 @@ public class GameScreen implements Screen {
 		
 		//debugging tools ->
 		game.font.draw(game.batch, "FPS: "+ Gdx.graphics.getFramesPerSecond(), 1f, Constants.HEIGHT-1f);
-		game.font.draw(game.batch, "Player xV: " + player.vel[0] + "Player yV: " + player.vel[1],  1f, Constants.HEIGHT-1.5f);
-		game.font.draw(game.batch, "Player xA: " + player.acc[0] + "Player yA: " + player.acc[1], 1f, Constants.HEIGHT-2f);
+		game.font.draw(game.batch, "Player xV: " + player.xVel + "Player yV: " + player.yVel,  1f, Constants.HEIGHT-1.5f);
+		game.font.draw(game.batch, "Player xA: " + player.xAcc + "Player yA: " + player.yAcc, 1f, Constants.HEIGHT-2f);
 		game.font.draw(game.batch, player.jolt[0] + "  " + player.jolt[1] + "  "+ player.jolt[2] + "  "+ player.jolt[3], 1f, Constants.HEIGHT-2.5f);
-		game.font.draw(game.batch, player.debugAnimation(), 1f, Constants.HEIGHT-3f);
+		//game.font.draw(game.batch, player.debugPlayer(), 1f, Constants.HEIGHT-3f);
 		
-		//System.out.println("Player xV: " + player.vel[0] + "Player yV: " + player.vel[1]);
+		//System.out.println("Player xV: " + player.xVel + "Player yV: " + player.yVel);
 		
 		game.batch.enableBlending();
 		
@@ -164,7 +164,6 @@ public class GameScreen implements Screen {
 //		} catch(InterruptedException ex) {
 //		    Thread.currentThread().interrupt();
 //		}
-//	
 		
 
 	}
