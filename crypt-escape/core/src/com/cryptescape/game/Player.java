@@ -26,9 +26,10 @@ public class Player extends Movables {
 	private float elapsedTime = 1f;
 	private boolean changeAnimation = true;
 	
-    private Body body;
+
     private ParticleEffect effect;
 	private TextureAtlas textureAtlas;
+
 
 	/**
 	* Defines a Player object. Player extends Movables. 
@@ -37,8 +38,8 @@ public class Player extends Movables {
 	* math/tolerances within the function. All values must be given with respect 
 	* to meters, not pixels. 
 	*/
-	public Player(float x, float y, float w, float h, Rectangle r, float t) {
-		super(x, y, w, h, 2.1f, r, t);
+	public Player(float x, float y, float w, float h, float t) {
+		super(x, y, w, h, 2.1f, t);
 		
         //effects
 		textureAtlas = new TextureAtlas();
@@ -70,7 +71,7 @@ public class Player extends Movables {
         bodyDef.position.set(x, y);
 
         // Create a body in the world using our definition
-        body = GameScreen.world.createBody(bodyDef);
+        this.body = GameScreen.world.createBody(bodyDef);
 
         // Now define the dimensions of the physics shape
         PolygonShape shape = new PolygonShape();
@@ -84,8 +85,8 @@ public class Player extends Movables {
         // If you are wondering, density and area are used to calculate over all mass
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = shape;
-        fixtureDef.density = 5f;
-        fixtureDef.friction = 0f;
+        fixtureDef.density = 1f;
+        fixtureDef.friction = 0.5f;
         fixtureDef.restitution= 1f;
         Fixture fixture = body.createFixture(fixtureDef);
 
@@ -143,6 +144,7 @@ public class Player extends Movables {
 		elapsedTime += Gdx.graphics.getDeltaTime();
 		
 		frame = playerAnimation.getFrame();
+		body.applyForceToCenter(forceVector, true);
 		batch.draw(frame, xPos, yPos, this.getWidth(), this.getHeight());
 //		effect.draw(batch);
 	}
@@ -152,7 +154,6 @@ public class Player extends Movables {
     public void act(float delta) {
         super.act(delta);
         this.setRotation(body.getAngle() *  MathUtils.radiansToDegrees);
-
         this.setPosition(body.getPosition().x-this.getWidth()/2,body.getPosition().y-this.getHeight()/2);
 //        effect.setPosition(this.getWidth()/2+this.getX(),this.getHeight()/2+this.getY());
 //        effect.update(delta);

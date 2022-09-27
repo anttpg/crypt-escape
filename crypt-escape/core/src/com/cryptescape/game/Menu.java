@@ -21,6 +21,7 @@ public class Menu implements Screen {
 
 	final MainCE game;
 	private Stage stage;
+	private static int size = 1;
 	OrthographicCamera camera;
 
 	public Menu(final MainCE gam) {
@@ -40,6 +41,8 @@ public class Menu implements Screen {
         title.setY(Gdx.graphics.getHeight()*2/3);
         title.setWidth(Gdx.graphics.getWidth());
         stage.addActor(title);
+        
+        size = 4; //testing constants
 
         TextButton playButton = new TextButton("Start!", skin);
         playButton.setWidth(Gdx.graphics.getWidth()/2);
@@ -79,6 +82,11 @@ public class Menu implements Screen {
 //			dispose();
 //		}
 	}
+	
+	public static int getSize() {
+		return size;
+	}
+
 
 	@Override
 	public void resize(int width, int height) {

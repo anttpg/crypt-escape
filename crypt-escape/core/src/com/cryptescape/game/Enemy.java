@@ -30,8 +30,8 @@ public class Enemy extends Movables {
 	 * scales all math/tolerances within the function. All values must be given with
 	 * respect to meters, not pixels.
 	 */
-	public Enemy(float x, float y, float w, float h, Rectangle r, float t) {
-		super(x, y, w, h, 2.1f, r, t);
+	public Enemy(float x, float y, float w, float h, float t) {
+		super(x, y, w, h, 2.1f, t);
 
 		enemyAnimation = new AnimationHandler(); // Adds all animations for the enemy manager
 		enemyAnimation.add("enemyE",
@@ -122,54 +122,7 @@ public class Enemy extends Movables {
 		// Gdx.graphics.getDeltaTime();
 		if (elapsedTime > 0.3) {
 			elapsedTime = 0;
-			//this.debugEnemy();
-			
-
-			if (Math.abs(xVel) > 0.0001 || Math.abs(yVel) > 0.0001) {
-				enemyAnimation.setAnimationDuration(Math.abs(-15.217f * Math.abs(this.xVel) + 0.6522f));
-			} else {
-				enemyAnimation.setAnimationDuration(10000);
-			}
-
-			if ((xVel >= (1 / tc)) && ((yVel <= (1 / tc)) && (yVel >= -(1 / tc)))) { // East
-				enemyAnimation.setCurrent("enemyE");
-
-			} else if ((xVel <= -(1 / tc)) && ((yVel <= (1 / tc)) && (yVel >= -(1 / tc)))) { // West
-				enemyAnimation.setCurrent("enemyW");
-
-			} else if (((xVel <= (1 / tc)) && (xVel >= -(1 / tc))) && (yVel >= (1 / tc))) { // North
-				enemyAnimation.setCurrent("error");
-
-			} else if (((xVel <= (1 / tc)) && (xVel >= -(1 / tc))) && (yVel <= -(1 / tc))) { // South
-				enemyAnimation.setCurrent("error");
-
-			} else if ((xVel > 0) && (yVel > 0)) { // Northeast
-				enemyAnimation.setCurrent("error");
-
-			} else if ((xVel > 0) && (yVel < 0)) { // Southeast
-				enemyAnimation.setCurrent("error");
-
-			} else if ((xVel < 0) && (yVel > 0)) { // Northwest
-				enemyAnimation.setCurrent("error");
-
-			} else if ((xVel < 0) && (yVel < 0)) { // Southwest
-				enemyAnimation.setCurrent("error");
-
-			} else if ((xVel == 0) && (yVel == 0)) { // Standing still
-				enemyAnimation.setCurrent("error");
-			}
-
 		}
-		elapsedTime += Gdx.graphics.getDeltaTime();
-
-		frame = enemyAnimation.getFrame();
-		batch.draw(frame, xPos, yPos, this.getWidth(), this.getHeight());
-	}
-	
-
-	@Override
-	public void act(float delta) {
-		super.act(delta);
 		this.setRotation(body.getAngle() * MathUtils.radiansToDegrees);
 		this.setPosition(body.getPosition().x - this.getWidth() / 2, body.getPosition().y - this.getHeight() / 2);
 	}

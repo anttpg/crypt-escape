@@ -3,6 +3,8 @@ package com.cryptescape.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
 
@@ -35,18 +37,19 @@ public abstract class Movables extends Actor{
 	public float speed = 1; //changes when sprinting
 	public float tc; //totalChange (used for scaling to new Box2D meters)
 	
-	private Rectangle collisonBox;
+	public Body body;
+	public Vector2 forceVector = new Vector2();
 	public boolean visible;
+	
 
 	private float width; // Of the room
 	private float height; // Of the room
 
 	// CONSTRUCTORS
-	public Movables(float x, float y, float w, float h, float mv, Rectangle r, float t) {
+	public Movables(float x, float y, float w, float h, float mv, float t) {
 		xPos = x;
 		yPos = y;
 		maxVel = mv/t;
-		collisonBox = r;
 		width = w;
 		height = h;
 		tc = t;
@@ -57,6 +60,8 @@ public abstract class Movables extends Actor{
 	public void setAcceleration(float x, float y, float s) {
 		xAcc = x*s;
 		yAcc = y*s;
+		
+		forceVector.set(xAcc*100, yAcc*100); 
 		speed = s;
 		
 		//Checks if the xAccel is zero, AND the velocity is not zero, 

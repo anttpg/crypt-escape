@@ -1,5 +1,9 @@
 package com.cryptescape.game;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -40,12 +44,7 @@ public class GameScreen implements Screen {
 	
 	private BitmapFont font;
 
-	private Texture enemySheet;
-	private Rectangle enemyRect;
-	public static Enemy enemy;
-	
-	private Texture playerSheet;
-	private Rectangle playerRect;
+	public static Enemy enemy;	
 	public static Player player;
 	
 	
@@ -69,16 +68,25 @@ public class GameScreen implements Screen {
 		
 		atlas = new TextureAtlas(Gdx.files.internal("packedImages/pack.atlas")); //loads images
 	
-		playerRect = new Rectangle();
-		player = new Player(2f, 3f, 0.85f, 0.85f, playerRect, 100f); 
+		player = new Player(2f, 3f, 0.85f, 0.85f, 100f); 
 		stage.addActor(player);
-		
-
-		enemyRect = new Rectangle();
-		enemy = new Enemy(4f, 4f, 0.95f, 0.95f, enemyRect, 100f);
+	
+		enemy = new Enemy(4f, 4f, 0.95f, 0.95f, 100f);
 		stage.addActor(enemy);
 		
-
+		
+		ArrayList<Double> p = new ArrayList<Double>();
+		Collections.addAll(p, 0.92, 0.04, 0.035, 0.005); // Probability of a interactable type
+		String[] key = new String[] {"empty", "box", "puddle", "bat"}; //The cooresponding type
+		
+		ArrayList<Double> p2 = new ArrayList<Double>();
+		Collections.addAll(p2, 0.92, 0.04, 0.035, 0.005); // Probability of room typeS
+		String[] key2 = new String[] {"empty", "box", "puddle", "bat"}; // Type names
+		
+		AliasMethod roomType = new AliasMethod(p2);
+		AliasMethod roomGen = new AliasMethod(p);
+		// use roomGen.next() to get where in key[i] to use
+		
 		
 		
 		//All input is calculated per tick, and stored as 0 or 1
@@ -142,6 +150,7 @@ public class GameScreen implements Screen {
 		//game.font.draw(game.batch, player.debugPlayer(), 1f, Constants.HEIGHT-3f);
 		
 		//System.out.println("Player xV: " + player.xVel + "Player yV: " + player.yVel);
+		System.out.println("Static constant fuckery: " + Constants.MAPSIZE);
 		
 		game.batch.enableBlending();
 		
@@ -200,7 +209,6 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void dispose() {
-		enemySheet.dispose();
 	
 	}
 }
