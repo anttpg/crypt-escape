@@ -15,17 +15,19 @@ public class Room {
 	private int[] roomLocation = new int[2]; // [roomY, roomX] on the map
 	private String[][] seed; 
 	private String roomType; 
+	private boolean[] doors;
 	private ArrayList<Interactable> interactables = new ArrayList<Interactable>();
 	
 	/**
 	* Defines a Room object, where L is the relative [Y,X] position of the room on the map (IE: [2,1] for 2 rows down, 1 col over).
-	* S is the String seed of what is within the room, and RT is the room type 
+	* S is the String seed of what is within the room, RT is the room type, and d is the usable doors (IE: [T,T,F,T])
 	* 
 	*/
-	public Room(int[] l, String[][] s, String rt) {
+	public Room(int[] l, String[][] s, String rt, boolean[] d) {
 		roomLocation = l;
 		seed = s;
 		roomType = rt;
+		doors = d;
 		
 		for(int row = 0; row < seed.length; row++) {
 			for(int col = 0; col < seed[row].length; row++) {

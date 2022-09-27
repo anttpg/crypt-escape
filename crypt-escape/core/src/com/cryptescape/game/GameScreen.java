@@ -100,6 +100,45 @@ public class GameScreen implements Screen {
 		String item;
 		String roomType;
 		String[][] seed = new String[Constants.Y_TILES][Constants.X_TILES];
+		boolean[] door = new boolean[] {true,true,true,true};
+		
+		//Fill walls of room
+		for(int y = 0; y <= Constants.Y_TILES; y++) { //Loop through and fill the boundaries
+			for(int x = 0; x <= Constants.X_TILES; x++) {
+				
+				//NORTH-SOUTH
+				if(y == 0) { //NORTH FACING
+					if(x == (Constants.X_TILES/2) || x == (Constants.X_TILES/2)-1) // If doorway
+						seed[y][x] = "northDoor";
+					else  // regular wall
+						seed[y][x] = "northWall";	
+				}
+				else if(y == Constants.Y_TILES) { // SOUTH FACING
+					if(x == (Constants.X_TILES/2) || x == (Constants.X_TILES/2)-1) 
+						seed[y][x] = "southDoor";
+					else  
+ 						seed[y][x] = "southWall";	
+				}
+				
+				//EAST-WEST
+				else if(x == 0) { //WEST FACING
+					if(y == (Constants.Y_TILES/2) || x == (Constants.Y_TILES/2)-1) // If doorway
+						seed[y][x] = "westDoor";
+					else  // regular wall
+						seed[y][x] = "westWall";
+					
+				}
+				else if(x == Constants.X_TILES) { //EAST FACING
+					if(y == (Constants.Y_TILES/2) || y == (Constants.Y_TILES/2)-1) 
+						seed[y][x] = "eastDoor";
+					else  
+ 						seed[y][x] = "eastWall";
+				}
+				
+					
+					
+			}
+		}
 		
 		
 		for(int row = 0; row < Constants.Y_MAPSIZE; row++) {
@@ -110,6 +149,7 @@ public class GameScreen implements Screen {
 				//DETERMINE: Room type, and what its filled with.
 				roomType = key2[roomTypeGen.next()];
 				
+				
 				for(int y = 1; y < Constants.Y_TILES-1; y++) { //Loop through and fill the seed (Excluding boundaries)
 					for(int x = 1; x < Constants.X_TILES-1; x++) {
 						seed[y][x] = key[roomItemGen.next()];
@@ -118,7 +158,7 @@ public class GameScreen implements Screen {
 				
 				
 	
-				Room r = new Room(new int[] {row, col}, seed.clone() ,roomType);
+				Room r = new Room(new int[] {row, col}, seed.clone(), roomType, door);
 				rooms.get(row).add(r);
 			}
 		}
