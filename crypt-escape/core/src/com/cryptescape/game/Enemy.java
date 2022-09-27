@@ -164,7 +164,6 @@ public class Enemy extends Movables {
 
 		frame = enemyAnimation.getFrame();
 		batch.draw(frame, xPos, yPos, this.getWidth(), this.getHeight());
-		// effect.draw(batch);
 	}
 	
 
@@ -172,10 +171,7 @@ public class Enemy extends Movables {
 	public void act(float delta) {
 		super.act(delta);
 		this.setRotation(body.getAngle() * MathUtils.radiansToDegrees);
-
 		this.setPosition(body.getPosition().x - this.getWidth() / 2, body.getPosition().y - this.getHeight() / 2);
-		// effect.setPosition(this.getWidth()/2+this.getX(),this.getHeight()/2+this.getY());
-		// effect.update(delta);
 	}
 
 	public void debugEnemy() {

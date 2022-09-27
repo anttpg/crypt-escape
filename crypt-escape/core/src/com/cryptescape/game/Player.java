@@ -56,12 +56,12 @@ public class Player extends Movables {
 		playerAnimation.add("error", new Animation<TextureRegion>(Constants.FRAME_SPEED, GameScreen.atlas.findRegions("error")));
 		playerAnimation.setCurrent("playerS");
 		
-        effect = new ParticleEffect();
-        effect.load(Gdx.files.internal("Old Assets/notusable/bubleNote.p"), textureAtlas);
-        effect.scaleEffect(1, 1);
-        effect.setDuration(3);
-        effect.setPosition(this.getWidth()/2 + this.getX(),this.getHeight()/2+ this.getY());
-        effect.start();
+//        effect = new ParticleEffect();
+//        effect.load(Gdx.files.internal("Old Assets/notusable/bubleNote.p"), textureAtlas);
+//        effect.scaleEffect(1, 1);
+//        effect.setDuration(3);
+//        effect.setPosition(this.getWidth()/2 + this.getX(),this.getHeight()/2+ this.getY());
+//        effect.start();
         
         
         //physics body definitions
@@ -144,7 +144,7 @@ public class Player extends Movables {
 		
 		frame = playerAnimation.getFrame();
 		batch.draw(frame, xPos, yPos, this.getWidth(), this.getHeight());
-		effect.draw(batch);
+//		effect.draw(batch);
 	}
 	
 	
@@ -154,8 +154,8 @@ public class Player extends Movables {
         this.setRotation(body.getAngle() *  MathUtils.radiansToDegrees);
 
         this.setPosition(body.getPosition().x-this.getWidth()/2,body.getPosition().y-this.getHeight()/2);
-        effect.setPosition(this.getWidth()/2+this.getX(),this.getHeight()/2+this.getY());
-        effect.update(delta);
+//        effect.setPosition(this.getWidth()/2+this.getX(),this.getHeight()/2+this.getY());
+//        effect.update(delta);
     }
     
     public void debugPlayer() {

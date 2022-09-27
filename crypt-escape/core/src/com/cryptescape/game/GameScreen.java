@@ -70,12 +70,12 @@ public class GameScreen implements Screen {
 		atlas = new TextureAtlas(Gdx.files.internal("packedImages/pack.atlas")); //loads images
 	
 		playerRect = new Rectangle();
-		player = new Player(1f, 1f, 0.85f, 0.85f, playerRect, 100f); 
+		player = new Player(2f, 3f, 0.85f, 0.85f, playerRect, 100f); 
 		stage.addActor(player);
 		
 
 		enemyRect = new Rectangle();
-		enemy = new Enemy(1, 1, 0.5f, 0.5f, enemyRect, 100f);
+		enemy = new Enemy(4f, 4f, 0.95f, 0.95f, enemyRect, 100f);
 		stage.addActor(enemy);
 		
 
