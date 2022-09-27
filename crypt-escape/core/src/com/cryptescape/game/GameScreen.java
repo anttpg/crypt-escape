@@ -38,6 +38,7 @@ public class GameScreen implements Screen {
 	public static Stage stage = new Stage(new ScreenViewport());
 	public static World world = new World(new Vector2(0, 0), true);
 	public static Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
+	public static List<List<Room>> rooms = new ArrayList<List<Room>>(); //Holds all the rooms
 	
 	public static OrthographicCamera camera;
 	public static TextureAtlas atlas;
@@ -68,6 +69,9 @@ public class GameScreen implements Screen {
 		
 		atlas = new TextureAtlas(Gdx.files.internal("packedImages/pack.atlas")); //loads images
 	
+		
+		//DYNAMIC ACTOR GENERATION
+		
 		player = new Player(2f, 3f, 0.85f, 0.85f, 100f); 
 		stage.addActor(player);
 	
@@ -75,21 +79,55 @@ public class GameScreen implements Screen {
 		stage.addActor(enemy);
 		
 		
+		
+		// ROOM GENERATION BELOW
+		
 		ArrayList<Double> p = new ArrayList<Double>();
 		Collections.addAll(p, 0.92, 0.04, 0.035, 0.005); // Probability of a interactable type
 		String[] key = new String[] {"empty", "box", "puddle", "bat"}; //The cooresponding type
 		
 		ArrayList<Double> p2 = new ArrayList<Double>();
-		Collections.addAll(p2, 0.92, 0.04, 0.035, 0.005); // Probability of room typeS
-		String[] key2 = new String[] {"empty", "box", "puddle", "bat"}; // Type names
-		
-		AliasMethod roomType = new AliasMethod(p2);
-		AliasMethod roomGen = new AliasMethod(p);
-		// use roomGen.next() to get where in key[i] to use
-		
+		Collections.addAll(p2, 0.7, 0.05, 0.025, 0.025, 0.025, 0.025, 0.075, 0.075); // Probability of room typeS
+		String[] key2 = new String[] {"open", "blocked", "bN3", "bS3", "bW1", "bE1", "bW3", "bE3"}; 
+		// Type names, open means all 4 doors are usable [T,T,T,T]. Blocked is the opposite [F,F,F,F]
+		// b stands for blocked, and then follows the direction and number of doors blocked
+		// EX: bN3 means the northmost 3 doors of that room are blocked. (the east, west, and north doors [F,F,T,F]
 		
 		
-		//All input is calculated per tick, and stored as 0 or 1
+		AliasMethod roomItemGen = new AliasMethod(p);
+		AliasMethod roomTypeGen = new AliasMethod(p2);
+		// use ##.next() to get where in key[i] to use
+		String item;
+		String roomType;
+		String[][] seed = new String[Constants.Y_TILES][Constants.X_TILES];
+		
+		
+		for(int row = 0; row < Constants.Y_MAPSIZE; row++) {
+			rooms.add(new ArrayList<Room>());  //instantiate all columns in the 2d array
+			
+			for(int col = 0; col < Constants.X_MAPSIZE; col++) {
+				//For each room in an NxN grid, that will make up the playfield...
+				//DETERMINE: Room type, and what its filled with.
+				roomType = key2[roomTypeGen.next()];
+				
+				for(int y = 1; y < Constants.Y_TILES-1; y++) { //Loop through and fill the seed (Excluding boundaries)
+					for(int x = 1; x < Constants.X_TILES-1; x++) {
+						seed[y][x] = key[roomItemGen.next()];
+					}
+				}
+				
+				
+	
+				Room r = new Room(new int[] {row, col}, seed.clone() ,roomType);
+				rooms.get(row).add(r);
+			}
+		}
+		
+		
+		
+		//INPUT HANDLING
+		//All calculated per tick, and stored as 0 or 1
+		
 		Gdx.input.setInputProcessor(new InputAdapter() {	
 			@Override
 			public boolean keyDown(int keycode) {
@@ -102,7 +140,7 @@ public class GameScreen implements Screen {
 				if (keycode == Input.Keys.D)
 					wasd[3] = 1;
 				if (keycode == Input.Keys.SHIFT_LEFT)
-					sprint = 1.6f;
+					sprint = 1.6f; //Except here since its a multiplier
 //				if (keycode == Input.Keys.X)
 //					KEY_X = true;
 //				if (keycode == Input.Keys.Z)
@@ -150,7 +188,7 @@ public class GameScreen implements Screen {
 		//game.font.draw(game.batch, player.debugPlayer(), 1f, Constants.HEIGHT-3f);
 		
 		//System.out.println("Player xV: " + player.xVel + "Player yV: " + player.yVel);
-		System.out.println("Static constant fuckery: " + Constants.MAPSIZE);
+		System.out.println("Static constant fuckery: " + Constants.X_MAPSIZE);
 		
 		game.batch.enableBlending();
 		

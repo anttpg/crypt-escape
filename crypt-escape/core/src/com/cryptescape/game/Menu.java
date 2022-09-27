@@ -21,12 +21,13 @@ public class Menu implements Screen {
 
 	final MainCE game;
 	private Stage stage;
-	private static int size = 1;
+	private static int size[] = new int[] {3,3};
 	OrthographicCamera camera;
 
 	public Menu(final MainCE gam) {
 		game = gam;
 		stage = new Stage(new ScreenViewport());
+        size[0] = 4; //testing constants
 		
 		
 		
@@ -41,9 +42,7 @@ public class Menu implements Screen {
         title.setY(Gdx.graphics.getHeight()*2/3);
         title.setWidth(Gdx.graphics.getWidth());
         stage.addActor(title);
-        
-        size = 4; //testing constants
-
+       
         TextButton playButton = new TextButton("Start!", skin);
         playButton.setWidth(Gdx.graphics.getWidth()/2);
         playButton.setPosition(Gdx.graphics.getWidth()/2-playButton.getWidth()/2,Gdx.graphics.getHeight()/2-playButton.getHeight()/2);
@@ -83,8 +82,15 @@ public class Menu implements Screen {
 //		}
 	}
 	
-	public static int getSize() {
-		return size;
+	// Y, X map size gen
+	public static int[] getSize() {
+		if(size[0] >= 3 && size[1] >= 3) {
+			return size;
+		} 
+		else { 
+			return new int[] {3,3}; 
+		}
+		
 	}
 
 

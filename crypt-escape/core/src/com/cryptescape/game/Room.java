@@ -12,12 +12,17 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 public class Room {
 	
 	private boolean discovered;
-	private int[] roomLocation = new int[2]; // [roomX,roomY] on the map
+	private int[] roomLocation = new int[2]; // [roomY, roomX] on the map
 	private String[][] seed; 
 	private String roomType; 
 	private ArrayList<Interactable> interactables = new ArrayList<Interactable>();
 	
-	public Room(int[] l, String[][] s, String rt, Room base) {
+	/**
+	* Defines a Room object, where L is the relative [Y,X] position of the room on the map (IE: [2,1] for 2 rows down, 1 col over).
+	* S is the String seed of what is within the room, and RT is the room type 
+	* 
+	*/
+	public Room(int[] l, String[][] s, String rt) {
 		roomLocation = l;
 		seed = s;
 		roomType = rt;
@@ -26,6 +31,7 @@ public class Room {
 			for(int col = 0; col < seed[row].length; row++) {
 				boolean i = false; 
 				
+				//Checking if the current item should be a static object
 				if( seed[row][col].equals("wall") ) {
 					i = true;
 				} else if( seed[row][col].equals("door") ) {
@@ -34,7 +40,7 @@ public class Room {
 					i = true;
 				} 
 				
-				if(i) {
+				if(i) { //If so...
 					// Create our body definition
 					BodyDef groundBodyDef = new BodyDef();  
 					// Set its world position
