@@ -100,43 +100,72 @@ public class GameScreen implements Screen {
 		String item;
 		String roomType;
 		String[][] seed = new String[Constants.Y_TILES][Constants.X_TILES];
+		ArrayList<String[][]> pregenTemplate = new ArrayList<String[][]>();
 		boolean[] door = new boolean[] {true,true,true,true};
 		
-		//Fill walls of room
+		//Fill pregens of room types (Walls, door, blocked, ect)
 		for(int y = 0; y <= Constants.Y_TILES; y++) { //Loop through and fill the boundaries
 			for(int x = 0; x <= Constants.X_TILES; x++) {
-				
-				//NORTH-SOUTH
-				if(y == 0) { //NORTH FACING
-					if(x == (Constants.X_TILES/2) || x == (Constants.X_TILES/2)-1) // If doorway
-						seed[y][x] = "northDoor";
-					else  // regular wall
-						seed[y][x] = "northWall";	
-				}
-				else if(y == Constants.Y_TILES) { // SOUTH FACING
-					if(x == (Constants.X_TILES/2) || x == (Constants.X_TILES/2)-1) 
-						seed[y][x] = "southDoor";
-					else  
- 						seed[y][x] = "southWall";	
-				}
-				
-				//EAST-WEST
-				else if(x == 0) { //WEST FACING
-					if(y == (Constants.Y_TILES/2) || x == (Constants.Y_TILES/2)-1) // If doorway
-						seed[y][x] = "westDoor";
-					else  // regular wall
-						seed[y][x] = "westWall";
+				for(String k : key2) { 
+					//NORTH-SOUTH
+					if(y == 0) { //NORTH FACING
+						if(x == (Constants.X_TILES/2) || x == (Constants.X_TILES/2)-1) // If doorway
+							seed[y][x] = "northDoor";
+						else  // regular wall
+							seed[y][x] = "northWall";	
+					}
+					else if(y == Constants.Y_TILES) { // SOUTH FACING
+						if(x == (Constants.X_TILES/2) || x == (Constants.X_TILES/2)-1) 
+							seed[y][x] = "southDoor";
+						else  
+	 						seed[y][x] = "southWall";	
+					}
 					
-				}
-				else if(x == Constants.X_TILES) { //EAST FACING
-					if(y == (Constants.Y_TILES/2) || y == (Constants.Y_TILES/2)-1) 
-						seed[y][x] = "eastDoor";
-					else  
- 						seed[y][x] = "eastWall";
-				}
-				
+					//EAST-WEST
+					else if(x == 0) { //WEST FACING
+						if(y == (Constants.Y_TILES/2) || x == (Constants.Y_TILES/2)-1) // If doorway
+							seed[y][x] = "westDoor";
+						else  // regular wall
+							seed[y][x] = "westWall";
+						
+					}
+					else if(x == Constants.X_TILES) { //EAST FACING
+						if(y == (Constants.Y_TILES/2) || y == (Constants.Y_TILES/2)-1) 
+							seed[y][x] = "eastDoor";
+						else  
+	 						seed[y][x] = "eastWall";
+					}
+
+					if(k.equals("blocked")) {
+						seed[y][x] = "blocked";
+					}
 					
+					if(k.equals("bN3")) {
+						
+					}
 					
+					if(k.equals("bS3")) {
+						
+					}
+					
+					if(k.equals("bW1")) {
+						
+					}
+					
+					if(k.equals("bE1")) {
+						
+					}
+
+					if(k.equals("bW3")) {
+						
+					}
+					
+					if(k.equals("bE3")) {
+						
+					}
+					
+					//pregenTemplate.add(seed.clone());
+				}
 			}
 		}
 		
