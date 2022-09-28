@@ -104,9 +104,11 @@ public class GameScreen implements Screen {
 		boolean[] door = new boolean[] {true,true,true,true};
 		
 		//Fill pregens of room types (Walls, door, blocked, ect)
-		for(int y = 0; y <= Constants.Y_TILES; y++) { //Loop through and fill the boundaries
-			for(int x = 0; x <= Constants.X_TILES; x++) {
-				for(String k : key2) { 
+		for(String k : key2) {
+			for(int y = 0; y < Constants.Y_TILES; y++) { //Loop through and fill the boundaries
+				for(int x = 0; x < Constants.X_TILES; x++) {
+					seed[y][x] = "empty";
+					
 					//NORTH-SOUTH
 					if(y == 0) { //NORTH FACING
 						if(x == (Constants.X_TILES/2) || x == (Constants.X_TILES/2)-1) // If doorway
@@ -136,44 +138,81 @@ public class GameScreen implements Screen {
 	 						seed[y][x] = "eastWall";
 					}
 
+					
+					// Type modifiers: 
 					if(k.equals("blocked")) {
 						seed[y][x] = "blocked";
 					}
 					
-					if(k.equals("bN3")) {
-						
+					else if(k.equals("bN3")) { //North 3 doors are blocked
+						if(y < (Constants.Y_TILES/2) - 3) {
+							seed[y][x] = "blocked";
+						} else if (y == (Constants.Y_TILES/2)-3) {
+							seed[y][x] = "northWall";
+						}
 					}
 					
-					if(k.equals("bS3")) {
-						
+					else if(k.equals("bS3")) { // South 3 doors are blocked
+						if(y > (Constants.Y_TILES/2) + 3) {
+							seed[y][x] = "blocked";
+						} else if (y == (Constants.Y_TILES/2)+3) {
+							seed[y][x] = "southWall";
+						}
 					}
 					
-					if(k.equals("bW1")) {
-						
+					else if(k.equals("bW1")) { // West door is blocked
+						if(x < (Constants.X_TILES/2) - 3) {
+							seed[y][x] = "blocked";
+						} else if(x == (Constants.X_TILES/2) - 3) {
+							seed[y][x] = "westWall";
+						}
 					}
 					
-					if(k.equals("bE1")) {
-						
+					else if(k.equals("bE1")) { // East door is blocked
+						if(x > (Constants.X_TILES/2) + 3) {
+							seed[y][x] = "blocked";
+						} else if(x == (Constants.X_TILES/2) + 3) {
+							seed[y][x] = "eastWall";
+						}
 					}
 
-					if(k.equals("bW3")) {
-						
+					else if(k.equals("bW3")) { // West 3 doors are blocked
+						if(x < (Constants.X_TILES/2) + 3) {
+							seed[y][x] = "blocked";
+						} else if(x == (Constants.X_TILES/2) + 3) {
+							seed[y][x] = "westWall";
+						}
 					}
 					
-					if(k.equals("bE3")) {
-						
+					else if(k.equals("bE3")) { // East 3 doors are blocked
+						if(x > (Constants.X_TILES/2) - 3) {
+							seed[y][x] = "blocked";
+						} else if(x == (Constants.X_TILES/2) - 3) {
+							seed[y][x] = "eastWall";
+						}
 					}
-					
-					//pregenTemplate.add(seed.clone());
 				}
 			}
-		}
+			pregenTemplate.add(seed.clone());
+			
+			System.out.println(" \nStart of template: " + k);
+			for(int yn = 0; yn < seed.length; yn++) {
+				System.out.print("Col: " + yn);
+				for(int xn = 0; xn < seed[yn].length; xn++) {
+					System.out.print(" "+ seed[yn][xn]);
+				}
+				System.out.println("");
+			}
+			
+		}	
 		
 		
-		for(int row = 0; row < Constants.Y_MAPSIZE; row++) {
+		
+		
+		for(int col = 0; col < Constants.Y_MAPSIZE; col++) {
 			rooms.add(new ArrayList<Room>());  //instantiate all columns in the 2d array
 			
-			for(int col = 0; col < Constants.X_MAPSIZE; col++) {
+			for(int row = 0; row < Constants.X_MAPSIZE; row++) {
 				//For each room in an NxN grid, that will make up the playfield...
 				//DETERMINE: Room type, and what its filled with.
 				roomType = key2[roomTypeGen.next()];
@@ -187,8 +226,8 @@ public class GameScreen implements Screen {
 				
 				
 	
-				Room r = new Room(new int[] {row, col}, seed.clone(), roomType, door);
-				rooms.get(row).add(r);
+				Room r = new Room(new int[] {col, row}, seed.clone(), roomType, door);
+				rooms.get(col).add(r);
 			}
 		}
 		
