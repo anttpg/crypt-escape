@@ -15,7 +15,7 @@ import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 
 
 // Please note that on macOS your application needs to be started with the -XstartOnFirstThread JVM argument
-public class DesktopLauncher {
+public class DesktopLauncher {	
 	public static void main (String[] arg) throws IOException {
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 		config.setForegroundFPS(60);
@@ -29,7 +29,8 @@ public class DesktopLauncher {
 			TexturePacker.process("../assets/imageAssets", "../assets/packedImages", "pack");
 			// ../ sets path back one folder, then reads from the general assets folder
 		}
-		s.close();
+		
+
 		
 		//main window
 		new Lwjgl3Application(new MainCE(), config);

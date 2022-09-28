@@ -22,6 +22,8 @@ public class Constants {
 	public static final float ROOM_X = (int)((4/3.0) * ROOM_Y); 
 	public static final float TILESIZE = ROOM_X/X_TILES;
 	
+	
+	//MAKE FINAL LATER TODO
 	public static String[][] template = new String[X_TILES][Y_TILES];
 	
 	

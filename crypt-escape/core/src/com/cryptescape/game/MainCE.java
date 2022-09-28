@@ -13,7 +13,6 @@ public class MainCE extends Game {
 		batch = new SpriteBatch();
 		font = new BitmapFont(); // libGDX's default Arial font
 		font.getData().setScale(0.03f);
-		
 		this.setScreen(new Menu(this));
 	}
 

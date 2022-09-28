@@ -116,7 +116,7 @@ public class GameScreen implements Screen {
 						else  // regular wall
 							seed[y][x] = "northWall";	
 					}
-					else if(y == Constants.Y_TILES) { // SOUTH FACING
+					else if(y == Constants.Y_TILES-1) { // SOUTH FACING
 						if(x == (Constants.X_TILES/2) || x == (Constants.X_TILES/2)-1) 
 							seed[y][x] = "southDoor";
 						else  
@@ -125,13 +125,13 @@ public class GameScreen implements Screen {
 					
 					//EAST-WEST
 					else if(x == 0) { //WEST FACING
-						if(y == (Constants.Y_TILES/2) || x == (Constants.Y_TILES/2)-1) // If doorway
+						if(y == (Constants.Y_TILES/2) || y == (Constants.Y_TILES/2)-1) // If doorway
 							seed[y][x] = "westDoor";
 						else  // regular wall
 							seed[y][x] = "westWall";
 						
 					}
-					else if(x == Constants.X_TILES) { //EAST FACING
+					else if(x == Constants.X_TILES-1) { //EAST FACING
 						if(y == (Constants.Y_TILES/2) || y == (Constants.Y_TILES/2)-1) 
 							seed[y][x] = "eastDoor";
 						else  
@@ -195,14 +195,14 @@ public class GameScreen implements Screen {
 			}
 			pregenTemplate.add(seed.clone());
 			
-			System.out.println(" \nStart of template: " + k);
-			for(int yn = 0; yn < seed.length; yn++) {
-				System.out.print("Col: " + yn);
-				for(int xn = 0; xn < seed[yn].length; xn++) {
-					System.out.print(" "+ seed[yn][xn]);
-				}
-				System.out.println("");
-			}
+//			System.out.println(" \nStart of template: " + k);
+//			for(int yn = 0; yn < seed.length; yn++) {
+//				System.out.print("Col: " + yn);
+//				for(int xn = 0; xn < seed[yn].length; xn++) {
+//					System.out.print(" "+ seed[yn][xn]);
+//				}
+//				System.out.println("");
+//			}
 			
 		}	
 		
@@ -223,9 +223,7 @@ public class GameScreen implements Screen {
 						seed[y][x] = key[roomItemGen.next()];
 					}
 				}
-				
-				
-	
+			
 				Room r = new Room(new int[] {col, row}, seed.clone(), roomType, door);
 				rooms.get(col).add(r);
 			}
