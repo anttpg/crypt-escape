@@ -61,7 +61,7 @@ public abstract class Movables extends Actor{
 		xAcc = x*s;
 		yAcc = y*s;
 		
-		forceVector.set(xAcc*100, yAcc*100); 
+		forceVector.set(xAcc*1000, yAcc*1000); 
 		speed = s;
 		
 		//Checks if the xAccel is zero, AND the velocity is not zero, 

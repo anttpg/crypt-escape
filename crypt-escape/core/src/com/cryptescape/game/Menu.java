@@ -23,7 +23,7 @@ public class Menu implements Screen {
 
 	final MainCE game;
 	private Stage stage;
-	private static int size[] = new int[] { 3, 3 };
+	private static int size[] = new int[] { 4, 4 };
 	OrthographicCamera camera;
 
 	public Menu(final MainCE gam) {

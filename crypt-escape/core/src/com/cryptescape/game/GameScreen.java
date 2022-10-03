@@ -96,12 +96,14 @@ public class GameScreen implements Screen {
 		
 		AliasMethod roomItemGen = new AliasMethod(p);
 		AliasMethod roomTypeGen = new AliasMethod(p2);
+		
 		// use ##.next() to get where in key[i] to use
 		String item;
 		String roomType;
+		int holderInt;
 		String[][] seed = new String[Constants.Y_TILES][Constants.X_TILES];
 		ArrayList<String[][]> pregenTemplate = new ArrayList<String[][]>();
-		boolean[] door = new boolean[] {true,true,true,true};
+
 		
 		//Fill pregens of room types (Walls, door, blocked, ect)
 		for(String k : key2) {
@@ -140,62 +142,43 @@ public class GameScreen implements Screen {
 
 					
 					// Type modifiers: 
-					if(k.equals("blocked")) {
+					if(k.equals("blocked")) 
 						seed[y][x] = "blocked";
-					}
+					
 					
 					else if(k.equals("bN3")) { //North 3 doors are blocked
-						if(y < (Constants.Y_TILES/2) - 3) {
-							seed[y][x] = "blocked";
-						} else if (y == (Constants.Y_TILES/2)-3) {
-							seed[y][x] = "northWall";
-						}
+						if(y < (Constants.Y_TILES/2) - 3) seed[y][x] = "blocked";  
+						if (y == (Constants.Y_TILES/2)-3) seed[y][x] = "northWall"; 
 					}
 					
 					else if(k.equals("bS3")) { // South 3 doors are blocked
-						if(y > (Constants.Y_TILES/2) + 3) {
-							seed[y][x] = "blocked";
-						} else if (y == (Constants.Y_TILES/2)+3) {
-							seed[y][x] = "southWall";
-						}
+						if(y > (Constants.Y_TILES/2) + 3) seed[y][x] = "blocked"; 
+						if (y == (Constants.Y_TILES/2)+3) seed[y][x] = "southWall"; 
 					}
 					
 					else if(k.equals("bW1")) { // West door is blocked
-						if(x < (Constants.X_TILES/2) - 3) {
-							seed[y][x] = "blocked";
-						} else if(x == (Constants.X_TILES/2) - 3) {
-							seed[y][x] = "westWall";
-						}
+						if(x < (Constants.X_TILES/2) - 3)  seed[y][x] = "blocked"; 
+						if(x == (Constants.X_TILES/2) - 3) seed[y][x] = "westWall";
 					}
 					
 					else if(k.equals("bE1")) { // East door is blocked
-						if(x > (Constants.X_TILES/2) + 3) {
-							seed[y][x] = "blocked";
-						} else if(x == (Constants.X_TILES/2) + 3) {
-							seed[y][x] = "eastWall";
-						}
+						if(x > (Constants.X_TILES/2) + 3)  seed[y][x] = "blocked"; 
+						if(x == (Constants.X_TILES/2) + 3) seed[y][x] = "eastWall";
 					}
 
 					else if(k.equals("bW3")) { // West 3 doors are blocked
-						if(x < (Constants.X_TILES/2) + 3) {
-							seed[y][x] = "blocked";
-						} else if(x == (Constants.X_TILES/2) + 3) {
-							seed[y][x] = "westWall";
-						}
+						if(x < (Constants.X_TILES/2) + 3)  seed[y][x] = "blocked"; 
+						if(x == (Constants.X_TILES/2) + 3) seed[y][x] = "westWall"; 
 					}
 					
 					else if(k.equals("bE3")) { // East 3 doors are blocked
-						if(x > (Constants.X_TILES/2) - 3) {
-							seed[y][x] = "blocked";
-						} else if(x == (Constants.X_TILES/2) - 3) {
-							seed[y][x] = "eastWall";
-						}
+						if(x > (Constants.X_TILES/2) - 3)  seed[y][x] = "blocked"; 
+						if(x == (Constants.X_TILES/2) - 3) seed[y][x] = "eastWall";
 					}
 				}
 			}
 			pregenTemplate.add(seed.clone());
-			
-//			System.out.println(" \nStart of template: " + k);
+//			System.out.println(" \nStart of template: ");
 //			for(int yn = 0; yn < seed.length; yn++) {
 //				System.out.print("Col: " + yn);
 //				for(int xn = 0; xn < seed[yn].length; xn++) {
@@ -203,9 +186,7 @@ public class GameScreen implements Screen {
 //				}
 //				System.out.println("");
 //			}
-			
 		}	
-		
 		
 		
 		
@@ -215,19 +196,34 @@ public class GameScreen implements Screen {
 			for(int row = 0; row < Constants.X_MAPSIZE; row++) {
 				//For each room in an NxN grid, that will make up the playfield...
 				//DETERMINE: Room type, and what its filled with.
-				roomType = key2[roomTypeGen.next()];
+				holderInt = roomTypeGen.next();
+				roomType = key2[holderInt];
+				seed = pregenTemplate.get(holderInt); 
 				
 				
 				for(int y = 1; y < Constants.Y_TILES-1; y++) { //Loop through and fill the seed (Excluding boundaries)
 					for(int x = 1; x < Constants.X_TILES-1; x++) {
-						seed[y][x] = key[roomItemGen.next()];
+						if(seed[y][x].equals("empty")) {
+							seed[y][x] = key[roomItemGen.next()];
+						}
 					}
 				}
-			
-				Room r = new Room(new int[] {col, row}, seed.clone(), roomType, door);
+				
+//				System.out.println(" \nStart of template: " + roomType);
+//				for(int yn = 0; yn < seed.length; yn++) {
+//					System.out.print("Col: " + yn);
+//					for(int xn = 0; xn < seed[yn].length; xn++) {
+//						System.out.print(" "+ seed[yn][xn]);
+//					}
+//					System.out.println("");
+//				}
+				
+				Room r = new Room(new int[] {col, row}, seed.clone(), roomType);
 				rooms.get(col).add(r);
 			}
 		}
+		
+		System.out.println(rooms.get(1).get(1));
 		
 		
 		
@@ -293,9 +289,7 @@ public class GameScreen implements Screen {
 		game.font.draw(game.batch, player.jolt[0] + "  " + player.jolt[1] + "  "+ player.jolt[2] + "  "+ player.jolt[3], 1f, Constants.HEIGHT-2.5f);
 		//game.font.draw(game.batch, player.debugPlayer(), 1f, Constants.HEIGHT-3f);
 		
-		//System.out.println("Player xV: " + player.xVel + "Player yV: " + player.yVel);
-		System.out.println("Static constant fuckery: " + Constants.X_MAPSIZE);
-		
+		//System.out.println("Player xV: " + player.xVel + "Player yV: " + player.yVel);		
 		game.batch.enableBlending();
 		
 		
@@ -304,6 +298,7 @@ public class GameScreen implements Screen {
 		
 		enemy.implementAction(); //decides what the enemy will do
 		enemy.draw(game.batch);
+		
 		
 		game.batch.end();
 		
@@ -320,6 +315,7 @@ public class GameScreen implements Screen {
 		
 
 	}
+	
 
 	@Override
 	public void resize(int width, int height) {
