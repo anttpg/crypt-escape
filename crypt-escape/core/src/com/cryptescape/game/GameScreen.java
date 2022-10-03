@@ -209,22 +209,24 @@ public class GameScreen implements Screen {
 					}
 				}
 				
-//				System.out.println(" \nStart of template: " + roomType);
-//				for(int yn = 0; yn < seed.length; yn++) {
-//					System.out.print("Col: " + yn);
-//					for(int xn = 0; xn < seed[yn].length; xn++) {
-//						System.out.print(" "+ seed[yn][xn]);
-//					}
-//					System.out.println("");
-//				}
+
 				
 				Room r = new Room(new int[] {col, row}, seed.clone(), roomType);
 				rooms.get(col).add(r);
 			}
 		}
 		
-		System.out.println(rooms.get(1).get(1));
 		
+		System.out.println(" \nStart of template: " + rooms.get(1).get(1).getRoomType());
+		seed = rooms.get(1).get(1).getSeed();
+		for(int yn = 0; yn < seed.length; yn++) {
+			System.out.print("Col: " + yn);
+			for(int xn = 0; xn < seed[yn].length; xn++) {
+				System.out.print(" "+ seed[yn][xn]);
+			}
+			System.out.println("");
+		}
+
 		
 		
 		//INPUT HANDLING

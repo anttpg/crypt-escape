@@ -38,23 +38,23 @@ public class Room {
 		roomLocation[0] = Constants.HEIGHT * (Constants.Y_MAPSIZE - l[0]);
 		roomLocation[1] = Constants.WIDTH * (l[1]);	
 		
-		seed = s;
-		roomType = rt;
+		setSeed(s);
+		setRoomType(rt);
 		
 		//roomTypes are {"open", "blocked", "bN3", "bS3", "bW1", "bE1", "bW3", "bE3"}
-		if(roomType.equals("open")) doors = new boolean[] {true,true,true,true};
-		else if(roomType.equals("blocked")) doors = new boolean[] {false,false,false,false};
-		else if(roomType.equals("bN3")) doors = new boolean[] {false,false,true,false};
-		else if(roomType.equals("bS3")) doors = new boolean[] {true,false,false,false};
-		else if(roomType.equals("bW1")) doors = new boolean[] {true,true,true,false};
-		else if(roomType.equals("bE1")) doors = new boolean[] {true,false,true,true};
-		else if(roomType.equals("bW3")) doors = new boolean[] {false,true,false,false};
-		else if(roomType.equals("bE3")) doors = new boolean[] {false,false,false,true};
+		if(getRoomType().equals("open")) doors = new boolean[] {true,true,true,true};
+		else if(getRoomType().equals("blocked")) doors = new boolean[] {false,false,false,false};
+		else if(getRoomType().equals("bN3")) doors = new boolean[] {false,false,true,false};
+		else if(getRoomType().equals("bS3")) doors = new boolean[] {true,false,false,false};
+		else if(getRoomType().equals("bW1")) doors = new boolean[] {true,true,true,false};
+		else if(getRoomType().equals("bE1")) doors = new boolean[] {true,false,true,true};
+		else if(getRoomType().equals("bW3")) doors = new boolean[] {false,true,false,false};
+		else if(getRoomType().equals("bE3")) doors = new boolean[] {false,false,false,true};
 		
 		String current = new String();
 		for(int col = 0; col < Constants.Y_MAPSIZE; col++) {
 			for(int row = 0; row < Constants.X_MAPSIZE; row++) { 
-				current = seed[col][row];
+				current = getSeed()[col][row];
 				
 				//Checking if the current item should be a static object
 				for(String w : Constants.WALLTYPES) { //Of type wall
@@ -131,6 +131,22 @@ public class Room {
 		Fixture f = bd.createFixture(box, 0.0f);
 		box.dispose();
 		return f;
+	}
+
+	public String getRoomType() {
+		return roomType;
+	}
+
+	public void setRoomType(String roomType) {
+		this.roomType = roomType;
+	}
+
+	public String[][] getSeed() {
+		return seed;
+	}
+
+	public void setSeed(String[][] seed) {
+		this.seed = seed;
 	}
 	
 	
