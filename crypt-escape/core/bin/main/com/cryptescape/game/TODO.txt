@@ -2,3 +2,5 @@
 
 -Player sprinting/slow walking (increases noise)
 -Door based opening ranging
+-FIX Generation probabilites; currently skewed.
+
