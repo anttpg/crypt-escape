@@ -18,7 +18,7 @@ public class Interactable {
 	
 	
 	public Vector2 getItemLocation(int col, int row, int[] roomLocation) {
-		return new Vector2(roomLocation[0] + (Constants.HEIGHT/col), roomLocation[1] + (Constants.WIDTH/row));
+		return new Vector2(roomLocation[0] + (Constants.CAMERA_HEIGHT/col), roomLocation[1] + (Constants.CAMERA_WIDTH/row));
 	}
 	
 	

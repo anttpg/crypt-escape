@@ -31,13 +31,15 @@ public class Menu implements Screen {
 		stage = new Stage(new ScreenViewport());
 		size[0] = 4; // testing constants
 
-		camera = new OrthographicCamera(Constants.WIDTH, Constants.HEIGHT);
-		camera.position.set(Constants.WIDTH / 2, Constants.HEIGHT / 2, 0);
+		camera = new OrthographicCamera(Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);
+		camera.position.set(Constants.CAMERA_WIDTH / 2, Constants.CAMERA_HEIGHT / 2, 0);
 		camera.update();
 
-		Scanner s = new Scanner(System.in);
-		System.out.println("Do you want launch a graphical menu? (y/n)");
-		if (s.nextLine().equals("y")) {
+		
+		//Temp disabled
+//		Scanner s = new Scanner(System.in);
+//		System.out.println("Do you want launch a graphical menu? (y/n)");
+//		if (s.nextLine().equals("y")) {
 
 			// All this is a temp menu start screen.
 			Skin skin = new Skin(Gdx.files.internal("Old Assets/skin/glassy-ui.json"));
@@ -65,10 +67,10 @@ public class Menu implements Screen {
 
 			stage.addActor(playButton);
 
-		} else {
-			game.setScreen(new GameScreen(game));
-		}
-		s.close();
+//		} else {
+//			game.setScreen(new GameScreen(game));
+//		}
+//		s.close();
 		
 	
 	}

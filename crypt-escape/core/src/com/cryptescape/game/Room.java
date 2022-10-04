@@ -16,7 +16,7 @@ public class Room {
 	
 	private boolean discovered;
 	private int[] relativeLocation = new int[2]; // [Col, Row] on the map
-	private float[] roomLocation = new float[2]; // room [x, y] real relative locations
+	private float[] roomLocation = new float[2]; // room [y, x] real relative locations
 	
 	private String roomType; 
 	private boolean[] doors;
@@ -35,11 +35,10 @@ public class Room {
 	public Room(int[] l, String[][] s, String rt) {	
 		// Get relative x/y location and calculate real coords based on that.
 		relativeLocation = l;
-		roomLocation[0] = Constants.HEIGHT * (Constants.Y_MAPSIZE - l[0]);
-		roomLocation[1] = Constants.WIDTH * (l[1]);	
-		
-		setSeed(s);
-		setRoomType(rt);
+		roomLocation[0] = Constants.CAMERA_HEIGHT * (Constants.Y_MAPSIZE - l[0]);
+		roomLocation[1] = Constants.CAMERA_WIDTH * (l[1]);
+		seed = s;
+		roomType = rt;
 		
 		//roomTypes are {"open", "blocked", "bN3", "bS3", "bW1", "bE1", "bW3", "bE3"}
 		if(getRoomType().equals("open")) doors = new boolean[] {true,true,true,true};
@@ -52,17 +51,34 @@ public class Room {
 		else if(getRoomType().equals("bE3")) doors = new boolean[] {false,false,false,true};
 		
 		String current = new String();
-		for(int col = 0; col < Constants.Y_MAPSIZE; col++) {
-			for(int row = 0; row < Constants.X_MAPSIZE; row++) { 
-				current = getSeed()[col][row];
+		float[][] edgeSizes = new float[][] { //v1X, v1Y, v2X, v2Y edge points>> into NESW
+			{-Constants.TILESIZE / 2f, 0, Constants.TILESIZE / 2f, 0}, 
+			{-Constants.TILESIZE / 2f, Constants.TILESIZE, Constants.TILESIZE / 2f, Constants.TILESIZE},
+			{0, -Constants.TILESIZE / 2f, 0, Constants.TILESIZE / 2f},
+			{Constants.TILESIZE, -Constants.TILESIZE / 2f, Constants.TILESIZE, Constants.TILESIZE / 2f}
+					}; 
+		for(float[] fArr : edgeSizes) {
+			for(float f : fArr) {
+				System.out.println(f);
+			}
+		}
+		
+		int counter = 0;
+		for(int col = 0; col < Constants.Y_TILES; col++) {
+			for(int row = 0; row < Constants.X_TILES; row++) { 
+				current = seed[col][row];
 				
+				counter = 0;
 				//Checking if the current item should be a static object
 				for(String w : Constants.WALLTYPES) { //Of type wall
-					if( current.equals(w) ) createStaticEdge(col, row); 
+					if( current.equals(w) ) createStaticEdge(col, row, edgeSizes[counter]); 
+					counter++;
 				} 
 				
+				counter = 0;
 				for(String d : Constants.DOORTYPES) { //Of type Door
-					if( current.equals(d) ) createStaticEdge(col, row);
+					if( current.equals(d) ) createStaticEdge(col, row, edgeSizes[counter]); 
+					counter++;
 				}
 				
 				if( current.equals("box") ) { //figure out how to work this.
@@ -92,21 +108,13 @@ public class Room {
 	
 	
 	private Vector2 getItemLocation(int col, int row) {
-		float colZ = 0f;
-		float rowZ = 0f;
-		
-		if(col != 0 ) {
-			colZ = (Constants.HEIGHT/col);
-		}
-		if(row != 0 ) {
-			rowZ = (Constants.WIDTH/row);
-		}
-			return new Vector2(roomLocation[0] + rowZ, roomLocation[1] + colZ);
-		
+		return new Vector2( // vectors are in x,y,z
+				roomLocation[1] + (Constants.X_ROOM_METERS * (row/(float)Constants.X_TILES) + Constants.X_BUFFER),
+				// Original X corner           + Location of X tile over                + border buffer
+				roomLocation[0] + (Constants.Y_ROOM_METERS * (col/(float)Constants.Y_TILES) + Constants.Y_BUFFER));
 	}
 	
-	
-	private void createStaticEdge(int col, int row) {
+	private void createStaticEdge(int col, int row, float[] edgeSizes) {
 		BodyDef bodyDef = new BodyDef();  
 		bodyDef.position.set(getItemLocation(col,row)); //Set its position 
 		Body bd = GameScreen.world.createBody(bodyDef);  
@@ -114,9 +122,10 @@ public class Room {
 		EdgeShape edge = new EdgeShape(); //Walls/Doors dont need to be a full box
 		
 		// SETTING THE POINTS AS OFFSET DISTANCE FROM CENTER
-		edge.set(-Constants.TILESIZE / 2f, 0, Constants.TILESIZE / 2f, 0);
+		edge.set(edgeSizes[0], edgeSizes[1], edgeSizes[2], edgeSizes[3]);
+		//debugItem(bd.createFixture(edge, 0.0f), col, row);
 		bd.createFixture(edge, 0.0f);
-		edge.dispose();
+		edge.dispose();	
 	}
 	
 	
@@ -132,22 +141,37 @@ public class Room {
 		box.dispose();
 		return f;
 	}
+	
+	
+	//Debug functions
+	@SuppressWarnings("unused")
+	public void debugItem(Fixture f, int col, int row) {
+		System.out.println("Position of item at col  " + col + "  and row  " + row + "  : " + f.getBody().getPosition());
+	}
+	
+	public void debugRoomPosition() {
+		System.out.println("END OF Room col: " + relativeLocation[0] + "    and row: " + relativeLocation[1]);
+		System.out.println("Y meters: " + roomLocation[0] + "   X meters: " + roomLocation[1] + "\n");
+	}
+	
+	public void debugRoomSeed() {
+		System.out.println(" \nStart of template: " + roomType);
+		for(int yn = 0; yn < seed.length; yn++) {
+			System.out.print("Col: " + yn);
+			for(int xn = 0; xn < seed[yn].length; xn++) {
+				System.out.print(" "+ seed[yn][xn]);
+			}
+			System.out.println("");
+		}
+	}
+
 
 	public String getRoomType() {
 		return roomType;
 	}
 
-	public void setRoomType(String roomType) {
-		this.roomType = roomType;
-	}
-
 	public String[][] getSeed() {
 		return seed;
 	}
-
-	public void setSeed(String[][] seed) {
-		this.seed = seed;
-	}
-	
 	
 }

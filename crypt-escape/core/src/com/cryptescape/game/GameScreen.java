@@ -1,6 +1,7 @@
 package com.cryptescape.game;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -61,8 +62,8 @@ public class GameScreen implements Screen {
 	public GameScreen(final MainCE gam) {
 		this.game = gam;
 		
-		camera = new OrthographicCamera(Constants.WIDTH, Constants.HEIGHT);
-		camera.position.set(Constants.WIDTH/2, Constants.HEIGHT/2, 0);
+		camera = new OrthographicCamera(Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);
+		camera.position.set(Constants.CAMERA_WIDTH/2, Constants.CAMERA_HEIGHT/2, 0);
 		
 		ambiance = Gdx.audio.newMusic(Gdx.files.internal("caveAmbiance.mp3"));
 		ambiance.setLooping(true);
@@ -72,7 +73,7 @@ public class GameScreen implements Screen {
 		
 		//DYNAMIC ACTOR GENERATION
 		
-		player = new Player(2f, 3f, 0.85f, 0.85f, 100f); 
+		player = new Player(12f, 10f, 0.85f, 0.85f, 100f); 
 		stage.addActor(player);
 	
 		enemy = new Enemy(4f, 4f, 0.95f, 0.95f, 100f);
@@ -82,25 +83,29 @@ public class GameScreen implements Screen {
 		
 		// ROOM GENERATION BELOW
 		
-		ArrayList<Double> p = new ArrayList<Double>();
-		Collections.addAll(p, 0.92, 0.04, 0.035, 0.005); // Probability of a interactable type
+		int[] p = new int[] {92, 4, 3, 1}; // Probability of a interactable type
 		String[] key = new String[] {"empty", "box", "puddle", "bat"}; //The cooresponding type
 		
-		ArrayList<Double> p2 = new ArrayList<Double>();
-		Collections.addAll(p2, 0.7, 0.05, 0.025, 0.025, 0.025, 0.025, 0.075, 0.075); // Probability of room typeS
+		RandomCollection<String> roomItemGen = new RandomCollection<String>();
+		for(int i = 0; i < p.length; i++) {
+			roomItemGen.add(p[i], key[i]);
+		}
+		
+		
+		int[] p2 = new int[] {75, 5, 2, 2, 6, 6, 2, 2}; // Probability of room type
 		String[] key2 = new String[] {"open", "blocked", "bN3", "bS3", "bW1", "bE1", "bW3", "bE3"}; 
 		// Type names, open means all 4 doors are usable [T,T,T,T]. Blocked is the opposite [F,F,F,F]
 		// b stands for blocked, and then follows the direction and number of doors blocked
 		// EX: bN3 means the northmost 3 doors of that room are blocked. (the east, west, and north doors [F,F,T,F]
 		
-		
-		AliasMethod roomItemGen = new AliasMethod(p);
-		AliasMethod roomTypeGen = new AliasMethod(p2);
-		
+		RandomCollection<Integer> roomTypeGen = new RandomCollection<Integer>();
+		for(int i = 0; i < p.length; i++) {
+			roomTypeGen.add(p2[i], i);
+		}
+
 		// use ##.next() to get where in key[i] to use
 		String item;
 		String roomType;
-		int holderInt;
 		String[][] seed = new String[Constants.Y_TILES][Constants.X_TILES];
 		ArrayList<String[][]> pregenTemplate = new ArrayList<String[][]>();
 
@@ -147,13 +152,13 @@ public class GameScreen implements Screen {
 					
 					
 					else if(k.equals("bN3")) { //North 3 doors are blocked
-						if(y < (Constants.Y_TILES/2) - 3) seed[y][x] = "blocked";  
-						if (y == (Constants.Y_TILES/2)-3) seed[y][x] = "northWall"; 
+						if(y < (Constants.Y_TILES/2) + 3) seed[y][x] = "blocked";  
+						if (y == (Constants.Y_TILES/2)+3) seed[y][x] = "northWall"; 
 					}
 					
 					else if(k.equals("bS3")) { // South 3 doors are blocked
-						if(y > (Constants.Y_TILES/2) + 3) seed[y][x] = "blocked"; 
-						if (y == (Constants.Y_TILES/2)+3) seed[y][x] = "southWall"; 
+						if(y > (Constants.Y_TILES/2) - 3) seed[y][x] = "blocked"; 
+						if (y == (Constants.Y_TILES/2)-3) seed[y][x] = "southWall"; 
 					}
 					
 					else if(k.equals("bW1")) { // West door is blocked
@@ -177,18 +182,24 @@ public class GameScreen implements Screen {
 					}
 				}
 			}
-			pregenTemplate.add(seed.clone());
-//			System.out.println(" \nStart of template: ");
+			pregenTemplate.add(clone2dArray(seed)); 
+			
+//			//Debugging each template
+//			System.out.println(" \nStart of template: " + k);
 //			for(int yn = 0; yn < seed.length; yn++) {
 //				System.out.print("Col: " + yn);
 //				for(int xn = 0; xn < seed[yn].length; xn++) {
 //					System.out.print(" "+ seed[yn][xn]);
 //				}
-//				System.out.println("");
+//				System.out.println("");  
 //			}
+//			System.out.println(); 
 		}	
 		
 		
+		
+		int index;
+		final ArrayList<String[][]> TEMPLATE = new ArrayList<String[][]>(Collections.unmodifiableList(pregenTemplate));
 		
 		for(int col = 0; col < Constants.Y_MAPSIZE; col++) {
 			rooms.add(new ArrayList<Room>());  //instantiate all columns in the 2d array
@@ -196,36 +207,27 @@ public class GameScreen implements Screen {
 			for(int row = 0; row < Constants.X_MAPSIZE; row++) {
 				//For each room in an NxN grid, that will make up the playfield...
 				//DETERMINE: Room type, and what its filled with.
-				holderInt = roomTypeGen.next();
-				roomType = key2[holderInt];
-				seed = pregenTemplate.get(holderInt); 
+				index = roomTypeGen.next();
+				roomType = key2[index];
+				seed = clone2dArray(TEMPLATE.get(index)); 
 				
+//				System.out.println(index); //TRYING TO DEBUG
+//				for(String t : key2) System.out.println(t);  
+//				printSeedArray(seed, roomType);
 				
 				for(int y = 1; y < Constants.Y_TILES-1; y++) { //Loop through and fill the seed (Excluding boundaries)
 					for(int x = 1; x < Constants.X_TILES-1; x++) {
 						if(seed[y][x].equals("empty")) {
-							seed[y][x] = key[roomItemGen.next()];
+							seed[y][x] = roomItemGen.next();
 						}
 					}
 				}
-				
+				rooms.get(col).add(new Room(new int[] {col+1, row}, seed.clone(), roomType));
+			}
+		}
+		
+		
 
-				
-				Room r = new Room(new int[] {col, row}, seed.clone(), roomType);
-				rooms.get(col).add(r);
-			}
-		}
-		
-		
-		System.out.println(" \nStart of template: " + rooms.get(1).get(1).getRoomType());
-		seed = rooms.get(1).get(1).getSeed();
-		for(int yn = 0; yn < seed.length; yn++) {
-			System.out.print("Col: " + yn);
-			for(int xn = 0; xn < seed[yn].length; xn++) {
-				System.out.print(" "+ seed[yn][xn]);
-			}
-			System.out.println("");
-		}
 
 		
 		
@@ -245,10 +247,6 @@ public class GameScreen implements Screen {
 					wasd[3] = 1;
 				if (keycode == Input.Keys.SHIFT_LEFT)
 					sprint = 1.6f; //Except here since its a multiplier
-//				if (keycode == Input.Keys.X)
-//					KEY_X = true;
-//				if (keycode == Input.Keys.Z)
-//					KEY_Z = true;
 				return false;
 			}
 
@@ -264,10 +262,6 @@ public class GameScreen implements Screen {
 					wasd[3] = 0;
 				if (keycode == Input.Keys.SHIFT_LEFT)
 					sprint = 1;
-//				if (keycode == Input.Keys.X)
-//					KEY_X = false;
-//				if (keycode == Input.Keys.Z)
-//					KEY_Z = false;
 				return false;
 			}
 		});
@@ -285,10 +279,10 @@ public class GameScreen implements Screen {
 		game.batch.disableBlending(); //save resources when not needed
 		
 		//debugging tools ->
-		game.font.draw(game.batch, "FPS: "+ Gdx.graphics.getFramesPerSecond(), 1f, Constants.HEIGHT-1f);
-		game.font.draw(game.batch, "Player xV: " + player.xVel + "Player yV: " + player.yVel,  1f, Constants.HEIGHT-1.5f);
-		game.font.draw(game.batch, "Player xA: " + player.xAcc + "Player yA: " + player.yAcc, 1f, Constants.HEIGHT-2f);
-		game.font.draw(game.batch, player.jolt[0] + "  " + player.jolt[1] + "  "+ player.jolt[2] + "  "+ player.jolt[3], 1f, Constants.HEIGHT-2.5f);
+		game.font.draw(game.batch, "FPS: "+ Gdx.graphics.getFramesPerSecond(), 1f, Constants.CAMERA_HEIGHT-1f);
+		game.font.draw(game.batch, "Player xV: " + player.xVel + "Player yV: " + player.yVel,  1f, Constants.CAMERA_HEIGHT-1.5f);
+		game.font.draw(game.batch, "Player xA: " + player.xAcc + "Player yA: " + player.yAcc, 1f, Constants.CAMERA_HEIGHT-2f);
+		game.font.draw(game.batch, player.jolt[0] + "  " + player.jolt[1] + "  "+ player.jolt[2] + "  "+ player.jolt[3], 1f, Constants.CAMERA_HEIGHT-2.5f);
 		//game.font.draw(game.batch, player.debugPlayer(), 1f, Constants.HEIGHT-3f);
 		
 		//System.out.println("Player xV: " + player.xVel + "Player yV: " + player.yVel);		
@@ -309,6 +303,19 @@ public class GameScreen implements Screen {
 		debugRenderer.render(world, camera.combined);
 		world.step(Constants.FRAME_SPEED, 6, 2);
 		
+//		System.out.println(camera.position);
+//		Room cr = rooms.get(0).get(0);
+//		for(String[] s : cr.getSeed()) {
+//			for(String s2 : s) {
+//				System.out.print(s2 + " ");
+//			}
+//			System.out.println();
+//		}
+//		cr.debugRoomPosition();
+//		cr = rooms.get(3).get(0);
+//		cr.debugRoomPosition();
+		
+		
 //		try {
 //		    Thread.sleep(50);                 //2000 milliseconds is one second.
 //		} catch(InterruptedException ex) {
@@ -318,12 +325,26 @@ public class GameScreen implements Screen {
 
 	}
 	
-
+	public void printSeedArray(String[][] org, String rt) {
+		System.out.println("Type of room should be: " + rt);
+		for(String[] s : org) {
+			for(String s2 : s) {
+				System.out.print(s2 + " ");
+			}
+			System.out.println();
+		}
+		System.out.println();
+	}
+	
+	public String[][] clone2dArray(String[][] original) {
+		return Arrays.stream(original).map(String[]::clone).toArray(String[][]::new);
+	}
+	
 	@Override
 	public void resize(int width, int height) {
 		//resize() can be called anytime you change your screen size(eg: when you screen orientation changes). 
 		//resize() takes the actual width and height (320x480 etc), which is the pixel value, and converts it
-        camera.viewportHeight = (Constants.WIDTH / width) * height;
+        camera.viewportHeight = (Constants.CAMERA_WIDTH / width) * height;
         camera.update();
 	}
 
