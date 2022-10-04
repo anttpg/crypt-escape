@@ -27,6 +27,13 @@ public class Room {
 	//iItems stores all the interactable objects
 	private ArrayList<Interactable> iItems = new ArrayList<Interactable>();
 	
+	
+	private float[][] edgeSizes = new float[][] { //v1X, v1Y, v2X, v2Y edge points>> into NESW
+		{-Constants.TILESIZE / 2f, Constants.TILESIZE/2f, Constants.TILESIZE / 2f, Constants.TILESIZE/2f}, 
+		{-Constants.TILESIZE/2f, -Constants.TILESIZE / 2f, -Constants.TILESIZE/2f, Constants.TILESIZE / 2f},
+		{-Constants.TILESIZE / 2f, -Constants.TILESIZE/2f, Constants.TILESIZE / 2f, -Constants.TILESIZE/2f},
+		{Constants.TILESIZE/2f, -Constants.TILESIZE / 2f, Constants.TILESIZE/2f, Constants.TILESIZE / 2f}
+				}; 
 	/**
 	* Defines a Room object, where L is the relative [Y,X] position of the room on the map (IE: [2,1] for 2 rows down, 1 col over).
 	* S is the String seed of what is within the room, RT is the room type, and d is the usable doors (IE: [T,T,F,T])
@@ -51,17 +58,7 @@ public class Room {
 		else if(getRoomType().equals("bE3")) doors = new boolean[] {false,false,false,true};
 		
 		String current = new String();
-		float[][] edgeSizes = new float[][] { //v1X, v1Y, v2X, v2Y edge points>> into NESW
-			{-Constants.TILESIZE / 2f, 0, Constants.TILESIZE / 2f, 0}, 
-			{-Constants.TILESIZE / 2f, Constants.TILESIZE, Constants.TILESIZE / 2f, Constants.TILESIZE},
-			{0, -Constants.TILESIZE / 2f, 0, Constants.TILESIZE / 2f},
-			{Constants.TILESIZE, -Constants.TILESIZE / 2f, Constants.TILESIZE, Constants.TILESIZE / 2f}
-					}; 
-		for(float[] fArr : edgeSizes) {
-			for(float f : fArr) {
-				System.out.println(f);
-			}
-		}
+		
 		
 		int counter = 0;
 		for(int col = 0; col < Constants.Y_TILES; col++) {
@@ -71,13 +68,13 @@ public class Room {
 				counter = 0;
 				//Checking if the current item should be a static object
 				for(String w : Constants.WALLTYPES) { //Of type wall
-					if( current.equals(w) ) createStaticEdge(col, row, edgeSizes[counter]); 
+					if( current.equals(w) ) createStaticEdge(col, row, counter);
 					counter++;
 				} 
 				
 				counter = 0;
 				for(String d : Constants.DOORTYPES) { //Of type Door
-					if( current.equals(d) ) createStaticEdge(col, row, edgeSizes[counter]); 
+					if( current.equals(d) ) createStaticEdge(col, row, counter); 
 					counter++;
 				}
 				
@@ -114,7 +111,7 @@ public class Room {
 				roomLocation[0] + (Constants.Y_ROOM_METERS * (col/(float)Constants.Y_TILES) + Constants.Y_BUFFER));
 	}
 	
-	private void createStaticEdge(int col, int row, float[] edgeSizes) {
+	private void createStaticEdge(int col, int row, int c) {
 		BodyDef bodyDef = new BodyDef();  
 		bodyDef.position.set(getItemLocation(col,row)); //Set its position 
 		Body bd = GameScreen.world.createBody(bodyDef);  
@@ -122,9 +119,9 @@ public class Room {
 		EdgeShape edge = new EdgeShape(); //Walls/Doors dont need to be a full box
 		
 		// SETTING THE POINTS AS OFFSET DISTANCE FROM CENTER
-		edge.set(edgeSizes[0], edgeSizes[1], edgeSizes[2], edgeSizes[3]);
-		//debugItem(bd.createFixture(edge, 0.0f), col, row);
-		bd.createFixture(edge, 0.0f);
+		edge.set(edgeSizes[c][0], edgeSizes[c][1], edgeSizes[c][2], edgeSizes[c][3]);
+		bd.createFixture(edge, 0.0f); 	
+		//DEBUG VERSION --> debugItem(bd.createFixture(edge, 0.0f), col, row);
 		edge.dispose();	
 	}
 	
