@@ -3,7 +3,9 @@ package com.cryptescape.game;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -58,6 +60,7 @@ public class GameScreen implements Screen {
 	public float sprint = 1; //changes when sprinting
 
 	float playerCounter = 0;
+	
 
 	
 	
@@ -199,18 +202,7 @@ public class GameScreen implements Screen {
 					}
 				}
 			}
-			pregenTemplate.add(clone2dArray(seed)); 
-			
-//			//Debugging each template
-//			System.out.println(" \nStart of template: " + k);
-//			for(int yn = 0; yn < seed.length; yn++) {
-//				System.out.print("Col: " + yn);
-//				for(int xn = 0; xn < seed[yn].length; xn++) {
-//					System.out.print(" "+ seed[yn][xn]);
-//				}
-//				System.out.println("");  
-//			}
-//			System.out.println(); 
+			pregenTemplate.add(clone2dArray(seed));  
 		}	
 		
 		

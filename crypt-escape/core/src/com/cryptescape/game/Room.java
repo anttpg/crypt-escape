@@ -17,7 +17,8 @@ public class Room {
 	
 	private boolean discovered;
 	private int[] relativeLocation = new int[2]; // [Col, Row] on the map
-	private float[] roomLocation = new float[2]; // room [y, x] real relative locations
+	private float[] roomCorner = new float[2]; // room [y, x] real relative locations 
+	private float[] roomTop = new float[2];
 	
 	private String roomType; 
 	private boolean[] doors;
@@ -27,14 +28,6 @@ public class Room {
 	
 	//iItems stores all the interactable objects
 	private ArrayList<Interactable> iItems = new ArrayList<Interactable>();
-	
-	
-	private float[][] edgeSizes = new float[][] { //v1X, v1Y, v2X, v2Y edge points>> into NESW
-		{-Constants.TILESIZE / 2f, Constants.TILESIZE/2f, Constants.TILESIZE / 2f, Constants.TILESIZE/2f}, 
-		{-Constants.TILESIZE/2f, -Constants.TILESIZE / 2f, -Constants.TILESIZE/2f, Constants.TILESIZE / 2f},
-		{-Constants.TILESIZE / 2f, -Constants.TILESIZE/2f, Constants.TILESIZE / 2f, -Constants.TILESIZE/2f},
-		{Constants.TILESIZE/2f, -Constants.TILESIZE / 2f, Constants.TILESIZE/2f, Constants.TILESIZE / 2f}
-				}; 
 	/**
 	* Defines a Room object, where L is the relative [Y,X] position of the room on the map (IE: [2,1] for 2 rows down, 1 col over).
 	* S is the String seed of what is within the room, RT is the room type, and d is the usable doors (IE: [T,T,F,T])
@@ -43,8 +36,9 @@ public class Room {
 	public Room(int[] l, String[][] s, String rt) {	
 		// Get relative x/y location and calculate real coords based on that.
 		relativeLocation = l;
-		roomLocation[0] = Constants.CAMERA_HEIGHT * (Constants.Y_MAPSIZE - l[0]) + Constants.Y_BUFFER;
-		roomLocation[1] = Constants.CAMERA_WIDTH * (l[1]) + Constants.X_BUFFER;
+		roomCorner[0] = Constants.CAMERA_HEIGHT * (Constants.Y_MAPSIZE - l[0]) + Constants.Y_BUFFER;
+		roomCorner[1] = Constants.CAMERA_WIDTH * (l[1]) + Constants.X_BUFFER;
+		
 		seed = s;
 		roomType = rt;
 		
@@ -58,6 +52,9 @@ public class Room {
 		else if(getRoomType().equals("bW3")) doors = new boolean[] {false,true,false,false};
 		else if(getRoomType().equals("bE3")) doors = new boolean[] {false,false,false,true};
 		
+		
+		roomTop[0] = roomCorner[0] + (Constants.TILESIZE * xLen);
+		roomTop[1] = roomCorner[1] + (Constants.TILESIZE * yLen);
 		String current = new String();
 		
 		
@@ -101,7 +98,7 @@ public class Room {
 	
 	public void draw(SpriteBatch batch) {
 		//Render background first, then
-		batch.draw(GameScreen.BACKGROUND, roomLocation[1], roomLocation[0], Constants.CAMERA_WIDTH - Constants.X_BUFFER*2, Constants.CAMERA_HEIGHT - Constants.Y_BUFFER*2);
+		batch.draw(GameScreen.BACKGROUND, roomCorner[1], roomCorner[0], Constants.CAMERA_WIDTH - Constants.X_BUFFER*2, Constants.CAMERA_HEIGHT - Constants.Y_BUFFER*2);
 		for(Interactable i : iItems) {
 			i.draw(batch);
 		}
@@ -115,7 +112,7 @@ public class Room {
 	
 	public void debugRoomPosition() {
 		System.out.println("END OF Room col: " + relativeLocation[0] + "    and row: " + relativeLocation[1]);
-		System.out.println("Y meters: " + roomLocation[0] + "   X meters: " + roomLocation[1] + "\n");
+		System.out.println("Y meters: " + roomCorner[0] + "   X meters: " + roomCorner[1] + "\n");
 	}
 	
 	public void debugRoomSeed() {
@@ -139,7 +136,7 @@ public class Room {
 	}
 
 	public float[] getRoomLocation() {
-		return roomLocation;
+		return roomCorner;
 	}
 	
 }
