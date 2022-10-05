@@ -13,6 +13,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureWrap;
@@ -30,11 +31,16 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+
+import box2dLight.PointLight;
+import box2dLight.RayHandler;
+
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
@@ -65,12 +71,16 @@ public class GameScreen implements Screen {
 	public static TextureRegion BACKGROUND;
 	private Fixture BASE_FLOOR;
 	
+	private RayHandler rayHandler;
+	private PointLight playerLight;
+	
 	
 	private Music ambiance;
 	private int[] wasd = new int[] {0,0,0,0};
 	public float sprint = 1; //changes when sprinting
 
 	float playerCounter = 0;
+	
 	
 	
 
@@ -96,6 +106,16 @@ public class GameScreen implements Screen {
 		//DYNAMIC ACTOR GENERATION
 		player = new Player(12f, 10f, 100f, null); 
 		stage.addActor(player);
+		
+		
+		rayHandler = new RayHandler(world);
+		rayHandler.setAmbientLight(0.1f);
+		rayHandler.setBlur(false);
+		
+		//Use like 20-200 rays on average, color, how far out to project 
+		playerLight = new PointLight(rayHandler, 100, Color.BLACK, 1f, 0f, 0f);
+		playerLight.setSoftnessLength(0f);
+		playerLight.setXray(false);
 	
 		//enemy = new Enemy(4f, 4f, 0.95f, 0.95f, 100f);
 		//stage.addActor(enemy);
@@ -128,7 +148,6 @@ public class GameScreen implements Screen {
 		for(int i = 0; i < p.length; i++) {
 			roomItemGen.add(p[i], key[i]);
 		}
-		
 		
 		int[] p2 = new int[] {75, 5, 2, 2, 6, 6, 2, 2}; // Probability of room type
 		String[] key2 = new String[] {"open", "blocked", "bN3", "bS3", "bW1", "bE1", "bW3", "bE3"}; 
@@ -321,7 +340,7 @@ public class GameScreen implements Screen {
 	
 	@Override
 	public void render(float delta) {
-		ScreenUtils.clear(0.5f, 0.5f, 0.5f, 1);
+		ScreenUtils.clear(0.0f, 0.0f, 0.0f, 1);
 		camera.update();
 		game.batch.setProjectionMatrix(camera.combined);
 		game.batch.begin();
@@ -352,8 +371,17 @@ public class GameScreen implements Screen {
 		
         stage.act();
         stage.draw();
-        camera.position.set(player.xPos, player.yPos, 0);
+        
+        camera.position.set(player.xPos, player.yPos, 0); //So camera follows player
+		
+		rayHandler.useCustomViewport(viewport.getScreenX(),
+                viewport.getScreenY(),
+                viewport.getScreenWidth(),
+                viewport.getScreenHeight());
+		rayHandler.updateAndRender();
+		
 		debugRenderer.render(world, camera.combined);
+		
 		world.step(Constants.FRAME_SPEED, 6, 2);
 		
 //		System.out.println(camera.position);
@@ -427,6 +455,8 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void dispose() {
-	
+		rayHandler.dispose();
+		world.dispose();
+			
 	}
 }

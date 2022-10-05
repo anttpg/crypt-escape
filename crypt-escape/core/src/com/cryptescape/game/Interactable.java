@@ -61,7 +61,7 @@ public class Interactable {
 		
 		PolygonShape box = new PolygonShape();  // Create a polygon shape 
 
-		box.setAsBox(-Constants.TILESIZE / 2f, Constants.TILESIZE / 2f);
+		box.setAsBox(Constants.TILESIZE / 2f, Constants.TILESIZE / 2f);
 		fixture = bd.createFixture(box, 0.0f);
 		box.dispose();
 	}
