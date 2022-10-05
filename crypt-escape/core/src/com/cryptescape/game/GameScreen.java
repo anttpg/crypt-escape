@@ -114,7 +114,7 @@ public class GameScreen implements Screen {
 		rayHandler.setBlur(false);
 		
 		//Use like 20-200 rays on average, color, how far out to project 
-		playerLight = new PointLight(rayHandler, 100, Color.BLACK, 4f, 0f, 0f);
+		playerLight = new PointLight(rayHandler, 100, Color.BLACK, 1f, 0f, 0f);
 		playerLight.setSoftnessLength(0f);
 		playerLight.setXray(false);
 	
@@ -139,8 +139,118 @@ public class GameScreen implements Screen {
 //	    groundshape.dispose();
 	    
 		
+		//Generate Rooms
+		generateRooms();
 		
 		
+		
+		//INPUT HANDLING
+		//All calculated per tick, and stored as 0 or 1
+		
+		Gdx.input.setInputProcessor(new InputAdapter() {	
+			@Override
+			public boolean keyDown(int keycode) {
+				if (keycode == Input.Keys.W)
+					wasd[0] = 1;
+				if (keycode == Input.Keys.A)
+					wasd[1] = 1;
+				if (keycode == Input.Keys.S)
+					wasd[2] = 1;
+				if (keycode == Input.Keys.D)
+					wasd[3] = 1;
+				if (keycode == Input.Keys.SHIFT_LEFT)
+					sprint = 1.6f; //Except here since its a multiplier
+				return false;
+			}
+
+			@Override
+			public boolean keyUp(int keycode) {
+				if (keycode == Input.Keys.W)
+					wasd[0] = 0;
+				if (keycode == Input.Keys.A)
+					wasd[1] = 0;
+				if (keycode == Input.Keys.S)
+					wasd[2] = 0;
+				if (keycode == Input.Keys.D)
+					wasd[3] = 0;
+				if (keycode == Input.Keys.SHIFT_LEFT)
+					sprint = 1;
+				return false;
+			}
+		});
+	}
+
+	
+	@Override
+	public void render(float delta) {
+		ScreenUtils.clear(0.5f, 0.5f, 0.5f, 1);
+		camera.update();
+		game.batch.setProjectionMatrix(camera.combined);
+		game.batch.begin();
+		
+		
+		game.batch.disableBlending(); //save resources when not needed
+		//debugging tools ->
+		game.font.draw(game.batch, "FPS: "+ Gdx.graphics.getFramesPerSecond(), 1f, Constants.CAMERA_HEIGHT-1f);
+		game.font.draw(game.batch, "Player xV: " + player.xVel + "Player yV: " + player.yVel,  1f, Constants.CAMERA_HEIGHT-1.5f);
+		game.font.draw(game.batch, "Player xA: " + player.xAcc + "Player yA: " + player.yAcc, 1f, Constants.CAMERA_HEIGHT-2f);
+		//game.font.draw(game.batch, player.debugPlayer(), 1f, Constants.HEIGHT-3f);
+		
+		
+		game.batch.enableBlending();
+		
+		//IMPORTANT <<< DO ALL RENDERING IN THE ORDER OF WHICH YOU WANT IT TO APPEAR
+		// Ie: Enemy on top of Player on top of Room.
+		
+		player.getRoom().draw(game.batch); //draw the room that the player is currently in
+		
+		player.setAcceleration((wasd[3]-wasd[1]), (wasd[0]-wasd[2]), sprint); //handles player movement
+		player.draw(game.batch);
+		
+//		enemy.implementAction(); //decides what the enemy will do
+//		enemy.draw(game.batch);
+		game.batch.end();
+		
+		
+        stage.act();
+        stage.draw();
+        System.out.println(Constants.TILESIZE);
+        camera.position.set(player.xPos, player.yPos, 0); //So camera follows player
+		
+		rayHandler.useCustomViewport(viewport.getScreenX(),
+                viewport.getScreenY(),
+                viewport.getScreenWidth(),
+                viewport.getScreenHeight());
+		rayHandler.updateAndRender();
+		
+		debugRenderer.render(world, camera.combined);
+		
+		world.step(Constants.FRAME_SPEED, 6, 2);
+		
+//		System.out.println(camera.position);
+//		Room cr = rooms.get(0).get(0);
+//		for(String[] s : cr.getSeed()) {
+//			for(String s2 : s) {
+//				System.out.print(s2 + " ");
+//			}
+//			System.out.println();
+//		}
+//		cr.debugRoomPosition();
+//		cr = rooms.get(3).get(0);
+//		cr.debugRoomPosition();
+		
+		
+//		try {
+//		    Thread.sleep(50);                 //2000 milliseconds is one second.
+//		} catch(InterruptedException ex) {
+//		    Thread.currentThread().interrupt();
+//		}
+		
+
+	}
+	
+	private void generateRooms() {
+
 		// ROOM GENERATION BELOW
 		int[] p = new int[] {92, 4, 3, 1}; // Probability of a interactable type
 		String[] key = new String[] {"empty", "box", "puddle", "bat"}; //The cooresponding type
@@ -299,111 +409,6 @@ public class GameScreen implements Screen {
 		
 		player.changeRoom(rooms.get(3).get(0));
 
-
-		
-		
-		//INPUT HANDLING
-		//All calculated per tick, and stored as 0 or 1
-		
-		Gdx.input.setInputProcessor(new InputAdapter() {	
-			@Override
-			public boolean keyDown(int keycode) {
-				if (keycode == Input.Keys.W)
-					wasd[0] = 1;
-				if (keycode == Input.Keys.A)
-					wasd[1] = 1;
-				if (keycode == Input.Keys.S)
-					wasd[2] = 1;
-				if (keycode == Input.Keys.D)
-					wasd[3] = 1;
-				if (keycode == Input.Keys.SHIFT_LEFT)
-					sprint = 1.6f; //Except here since its a multiplier
-				return false;
-			}
-
-			@Override
-			public boolean keyUp(int keycode) {
-				if (keycode == Input.Keys.W)
-					wasd[0] = 0;
-				if (keycode == Input.Keys.A)
-					wasd[1] = 0;
-				if (keycode == Input.Keys.S)
-					wasd[2] = 0;
-				if (keycode == Input.Keys.D)
-					wasd[3] = 0;
-				if (keycode == Input.Keys.SHIFT_LEFT)
-					sprint = 1;
-				return false;
-			}
-		});
-	}
-
-	
-	@Override
-	public void render(float delta) {
-		ScreenUtils.clear(0.5f, 0.5f, 0.5f, 1);
-		camera.update();
-		game.batch.setProjectionMatrix(camera.combined);
-		game.batch.begin();
-		
-		
-		game.batch.disableBlending(); //save resources when not needed
-		//debugging tools ->
-		game.font.draw(game.batch, "FPS: "+ Gdx.graphics.getFramesPerSecond(), 1f, Constants.CAMERA_HEIGHT-1f);
-		game.font.draw(game.batch, "Player xV: " + player.xVel + "Player yV: " + player.yVel,  1f, Constants.CAMERA_HEIGHT-1.5f);
-		game.font.draw(game.batch, "Player xA: " + player.xAcc + "Player yA: " + player.yAcc, 1f, Constants.CAMERA_HEIGHT-2f);
-		//game.font.draw(game.batch, player.debugPlayer(), 1f, Constants.HEIGHT-3f);
-		
-		
-		game.batch.enableBlending();
-		
-		//IMPORTANT <<< DO ALL RENDERING IN THE ORDER OF WHICH YOU WANT IT TO APPEAR
-		// Ie: Enemy on top of Player on top of Room.
-		
-		player.getRoom().draw(game.batch); //draw the room that the player is currently in
-		
-		player.setAcceleration((wasd[3]-wasd[1]), (wasd[0]-wasd[2]), sprint); //handles player movement
-		player.draw(game.batch);
-		
-//		enemy.implementAction(); //decides what the enemy will do
-//		enemy.draw(game.batch);
-		game.batch.end();
-		
-		
-        stage.act();
-        stage.draw();
-        System.out.println(Constants.TILESIZE);
-        camera.position.set(player.xPos, player.yPos, 0); //So camera follows player
-		
-		rayHandler.useCustomViewport(viewport.getScreenX(),
-                viewport.getScreenY(),
-                viewport.getScreenWidth(),
-                viewport.getScreenHeight());
-		rayHandler.updateAndRender();
-		
-		debugRenderer.render(world, camera.combined);
-		
-		world.step(Constants.FRAME_SPEED, 6, 2);
-		
-//		System.out.println(camera.position);
-//		Room cr = rooms.get(0).get(0);
-//		for(String[] s : cr.getSeed()) {
-//			for(String s2 : s) {
-//				System.out.print(s2 + " ");
-//			}
-//			System.out.println();
-//		}
-//		cr.debugRoomPosition();
-//		cr = rooms.get(3).get(0);
-//		cr.debugRoomPosition();
-		
-		
-//		try {
-//		    Thread.sleep(50);                 //2000 milliseconds is one second.
-//		} catch(InterruptedException ex) {
-//		    Thread.currentThread().interrupt();
-//		}
-		
 
 	}
 	
