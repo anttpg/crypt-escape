@@ -111,13 +111,13 @@ public class GameScreen implements Screen {
 		
 		
 		rayHandler = new RayHandler(world);
-		rayHandler.setAmbientLight(0.1f);
+		rayHandler.setAmbientLight(0f);
 		rayHandler.setShadows(true);
-		rayHandler.setBlur(false);
+		rayHandler.setBlur(true);
 		
 		//Use like 20-200 rays on average, color, how far out to project 
-		playerLight = new PointLight(rayHandler, 100, Color.BLACK, 1f, 0f, 0f);
-		playerLight.setSoftnessLength(0f);
+		playerLight = new PointLight(rayHandler, 500, null, 3.5f, player.xPos, player.yPos);
+		playerLight.setSoftnessLength(2f);
 		playerLight.setXray(false);
 		
 //		coneLight = new ConeLight(rayHandler, 100, Color.BLACK, 60f, 1f, 1f, 0, 0f);
@@ -227,7 +227,7 @@ public class GameScreen implements Screen {
 //                viewport.getScreenY(),
 //                viewport.getScreenWidth(),
 //                viewport.getScreenHeight());
-        
+        playerLight.setPosition(player.xPos, player.yPos);
         rayHandler.setCombinedMatrix(camera);
 		rayHandler.updateAndRender();
 		
