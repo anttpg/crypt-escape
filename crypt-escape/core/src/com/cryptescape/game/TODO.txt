@@ -2,5 +2,9 @@
 
 -Player sprinting/slow walking (increases noise)
 -Door based opening ranging
--FIX Generation probabilites; currently skewed.
+
+-Lighting based on view 
+-Zoom camera and have follow player to corner
+-Change to tilemap system instead of doing it manually?
+
 
