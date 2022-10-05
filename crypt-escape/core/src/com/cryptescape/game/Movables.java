@@ -52,12 +52,12 @@ public abstract class Movables extends Actor{
         
 
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(Constants.TILESIZE/4, Constants.TILESIZE/16);
+        shape.setAsBox(Constants.TILESIZE/6, Constants.TILESIZE/16);
         FixtureDef fixtureDef = new FixtureDef();
         
         //Physics rules
         fixtureDef.shape = shape;
-        fixtureDef.density = 8f;
+        fixtureDef.density = 12f;
         fixtureDef.friction = 0.5f;
         fixtureDef.restitution= 0.05f;
         fixture = body.createFixture(fixtureDef);
@@ -77,7 +77,7 @@ public abstract class Movables extends Actor{
 		speed = s;
 	}
 	
-	//S is for sprinting, a speed multiplier
+	//S is for sprinting, a speed multiplier 
 	public void setAcceleration(float x, float y, float s) {
 		xAcc = x*s;
 		yAcc = y*s;

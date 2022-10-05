@@ -110,10 +110,11 @@ public class GameScreen implements Screen {
 		
 		rayHandler = new RayHandler(world);
 		rayHandler.setAmbientLight(0.1f);
+		rayHandler.setShadows(true);
 		rayHandler.setBlur(false);
 		
 		//Use like 20-200 rays on average, color, how far out to project 
-		playerLight = new PointLight(rayHandler, 100, Color.BLACK, 1f, 0f, 0f);
+		playerLight = new PointLight(rayHandler, 100, Color.BLACK, 4f, 0f, 0f);
 		playerLight.setSoftnessLength(0f);
 		playerLight.setXray(false);
 	
@@ -340,7 +341,7 @@ public class GameScreen implements Screen {
 	
 	@Override
 	public void render(float delta) {
-		ScreenUtils.clear(0.0f, 0.0f, 0.0f, 1);
+		ScreenUtils.clear(0.5f, 0.5f, 0.5f, 1);
 		camera.update();
 		game.batch.setProjectionMatrix(camera.combined);
 		game.batch.begin();
@@ -371,7 +372,7 @@ public class GameScreen implements Screen {
 		
         stage.act();
         stage.draw();
-        
+        System.out.println(Constants.TILESIZE);
         camera.position.set(player.xPos, player.yPos, 0); //So camera follows player
 		
 		rayHandler.useCustomViewport(viewport.getScreenX(),
