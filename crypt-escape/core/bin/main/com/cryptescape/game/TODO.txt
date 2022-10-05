@@ -1,11 +1,14 @@
 
 MY STUFF:
--Player sprinting/slow walking (increases noise)
--Door based opening ranging
+-Player sprinting/slow walking (increases noise for enemy to hear)
+-Door opening baseed on range from player 
 -Lighting based on view 
 -Zoom camera and have follow player to corner
 -Change to tilemap system instead of doing it manually?
--Fix that fucking box bug???
+-Fix that fucking stone tiling issue??
+-Display font text on screen
+-Implement sleeping in room interactables??
+-Fix floor not slowing objects?? Wy tf are my objects made of dark matter???
 
 
 FOR OTHERS: 

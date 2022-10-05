@@ -20,16 +20,15 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 
 public class Player extends Movables {
-	private boolean isRunning = false;
-	private TextureRegion frame;
 	private AnimationHandler playerAnimation;
-	private float elapsedTime = 1f;
-	private boolean changeAnimation = true;
-	
-    private ParticleEffect effect;
 	private TextureAtlas textureAtlas;
+	private TextureRegion frame;
+	private float elapsedTime = 1f;
+	
+	private float scale;
+	
 
-	private Room currentRoom; 
+
 
 	/**
 	* Defines a Player object. Player extends Movables. 
@@ -38,9 +37,9 @@ public class Player extends Movables {
 	* math/tolerances within the function. All values must be given with respect 
 	* to meters, not pixels. 
 	*/
-	public Player(float x, float y, float w, float h, float t, Room starting) {
-		super(x, y, w, h, 2.1f, t);
-		currentRoom = starting;
+	public Player(float x, float y, float t, Room s) {
+		super(x, y, 2.1f, s);
+		scale = t;
 		
         //effects
 		textureAtlas = new TextureAtlas();
@@ -57,64 +56,34 @@ public class Player extends Movables {
 		playerAnimation.add("playerSW", new Animation<TextureRegion>(Constants.FRAME_SPEED, GameScreen.atlas.findRegions("playerSW")));
 		playerAnimation.add("error", new Animation<TextureRegion>(Constants.FRAME_SPEED, GameScreen.atlas.findRegions("error")));
 		playerAnimation.setCurrent("playerS");
-        
-        //physics body definitions
-        BodyDef bodyDef = new BodyDef();
-        bodyDef.type = BodyDef.BodyType.DynamicBody;
-        bodyDef.position.set(x, y);
-
-        // Create a body in the world using our definition
-        this.body = GameScreen.world.createBody(bodyDef);
-
-        // Now define the dimensions of the physics shape
-        PolygonShape shape = new PolygonShape();
-        // We are a box, so this makes sense, no?
-        // Basically set the physics polygon to a box with the same dimensions as our sprite
-        shape.setAsBox(this.getWidth()/2, this.getHeight()/2);
-
-        // FixtureDef is a confusing expression for physical properties
-        // Basically this is where you, in addition to defining the shape of the body
-        // you also define it's properties like density, restitution and others we will see shortly
-        // If you are wondering, density and area are used to calculate over all mass
-        FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.shape = shape;
-        fixtureDef.density = 1f;
-        fixtureDef.friction = 0.5f;
-        fixtureDef.restitution= 1f;
-        Fixture fixture = body.createFixture(fixtureDef);
-
-        // Shape is the only disposable of the lot, so get rid of it
-        shape.dispose();
-        this.setOrigin(this.getWidth()/2,this.getHeight()/2);
 	}
 	
 		
 	@Override
 	public void draw(SpriteBatch batch) {
+		body.applyForceToCenter(forceVector, true);
 		this.updateTick();
-		
-		//this.debugPlayer();
-		//Gdx.graphics.getDeltaTime();
+
 		if (elapsedTime > 0.3) {
 			elapsedTime = 0;
-			
-			if(Math.abs(xVel) > 0.0001 || Math.abs(yVel) > 0.0001) {
+
+			if(Math.abs(xVel) > 0.0001 || Math.abs(yVel) > 0.0001) { //A weird function made to control animation speed
 				playerAnimation.setAnimationDuration(Math.abs(-15.217f*Math.abs(this.xVel) + 0.6522f));
 			}
 			else {
 				playerAnimation.setAnimationDuration(10000);
 			}
-			
-			if ((xVel >= (1/tc)) && ((yVel <= (1/tc)) && (yVel >= -(1/tc))) ) { // East
+		
+			if ((xVel >= (1/scale)) && ((yVel <= (1/scale)) && (yVel >= -(1/scale))) ) { // East
 				playerAnimation.setCurrent("playerE");
 				
-			} else if ((xVel <= -(1/tc)) && ((yVel <= (1/tc)) && (yVel >= -(1/tc))) ) { // West
+			} else if ((xVel <= -(1/scale)) && ((yVel <= (1/scale)) && (yVel >= -(1/scale))) ) { // West
 				playerAnimation.setCurrent("playerW");
 				
-			} else if (((xVel <= (1/tc)) && (xVel >= -(1/tc)) ) && (yVel >= (1/tc))) { // North
+			} else if (((xVel <= (1/scale)) && (xVel >= -(1/scale)) ) && (yVel >= (1/scale))) { // North
 				playerAnimation.setCurrent("playerN");
 				
-			} else if (((xVel <= (1/tc)) && (xVel >= -(1/tc)) ) && (yVel <= -(1/tc))) { // South
+			} else if (((xVel <= (1/scale)) && (xVel >= -(1/scale)) ) && (yVel <= -(1/scale))) { // South
 				playerAnimation.setCurrent("playerS");
 				
 			} else if ((xVel > 0) && (yVel > 0)) { // Northeast
@@ -132,14 +101,11 @@ public class Player extends Movables {
 			} else if ((xVel == 0) && (yVel == 0)) { // Standing still 
 				playerAnimation.setCurrent("playerS");
 			}
-			
 		}		
-		elapsedTime += Gdx.graphics.getDeltaTime();
 		
+		elapsedTime += Gdx.graphics.getDeltaTime();
 		frame = playerAnimation.getFrame();
-		body.applyForceToCenter(forceVector, true);
-		batch.draw(frame, xPos, yPos, this.getWidth(), this.getHeight());
-//		effect.draw(batch);
+		batch.draw(frame, xPos - (Constants.TILESIZE/1.8f), yPos - (Constants.TILESIZE/3.8f), Constants.TILESIZE*1.1f, Constants.TILESIZE*1.1f);
 	}
 	
 	
@@ -155,9 +121,7 @@ public class Player extends Movables {
     	System.out.println("Player X: " + this.getX() + " PlayerY: " + this.getY());
 		System.out.println("Player xV: " + xVel + " Player yV: " + yVel);
 		System.out.println("Player xA: " + xAcc + " Player yA: " + yAcc);
-		System.out.println("Jolt: " + jolt[0] + "  " + jolt[1] + "  " + jolt[2] + "  " + jolt[3]);
 		System.out.println(Math.abs(-15.217f*Math.abs(this.xVel) + 0.6522f));
-		System.out.println("");
     }
     
     public Room getRoom() {
@@ -173,8 +137,5 @@ public class Player extends Movables {
     			(bounds[3]*Constants.TILESIZE) - (bounds[1]*Constants.TILESIZE) - Constants.TILESIZE*2,
     			(bounds[2]*Constants.TILESIZE) - (bounds[0]*Constants.TILESIZE) - Constants.TILESIZE*2
     			);
-    }
-    
-    
-    
+    }   
 }

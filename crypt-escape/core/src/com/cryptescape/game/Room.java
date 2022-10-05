@@ -39,7 +39,7 @@ public class Room {
 		relativeLocation = l;
 		
 		int[] bounds = Constants.ROOMSIZES.get(rt);
-		roomCorner[0] = Constants.CAMERA_HEIGHT * (Constants.Y_MAPSIZE - l[0]) + (Constants.Y_BUFFER + (bounds[0]*Constants.TILESIZE)); 
+		roomCorner[0] = Constants.CAMERA_HEIGHT * (Constants.NUM_OF_ROOMS_Y - l[0]) + (Constants.Y_BUFFER + (bounds[0]*Constants.TILESIZE)); 
 		roomCorner[1] = Constants.CAMERA_WIDTH * (l[1]) + (Constants.X_BUFFER + (bounds[1]*Constants.TILESIZE));
 //		roomTop[0] = Constants.CAMERA_HEIGHT * (Constants.Y_MAPSIZE - l[0]) + (Constants.Y_BUFFER + (bounds[2]*Constants.TILESIZE));
 //		roomTop[1] = Constants.CAMERA_WIDTH * (l[1]) + (Constants.X_BUFFER + (bounds[3]*Constants.TILESIZE));
@@ -82,6 +82,10 @@ public class Room {
 					iItems.add(new BoxObstacle(col, row, current, this));
 				} 
 				
+				if( current.equals("puddle") ) { //Of Type Box
+					iItems.add(new Puddle(col, row, current, this));
+				} 
+				
 				if ( current.equals("blocked") ) {
 					//doSOmething later
 				}
@@ -100,10 +104,26 @@ public class Room {
 	
 	public void draw(SpriteBatch batch) {
 		//Render background first, then
+		batch.disableBlending();
 		batch.draw(GameScreen.BACKGROUND, roomCorner[1]+Constants.TILESIZE, roomCorner[0]+Constants.TILESIZE, roomTop[1]-Constants.TILESIZE*2, roomTop[0]-Constants.TILESIZE*2);
+		batch.enableBlending();
 		
 		for(Interactable i : iItems) {
 			i.draw(batch);
+		}
+	}
+	
+	
+	//IMPLETMENT THESE LATER
+	public void sleepRoom() {
+		for(Interactable i : iItems) {
+			//Does nothing currently, bodies automatically sleep 
+		}
+	}
+	
+	public void wakeRoom() {
+		for(Interactable i : iItems) {
+			//Does nothing currently, bodies automatically sleep 
 		}
 	}
 	

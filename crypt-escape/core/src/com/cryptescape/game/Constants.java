@@ -17,12 +17,14 @@ public class Constants {
 	public static float FRAME_SPEED = 1/60f;
 	
 	//Y by X room array
-	public static final int Y_MAPSIZE = Menu.getSize()[0]; 
-	public static final int X_MAPSIZE = Menu.getSize()[1];
+	public static final int NUM_OF_ROOMS_Y = Menu.getSize()[0]; 
+	public static final int NUM_OF_ROOMS_X = Menu.getSize()[1];
 
 	//Camera size
 	public static final float CAMERA_WIDTH = 24f;
 	public static final float CAMERA_HEIGHT = 18f;
+	public static final float VIEWPORT_WIDTH = CAMERA_WIDTH / 3;
+	public static final float VIEWPORT_HEIGHT = CAMERA_HEIGHT / 3;
 	
 	//Room constants
 	public static final float Y_ROOM_METERS = CAMERA_HEIGHT - (CAMERA_HEIGHT/3); //pixel x/y of each room

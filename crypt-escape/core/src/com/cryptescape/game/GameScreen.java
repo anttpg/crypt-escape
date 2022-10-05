@@ -25,10 +25,19 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.badlogic.gdx.utils.viewport.StretchViewport;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Body;
+import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
@@ -46,6 +55,7 @@ public class GameScreen implements Screen {
 	public static List<List<Room>> rooms = new ArrayList<List<Room>>(); //Holds all the rooms
 	
 	public static OrthographicCamera camera;
+	public static Viewport viewport;
 	public static TextureAtlas atlas;
 	
 	private BitmapFont font;
@@ -53,6 +63,7 @@ public class GameScreen implements Screen {
 	public static Enemy enemy;	
 	public static Player player;
 	public static TextureRegion BACKGROUND;
+	private Fixture BASE_FLOOR;
 	
 	
 	private Music ambiance;
@@ -60,6 +71,7 @@ public class GameScreen implements Screen {
 	public float sprint = 1; //changes when sprinting
 
 	float playerCounter = 0;
+	
 	
 
 	
@@ -70,6 +82,11 @@ public class GameScreen implements Screen {
 		camera = new OrthographicCamera(Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);
 		camera.position.set(Constants.CAMERA_WIDTH/2, Constants.CAMERA_HEIGHT/2, 0);
 		
+		//Different types of viewports for debugging
+		//viewport = new ExtendViewport(Constants.VIEWPORT_WIDTH*15, Constants.VIEWPORT_HEIGHT*15, camera);
+		//viewport = new ExtendViewport(Constants.VIEWPORT_WIDTH*5, Constants.VIEWPORT_HEIGHT*5, camera);
+		viewport = new ExtendViewport(Constants.VIEWPORT_WIDTH, Constants.VIEWPORT_HEIGHT, camera);
+		
 		ambiance = Gdx.audio.newMusic(Gdx.files.internal("caveAmbiance.mp3"));
 		ambiance.setLooping(true);
 		
@@ -77,11 +94,11 @@ public class GameScreen implements Screen {
 	
 		
 		//DYNAMIC ACTOR GENERATION
-		player = new Player(12f, 10f, 0.85f, 0.85f, 100f, null); 
+		player = new Player(12f, 10f, 100f, null); 
 		stage.addActor(player);
 	
-		enemy = new Enemy(4f, 4f, 0.95f, 0.95f, 100f);
-		stage.addActor(enemy);
+		//enemy = new Enemy(4f, 4f, 0.95f, 0.95f, 100f);
+		//stage.addActor(enemy);
 		
 		Texture b = new Texture(Gdx.files.internal("imageAssets/stone.png"));
 		b.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
@@ -89,6 +106,18 @@ public class GameScreen implements Screen {
 		
 		//X,Y, then SIZE AFTER REPEAT
 		BACKGROUND.setRegion(0, 0, Constants.CAMERA_WIDTH - Constants.X_BUFFER*2, Constants.CAMERA_HEIGHT - Constants.Y_BUFFER*2); 
+		
+		
+		//Obsolete with linear dampening
+//		BodyDef bodyDef = new BodyDef();  
+//		bodyDef.position.set(Constants.CAMERA_WIDTH / 2f, Constants.CAMERA_HEIGHT / 2f); //Set its position 
+//	    Body groundBody = world.createBody(bodyDef);  
+//	    PolygonShape groundshape = new PolygonShape();  
+//	    groundshape.setAsBox(Constants.CAMERA_WIDTH/2f, Constants.CAMERA_HEIGHT / 2f);  
+//	    BASE_FLOOR = groundBody.createFixture(groundshape, 0.0f);
+//	    groundshape.dispose();
+	    
+		
 		
 		
 		// ROOM GENERATION BELOW
@@ -210,10 +239,10 @@ public class GameScreen implements Screen {
 		int index;
 		final ArrayList<String[][]> TEMPLATE = new ArrayList<String[][]>(Collections.unmodifiableList(pregenTemplate));
 		
-		for(int col = 0; col < Constants.Y_MAPSIZE; col++) {
+		for(int col = 0; col < Constants.NUM_OF_ROOMS_Y; col++) {
 			rooms.add(new ArrayList<Room>());  //instantiate all columns in the 2d array
 			
-			for(int row = 0; row < Constants.X_MAPSIZE; row++) {
+			for(int row = 0; row < Constants.NUM_OF_ROOMS_X; row++) {
 				//For each room in an NxN grid, that will make up the playfield...
 				//DETERMINE: Room type, and what its filled with.
 				index = roomTypeGen.next();
@@ -299,35 +328,31 @@ public class GameScreen implements Screen {
 		
 		
 		game.batch.disableBlending(); //save resources when not needed
-		
 		//debugging tools ->
 		game.font.draw(game.batch, "FPS: "+ Gdx.graphics.getFramesPerSecond(), 1f, Constants.CAMERA_HEIGHT-1f);
 		game.font.draw(game.batch, "Player xV: " + player.xVel + "Player yV: " + player.yVel,  1f, Constants.CAMERA_HEIGHT-1.5f);
 		game.font.draw(game.batch, "Player xA: " + player.xAcc + "Player yA: " + player.yAcc, 1f, Constants.CAMERA_HEIGHT-2f);
-		game.font.draw(game.batch, player.jolt[0] + "  " + player.jolt[1] + "  "+ player.jolt[2] + "  "+ player.jolt[3], 1f, Constants.CAMERA_HEIGHT-2.5f);
 		//game.font.draw(game.batch, player.debugPlayer(), 1f, Constants.HEIGHT-3f);
 		
-		//System.out.println("Player xV: " + player.xVel + "Player yV: " + player.yVel);		
-		game.batch.enableBlending();
 		
+		game.batch.enableBlending();
 		
 		//IMPORTANT <<< DO ALL RENDERING IN THE ORDER OF WHICH YOU WANT IT TO APPEAR
 		// Ie: Enemy on top of Player on top of Room.
 		
 		player.getRoom().draw(game.batch); //draw the room that the player is currently in
 		
-		player.setAcceleration((wasd[3]-wasd[1])*0.0013f, (wasd[0]-wasd[2])*0.0013f, sprint); //handles player movement
+		player.setAcceleration((wasd[3]-wasd[1]), (wasd[0]-wasd[2]), sprint); //handles player movement
 		player.draw(game.batch);
 		
-		enemy.implementAction(); //decides what the enemy will do
-		enemy.draw(game.batch);
-		
-
-		
+//		enemy.implementAction(); //decides what the enemy will do
+//		enemy.draw(game.batch);
 		game.batch.end();
+		
 		
         stage.act();
         stage.draw();
+        camera.position.set(player.xPos, player.yPos, 0);
 		debugRenderer.render(world, camera.combined);
 		world.step(Constants.FRAME_SPEED, 6, 2);
 		
@@ -370,10 +395,12 @@ public class GameScreen implements Screen {
 	
 	@Override
 	public void resize(int width, int height) {
-		//resize() can be called anytime you change your screen size(eg: when you screen orientation changes). 
+		//resize() will be called anytime you change your screen size(eg: when you screen orientation changes). 
 		//resize() takes the actual width and height (320x480 etc), which is the pixel value, and converts it
         camera.viewportHeight = (Constants.CAMERA_WIDTH / width) * height;
         camera.update();
+        viewport.update(width, height);
+        
 	}
 
 	@Override
