@@ -164,8 +164,17 @@ public class Player extends Movables {
     	return currentRoom;
     }
     
-    public void setRoom(Room r) {
+    public void changeRoom(Room r) {
     	currentRoom = r;
+    	
+    	//Change the size of the background proportional to the current room REMEBER ITS IN X/Y
+    	int[] bounds = Constants.ROOMSIZES.get(r.getRoomType());
+    	GameScreen.BACKGROUND.setRegion(0, 0, 
+    			(bounds[3]*Constants.TILESIZE) - (bounds[1]*Constants.TILESIZE) - Constants.TILESIZE*2,
+    			(bounds[2]*Constants.TILESIZE) - (bounds[0]*Constants.TILESIZE) - Constants.TILESIZE*2
+    			);
     }
+    
+    
     
 }

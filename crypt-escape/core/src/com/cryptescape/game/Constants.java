@@ -36,7 +36,7 @@ public class Constants {
 	public static final String[] WALLTYPES = new String[] {"northWall", "eastWall", "southWall", "westWall"};
 	public static final String[] DOORTYPES = new String[] {"northDoor", "eastDoor", "southDoor", "westDoor"};
 
-	public static final Map<String, int[]> roomSizes = new HashMap<String, int[]>() {{ 
+	public static final Map<String, int[]> ROOMSIZES = new HashMap<String, int[]>() {{ 
 		//Tiles start where, and end where
 		// Y, X bottom left, Y, X top right
         put("open", new int[] {0, 0, Y_TILES, X_TILES} );      

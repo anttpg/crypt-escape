@@ -248,7 +248,7 @@ public class GameScreen implements Screen {
 			}
 		}
 		
-		player.setRoom(rooms.get(3).get(0));
+		player.changeRoom(rooms.get(3).get(0));
 
 
 		
