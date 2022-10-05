@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -42,8 +43,8 @@ public class Room {
 	public Room(int[] l, String[][] s, String rt) {	
 		// Get relative x/y location and calculate real coords based on that.
 		relativeLocation = l;
-		roomLocation[0] = Constants.CAMERA_HEIGHT * (Constants.Y_MAPSIZE - l[0]);
-		roomLocation[1] = Constants.CAMERA_WIDTH * (l[1]);
+		roomLocation[0] = Constants.CAMERA_HEIGHT * (Constants.Y_MAPSIZE - l[0]) + Constants.Y_BUFFER;
+		roomLocation[1] = Constants.CAMERA_WIDTH * (l[1]) + Constants.X_BUFFER;
 		seed = s;
 		roomType = rt;
 		
@@ -98,17 +99,16 @@ public class Room {
 		discovered = true;
 	}
 	
-	
-	public void drawRoom() {
-		return;
+	public void draw(SpriteBatch batch) {
+		batch.draw(GameScreen.BACKGROUND, roomLocation[1], roomLocation[0], Constants.CAMERA_WIDTH - Constants.X_BUFFER*2, Constants.CAMERA_HEIGHT - Constants.Y_BUFFER*2);
 	}
 	
 	
 	private Vector2 getItemLocation(int col, int row) {
 		return new Vector2( // vectors are in x,y,z
-				roomLocation[1] + (Constants.X_ROOM_METERS * (row/(float)Constants.X_TILES) + Constants.X_BUFFER),
-				// Original X corner           + Location of X tile over                + border buffer
-				roomLocation[0] + (Constants.Y_ROOM_METERS * (col/(float)Constants.Y_TILES) + Constants.Y_BUFFER));
+				roomLocation[1] + (Constants.X_ROOM_METERS * (row/(float)Constants.X_TILES)) + Constants.TILESIZE/2,
+				//Original corner        + Location at X tiles over          
+				roomLocation[0] + (Constants.Y_ROOM_METERS * (col/(float)Constants.Y_TILES)) + Constants.TILESIZE/2 );
 	}
 	
 	private void createStaticEdge(int col, int row, int c) {
@@ -120,7 +120,7 @@ public class Room {
 		
 		// SETTING THE POINTS AS OFFSET DISTANCE FROM CENTER
 		edge.set(edgeSizes[c][0], edgeSizes[c][1], edgeSizes[c][2], edgeSizes[c][3]);
-		bd.createFixture(edge, 0.0f); 	
+		bd.createFixture(edge, 0.0f);
 		//DEBUG VERSION --> debugItem(bd.createFixture(edge, 0.0f), col, row);
 		edge.dispose();	
 	}

@@ -20,16 +20,16 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
 
 public class Player extends Movables {
-	public boolean isRunning = false;
+	private boolean isRunning = false;
 	private TextureRegion frame;
 	private AnimationHandler playerAnimation;
 	private float elapsedTime = 1f;
 	private boolean changeAnimation = true;
 	
-
     private ParticleEffect effect;
 	private TextureAtlas textureAtlas;
 
+	private Room currentRoom; 
 
 	/**
 	* Defines a Player object. Player extends Movables. 
@@ -38,8 +38,9 @@ public class Player extends Movables {
 	* math/tolerances within the function. All values must be given with respect 
 	* to meters, not pixels. 
 	*/
-	public Player(float x, float y, float w, float h, float t) {
+	public Player(float x, float y, float w, float h, float t, Room starting) {
 		super(x, y, w, h, 2.1f, t);
+		currentRoom = starting;
 		
         //effects
 		textureAtlas = new TextureAtlas();
@@ -56,14 +57,6 @@ public class Player extends Movables {
 		playerAnimation.add("playerSW", new Animation<TextureRegion>(Constants.FRAME_SPEED, GameScreen.atlas.findRegions("playerSW")));
 		playerAnimation.add("error", new Animation<TextureRegion>(Constants.FRAME_SPEED, GameScreen.atlas.findRegions("error")));
 		playerAnimation.setCurrent("playerS");
-		
-//        effect = new ParticleEffect();
-//        effect.load(Gdx.files.internal("Old Assets/notusable/bubleNote.p"), textureAtlas);
-//        effect.scaleEffect(1, 1);
-//        effect.setDuration(3);
-//        effect.setPosition(this.getWidth()/2 + this.getX(),this.getHeight()/2+ this.getY());
-//        effect.start();
-        
         
         //physics body definitions
         BodyDef bodyDef = new BodyDef();
@@ -155,8 +148,6 @@ public class Player extends Movables {
         super.act(delta);
         this.setRotation(body.getAngle() *  MathUtils.radiansToDegrees);
         this.setPosition(body.getPosition().x-this.getWidth()/2,body.getPosition().y-this.getHeight()/2);
-//        effect.setPosition(this.getWidth()/2+this.getX(),this.getHeight()/2+this.getY());
-//        effect.update(delta);
     }
     
     public void debugPlayer() {
@@ -167,6 +158,14 @@ public class Player extends Movables {
 		System.out.println("Jolt: " + jolt[0] + "  " + jolt[1] + "  " + jolt[2] + "  " + jolt[3]);
 		System.out.println(Math.abs(-15.217f*Math.abs(this.xVel) + 0.6522f));
 		System.out.println("");
+    }
+    
+    public Room getRoom() {
+    	return currentRoom;
+    }
+    
+    public void setRoom(Room r) {
+    	currentRoom = r;
     }
     
 }

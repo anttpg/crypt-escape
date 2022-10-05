@@ -13,6 +13,8 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureWrap;
+import com.badlogic.gdx.graphics.TextureData;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -48,7 +50,7 @@ public class GameScreen implements Screen {
 
 	public static Enemy enemy;	
 	public static Player player;
-	
+	public static TextureRegion BACKGROUND;
 	
 	
 	private Music ambiance;
@@ -72,17 +74,21 @@ public class GameScreen implements Screen {
 	
 		
 		//DYNAMIC ACTOR GENERATION
-		
-		player = new Player(12f, 10f, 0.85f, 0.85f, 100f); 
+		player = new Player(12f, 10f, 0.85f, 0.85f, 100f, null); 
 		stage.addActor(player);
 	
 		enemy = new Enemy(4f, 4f, 0.95f, 0.95f, 100f);
 		stage.addActor(enemy);
 		
+		Texture b = new Texture(Gdx.files.internal("imageAssets/stone.png"));
+		b.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
+		BACKGROUND = new TextureRegion(b);
+		
+		//X,Y, then SIZE AFTER REPEAT
+		BACKGROUND.setRegion(0, 0, Constants.CAMERA_WIDTH - Constants.X_BUFFER*2, Constants.CAMERA_HEIGHT - Constants.Y_BUFFER*2); 
 		
 		
 		// ROOM GENERATION BELOW
-		
 		int[] p = new int[] {92, 4, 3, 1}; // Probability of a interactable type
 		String[] key = new String[] {"empty", "box", "puddle", "bat"}; //The cooresponding type
 		
@@ -220,13 +226,26 @@ public class GameScreen implements Screen {
 						if(seed[y][x].equals("empty")) {
 							seed[y][x] = roomItemGen.next();
 						}
+						
+						if(x == (Constants.X_TILES/2) || x == (Constants.X_TILES/2)-1) { //Exceptions are, if in front of door
+							if(y == 1 || y == Constants.Y_TILES-2) {
+								seed[y][x] = "empty";
+							}
+						}
+						
+						if(y == (Constants.Y_TILES/2) || y == (Constants.Y_TILES/2)-1) { //Exceptions are, if in front of door
+							if(x == 1 || x == Constants.X_TILES-2) {
+								seed[y][x] = "empty";
+							}
+						}
+						
 					}
 				}
 				rooms.get(col).add(new Room(new int[] {col+1, row}, seed.clone(), roomType));
 			}
 		}
 		
-		
+		player.setRoom(rooms.get(3).get(0));
 
 
 		
@@ -295,6 +314,7 @@ public class GameScreen implements Screen {
 		enemy.implementAction(); //decides what the enemy will do
 		enemy.draw(game.batch);
 		
+		player.getRoom().draw(game.batch); //draw the room that the player is currently in
 		
 		game.batch.end();
 		

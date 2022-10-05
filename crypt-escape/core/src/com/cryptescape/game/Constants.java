@@ -3,6 +3,9 @@ package com.cryptescape.game;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.Texture.TextureWrap;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class Constants {
 	
@@ -29,7 +32,11 @@ public class Constants {
 	public static final int Y_TILES = 18;
 	public static final float TILESIZE = X_ROOM_METERS/X_TILES;
 	public static final String[] WALLTYPES = new String[] {"northWall", "eastWall", "southWall", "westWall"};
-	public static final String[] DOORTYPES = new String[] {"northDoor", "eastDoor", "southDoor", "westDoor"};
+	public static final String[] DOORTYPES = new String[] {"westDoor", "northDoor", "eastDoor", "southDoor"}; //intentionally off
+	
+	
+	
+	
 	
 	//MAKE FINAL LATER TODO
 	//public static final ArrayList<String[][]> TEMPLATE = new ArrayList<String[][]>(GameScreen.getImmutableList());
