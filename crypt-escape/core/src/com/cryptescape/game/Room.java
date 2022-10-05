@@ -69,22 +69,22 @@ public class Room {
 				counter = 0;
 				//Checking if the current item should be a static object
 				for(String w : Constants.WALLTYPES) { //Of type wall
-					if( current.equals(w) ) createStaticEdge(col, row, counter);
+					if( current.equals(w) ) iItems.add(new Wall(col, row, current, this, counter));
 					counter++;
 				} 
 				
 				counter = 0;
 				for(String d : Constants.DOORTYPES) { //Of type Door
-					if( current.equals(d) ) createStaticEdge(col, row, counter); 
+					if( current.equals(d) ) iItems.add(new Door(col, row, current, this, counter));
 					counter++;
 				}
 				
-				if( current.equals("box") ) { //figure out how to work this.
-					iItems.add(new Interactable(createStaticBox(col, row))); 
+				if( current.equals("box") ) { //Of Type Box
+					//iItems.add(new BoxObstacle(col, row, current, this));
 				} 
 				
 				if ( current.equals("blocked") ) {
-
+					//doSOmething later
 				}
 				
 				if ( current.equals("empty") ) {
@@ -100,45 +100,12 @@ public class Room {
 	}
 	
 	public void draw(SpriteBatch batch) {
+		//Render background first, then
 		batch.draw(GameScreen.BACKGROUND, roomLocation[1], roomLocation[0], Constants.CAMERA_WIDTH - Constants.X_BUFFER*2, Constants.CAMERA_HEIGHT - Constants.Y_BUFFER*2);
+		for(Interactable i : iItems) {
+			i.draw(batch);
+		}
 	}
-	
-	
-	private Vector2 getItemLocation(int col, int row) {
-		return new Vector2( // vectors are in x,y,z
-				roomLocation[1] + (Constants.X_ROOM_METERS * (row/(float)Constants.X_TILES)) + Constants.TILESIZE/2,
-				//Original corner        + Location at X tiles over          
-				roomLocation[0] + (Constants.Y_ROOM_METERS * (col/(float)Constants.Y_TILES)) + Constants.TILESIZE/2 );
-	}
-	
-	private void createStaticEdge(int col, int row, int c) {
-		BodyDef bodyDef = new BodyDef();  
-		bodyDef.position.set(getItemLocation(col,row)); //Set its position 
-		Body bd = GameScreen.world.createBody(bodyDef);  
-		
-		EdgeShape edge = new EdgeShape(); //Walls/Doors dont need to be a full box
-		
-		// SETTING THE POINTS AS OFFSET DISTANCE FROM CENTER
-		edge.set(edgeSizes[c][0], edgeSizes[c][1], edgeSizes[c][2], edgeSizes[c][3]);
-		bd.createFixture(edge, 0.0f);
-		//DEBUG VERSION --> debugItem(bd.createFixture(edge, 0.0f), col, row);
-		edge.dispose();	
-	}
-	
-	
-	private Fixture createStaticBox(int col, int row) {
-		BodyDef bodyDef = new BodyDef();  
-		bodyDef.position.set(getItemLocation(col,row)); //Set its position 
-		Body bd = GameScreen.world.createBody(bodyDef);  
-		
-		PolygonShape box = new PolygonShape();  // Create a polygon shape 
-
-		box.setAsBox(-Constants.TILESIZE / 2f, Constants.TILESIZE / 2f);
-		Fixture f = bd.createFixture(box, 0.0f);
-		box.dispose();
-		return f;
-	}
-	
 	
 	//Debug functions
 	@SuppressWarnings("unused")
@@ -169,6 +136,10 @@ public class Room {
 
 	public String[][] getSeed() {
 		return seed;
+	}
+
+	public float[] getRoomLocation() {
+		return roomLocation;
 	}
 	
 }

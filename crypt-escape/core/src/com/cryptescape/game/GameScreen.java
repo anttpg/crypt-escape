@@ -308,13 +308,18 @@ public class GameScreen implements Screen {
 		game.batch.enableBlending();
 		
 		
+		//IMPORTANT <<< DO ALL RENDERING IN THE ORDER OF WHICH YOU WANT IT TO APPEAR
+		// Ie: Enemy on top of Player on top of Room.
+		
+		player.getRoom().draw(game.batch); //draw the room that the player is currently in
+		
 		player.setAcceleration((wasd[3]-wasd[1])*0.0013f, (wasd[0]-wasd[2])*0.0013f, sprint); //handles player movement
 		player.draw(game.batch);
 		
 		enemy.implementAction(); //decides what the enemy will do
 		enemy.draw(game.batch);
 		
-		player.getRoom().draw(game.batch); //draw the room that the player is currently in
+
 		
 		game.batch.end();
 		

@@ -53,32 +53,18 @@ box6
   orig: 105, 105
   offset: 0, 0
   index: -1
-doorEast
+eastDoor
   rotate: false
   xy: 487, 336
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
-doorNorth
+eastWall
   rotate: false
-  xy: 278, 64
-  size: 100, 100
-  orig: 100, 100
-  offset: 0, 0
-  index: -1
-doorSouth
-  rotate: false
-  xy: 487, 234
-  size: 100, 100
-  orig: 100, 100
-  offset: 0, 0
-  index: -1
-doorWest
-  rotate: false
-  xy: 385, 197
-  size: 100, 100
-  orig: 100, 100
+  xy: 526, 601
+  size: 140, 144
+  orig: 140, 144
   offset: 0, 0
   index: -1
 error
@@ -165,6 +151,20 @@ monsterW
   orig: 64, 64
   offset: 0, 0
   index: 3
+northDoor
+  rotate: false
+  xy: 278, 64
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+northWall
+  rotate: false
+  xy: 2, 2
+  size: 132, 120
+  orig: 132, 120
+  offset: 0, 0
+  index: -1
 playerE
   rotate: false
   xy: 450, 163
@@ -417,45 +417,45 @@ puddle4
   orig: 320, 320
   offset: 0, 0
   index: -1
-stone
+southDoor
   rotate: false
-  xy: 487, 132
+  xy: 487, 234
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
-stoneLeft
-  rotate: false
-  xy: 526, 601
-  size: 140, 144
-  orig: 140, 144
-  offset: 0, 0
-  index: -1
-stoneLower
-  rotate: false
-  xy: 2, 2
-  size: 132, 120
-  orig: 132, 120
-  offset: 0, 0
-  index: -1
-stoneRight
-  rotate: false
-  xy: 668, 675
-  size: 140, 144
-  orig: 140, 144
-  offset: 0, 0
-  index: -1
-stoneUpper
+southWall
   rotate: false
   xy: 136, 2
   size: 132, 120
   orig: 132, 120
   offset: 0, 0
   index: -1
+stone
+  rotate: false
+  xy: 385, 197
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
 stoneWall
+  rotate: false
+  xy: 487, 132
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: -1
+westDoor
   rotate: false
   xy: 775, 573
   size: 100, 100
   orig: 100, 100
+  offset: 0, 0
+  index: -1
+westWall
+  rotate: false
+  xy: 668, 675
+  size: 140, 144
+  orig: 140, 144
   offset: 0, 0
   index: -1
