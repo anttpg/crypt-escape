@@ -66,6 +66,7 @@ public class GameScreen implements Screen {
 	public static TextureAtlas atlas;
 	
 	private BitmapFont font;
+	private Vector2 mousePosition = new Vector2(0, 0);
 
 	public static Enemy enemy;	
 	public static Player player;
@@ -74,7 +75,7 @@ public class GameScreen implements Screen {
 	
 	private RayHandler rayHandler;
 	private PointLight playerLight;
-	private ConeLight coneLight;
+	private ConeLight playerCone;
 	
 	private Music ambiance;
 	private int[] wasd = new int[] {0,0,0,0};
@@ -116,13 +117,13 @@ public class GameScreen implements Screen {
 		rayHandler.setBlur(true);
 		
 		//Use like 20-200 rays on average, color, how far out to project 
-		playerLight = new PointLight(rayHandler, 500, null, 3.5f, player.xPos, player.yPos);
-		playerLight.setSoftnessLength(2f);
-		playerLight.setXray(false);
+//		playerLight = new PointLight(rayHandler, 500, null, 3.5f, player.xPos, player.yPos);
+//		playerLight.setSoftnessLength(2f);
+//		playerLight.setXray(false);
 		
-//		coneLight = new ConeLight(rayHandler, 100, Color.BLACK, 60f, 1f, 1f, 0, 0f);
-//		coneLight.setSoftnessLength(0);
-//		coneLight.setXray(false);
+		playerCone = new ConeLight(rayHandler, 100, Color.BLACK, 6f, player.xPos, player.yPos, 0, 50f);
+		playerCone.setSoftnessLength(0);
+		playerCone.setXray(false);
 	
 		//enemy = new Enemy(4f, 4f, 0.95f, 0.95f, 100f);
 		//stage.addActor(enemy);
@@ -183,6 +184,13 @@ public class GameScreen implements Screen {
 					sprint = 1;
 				return false;
 			}
+			
+			@Override
+			public boolean mouseMoved(int screenX, int screenY) {
+				mousePosition.set(screenX, screenY);
+				System.out.println("Moved: " + screenX);
+				return false;
+			}
 		});
 	}
 
@@ -220,14 +228,17 @@ public class GameScreen implements Screen {
 		
         stage.act();
         stage.draw();
-        System.out.println(Constants.TILESIZE);
         camera.position.set(player.xPos, player.yPos, 0); //So camera follows player
 		
 //		rayHandler.useCustomViewport(viewport.getScreenX(),
 //                viewport.getScreenY(),
 //                viewport.getScreenWidth(),
 //                viewport.getScreenHeight());
-        playerLight.setPosition(player.xPos, player.yPos);
+        
+        //playerLight.setPosition(player.xPos, player.yPos);
+        playerCone.setPosition(mousePosition.x, mousePosition.y);
+        playerCone.setDirection(getAngle(player.xPos, player.yPos, mousePosition));
+        
         rayHandler.setCombinedMatrix(camera);
 		rayHandler.updateAndRender();
 		
@@ -418,6 +429,14 @@ public class GameScreen implements Screen {
 		player.changeRoom(rooms.get(3).get(0));
 
 
+	}
+	
+	public float getAngle(Float x, Float y, Vector2 target) {
+	    float angle = (float) Math.toDegrees(Math.atan2(target.y - y, target.x - x));
+	    if(angle < 0){
+	        angle += 360;
+	    }
+	    return angle;
 	}
 	
 	public void printSeedArray(String[][] org, String rt) {
