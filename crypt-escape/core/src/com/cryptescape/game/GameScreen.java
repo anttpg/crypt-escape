@@ -32,6 +32,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import box2dLight.ConeLight;
 import box2dLight.PointLight;
 import box2dLight.RayHandler;
 
@@ -73,13 +74,14 @@ public class GameScreen implements Screen {
 	
 	private RayHandler rayHandler;
 	private PointLight playerLight;
-	
+	private ConeLight coneLight;
 	
 	private Music ambiance;
 	private int[] wasd = new int[] {0,0,0,0};
 	public float sprint = 1; //changes when sprinting
 
 	float playerCounter = 0;
+	
 	
 	
 	
@@ -117,6 +119,10 @@ public class GameScreen implements Screen {
 		playerLight = new PointLight(rayHandler, 100, Color.BLACK, 1f, 0f, 0f);
 		playerLight.setSoftnessLength(0f);
 		playerLight.setXray(false);
+		
+//		coneLight = new ConeLight(rayHandler, 100, Color.BLACK, 60f, 1f, 1f, 0, 0f);
+//		coneLight.setSoftnessLength(0);
+//		coneLight.setXray(false);
 	
 		//enemy = new Enemy(4f, 4f, 0.95f, 0.95f, 100f);
 		//stage.addActor(enemy);
@@ -217,10 +223,12 @@ public class GameScreen implements Screen {
         System.out.println(Constants.TILESIZE);
         camera.position.set(player.xPos, player.yPos, 0); //So camera follows player
 		
-		rayHandler.useCustomViewport(viewport.getScreenX(),
-                viewport.getScreenY(),
-                viewport.getScreenWidth(),
-                viewport.getScreenHeight());
+//		rayHandler.useCustomViewport(viewport.getScreenX(),
+//                viewport.getScreenY(),
+//                viewport.getScreenWidth(),
+//                viewport.getScreenHeight());
+        
+        rayHandler.setCombinedMatrix(camera);
 		rayHandler.updateAndRender();
 		
 		debugRenderer.render(world, camera.combined);
