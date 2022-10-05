@@ -32,21 +32,18 @@ public class Constants {
 	public static final int Y_TILES = 18;
 	public static final float TILESIZE = X_ROOM_METERS/X_TILES;
 	public static final String[] WALLTYPES = new String[] {"northWall", "eastWall", "southWall", "westWall"};
-	public static final String[] DOORTYPES = new String[] {"westDoor", "northDoor", "eastDoor", "southDoor"}; //intentionally off
+	public static final String[] DOORTYPES = new String[] {"northDoor", "eastDoor", "southDoor", "westDoor"}; //intentionally off
 	
 	public static float[][] edgeSizes = new float[][] { //v1X, v1Y, v2X, v2Y edge points>> into NESW
-		{-Constants.TILESIZE / 2f, Constants.TILESIZE/2f, Constants.TILESIZE / 2f, Constants.TILESIZE/2f}, 
+		{-Constants.TILESIZE / 2f, -Constants.TILESIZE/2f, Constants.TILESIZE / 2f, -Constants.TILESIZE/2f}, 
 		{-Constants.TILESIZE/2f, -Constants.TILESIZE / 2f, -Constants.TILESIZE/2f, Constants.TILESIZE / 2f},
-		{-Constants.TILESIZE / 2f, -Constants.TILESIZE/2f, Constants.TILESIZE / 2f, -Constants.TILESIZE/2f},
+		{-Constants.TILESIZE / 2f, Constants.TILESIZE/2f, Constants.TILESIZE / 2f, Constants.TILESIZE/2f},
 		{Constants.TILESIZE/2f, -Constants.TILESIZE / 2f, Constants.TILESIZE/2f, Constants.TILESIZE / 2f}}; 
 	
 	
 	
 	//MAKE FINAL LATER TODO
 	//public static final ArrayList<String[][]> TEMPLATE = new ArrayList<String[][]>(GameScreen.getImmutableList());
-	
-	
-	
-	
+
 
 }

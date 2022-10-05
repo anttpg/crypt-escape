@@ -80,7 +80,7 @@ public class Room {
 				}
 				
 				if( current.equals("box") ) { //Of Type Box
-					//iItems.add(new BoxObstacle(col, row, current, this));
+					//iItems.add(new Door(col, row, "northDoor", this, 0));
 				} 
 				
 				if ( current.equals("blocked") ) {

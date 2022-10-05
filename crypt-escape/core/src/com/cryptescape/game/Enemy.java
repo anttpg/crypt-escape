@@ -136,5 +136,5 @@ public class Enemy extends Movables {
 		System.out.println(Math.abs(-15.217f * Math.abs(this.xVel) + 0.6522f));
 		System.out.println("");
 	}
-
+	
 }

@@ -123,17 +123,17 @@ public class GameScreen implements Screen {
 					seed[y][x] = "empty";
 					
 					//NORTH-SOUTH
-					if(y == 0) { //NORTH FACING
+					if(y == 0) { //SOUTH FACING
 						if(x == (Constants.X_TILES/2) || x == (Constants.X_TILES/2)-1) // If doorway
-							seed[y][x] = "northDoor";
-						else  // regular wall
-							seed[y][x] = "northWall";	
-					}
-					else if(y == Constants.Y_TILES-1) { // SOUTH FACING
-						if(x == (Constants.X_TILES/2) || x == (Constants.X_TILES/2)-1) 
 							seed[y][x] = "southDoor";
+						else  // regular wall
+							seed[y][x] = "southWall";		
+					}
+					else if(y == Constants.Y_TILES-1) { // NORTH FACING
+						if(x == (Constants.X_TILES/2) || x == (Constants.X_TILES/2)-1) 
+							seed[y][x] = "northDoor";
 						else  
-	 						seed[y][x] = "southWall";	
+	 						seed[y][x] = "northWall";
 					}
 					
 					//EAST-WEST
@@ -150,6 +150,11 @@ public class GameScreen implements Screen {
 						else  
 	 						seed[y][x] = "eastWall";
 					}
+					
+
+					if((x == 0 || x == (Constants.X_TILES-1)) && (y == 0 || y == Constants.Y_TILES-1)) { //Corners
+						seed[y][x] = "blocked";
+					}
 
 					
 					// Type modifiers: 
@@ -160,31 +165,37 @@ public class GameScreen implements Screen {
 					else if(k.equals("bN3")) { //North 3 doors are blocked
 						if(y < (Constants.Y_TILES/2) + 3) seed[y][x] = "blocked";  
 						if (y == (Constants.Y_TILES/2)+3) seed[y][x] = "northWall"; 
+						if(y == (Constants.Y_TILES/2)+3 && (x == 0 || x == Constants.X_TILES-1)) seed[y][x] = "blocked";
 					}
 					
 					else if(k.equals("bS3")) { // South 3 doors are blocked
 						if(y > (Constants.Y_TILES/2) - 3) seed[y][x] = "blocked"; 
 						if (y == (Constants.Y_TILES/2)-3) seed[y][x] = "southWall"; 
+						if(y == (Constants.Y_TILES/2)-3 && (x == 0 || x == Constants.X_TILES-1)) seed[y][x] = "blocked";
 					}
 					
 					else if(k.equals("bW1")) { // West door is blocked
 						if(x < (Constants.X_TILES/2) - 3)  seed[y][x] = "blocked"; 
 						if(x == (Constants.X_TILES/2) - 3) seed[y][x] = "westWall";
+						if(x == (Constants.X_TILES/2) - 3 && (y == 0 || x == Constants.Y_TILES-1)) seed[y][x] = "blocked"; 
 					}
 					
 					else if(k.equals("bE1")) { // East door is blocked
 						if(x > (Constants.X_TILES/2) + 3)  seed[y][x] = "blocked"; 
 						if(x == (Constants.X_TILES/2) + 3) seed[y][x] = "eastWall";
+						if(x == (Constants.X_TILES/2) + 3 && (y == 0 || x == Constants.Y_TILES-1)) seed[y][x] = "blocked"; 
 					}
 
 					else if(k.equals("bW3")) { // West 3 doors are blocked
 						if(x < (Constants.X_TILES/2) + 3)  seed[y][x] = "blocked"; 
 						if(x == (Constants.X_TILES/2) + 3) seed[y][x] = "westWall"; 
+						if(x == (Constants.X_TILES/2) + 3 && (y == 0 || x == Constants.Y_TILES-1)) seed[y][x] = "blocked"; 
 					}
 					
 					else if(k.equals("bE3")) { // East 3 doors are blocked
 						if(x > (Constants.X_TILES/2) - 3)  seed[y][x] = "blocked"; 
 						if(x == (Constants.X_TILES/2) - 3) seed[y][x] = "eastWall";
+						if(x == (Constants.X_TILES/2) - 3 && (y == 0 || x == Constants.Y_TILES-1)) seed[y][x] = "blocked"; 
 					}
 				}
 			}
