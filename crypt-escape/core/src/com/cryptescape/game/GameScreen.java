@@ -240,11 +240,12 @@ public class GameScreen implements Screen {
         mousePosition.x = (player.xPos - (Constants.VIEWPORT_WIDTH/2)) + (((float)relativeMousePosition.x/Gdx.graphics.getWidth()) * Constants.VIEWPORT_WIDTH);
 		mousePosition.y = (player.yPos + (Constants.VIEWPORT_HEIGHT/2)) - (((float)relativeMousePosition.y/Gdx.graphics.getHeight()) * Constants.VIEWPORT_HEIGHT);
 		
-		
-        playerLight.setPosition(player.xPos, player.yPos);
+        
         playerCone.setPosition(player.xPos, player.yPos);
         playerCone.setDirection(getAngle(player.xPos, player.yPos, mousePosition));
-    
+        playerLight.setPosition(player.xPos, player.yPos);
+        
+        
         rayHandler.setCombinedMatrix(camera);
 		rayHandler.updateAndRender();
 		
