@@ -1,19 +1,24 @@
 
 MY STUFF:
 -Player sprinting/slow walking (increases noise for enemy to hear)
+
 -Door opening baseed on range from player 
--Lighting based on view 
+-Boxes openable and animation
+-Box border
+-Able to hide in closets or stuff
+-Different room types of different angles
+-BIG BOX/WALL!
+-bigger rooms?
+-Enemy smells player hiding away or smthn
+-Make function to dim / brighten the light
+
 -Zoom camera and have follow player to corner
 -Change to tilemap system instead of doing it manually?
 -Fix that fucking stone tiling issue??
 -Display font text on screen
--Implement sleeping in room interactables??
--Fix floor not slowing objects?? Wy tf are my objects made of dark matter???
 
 
 FOR OTHERS: 
 -Add music
 -Sound effects on walking
 -MAKE THE FUCKING AI MOVE AND SHIT
-
-
