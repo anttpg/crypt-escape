@@ -67,6 +67,7 @@ public class GameScreen implements Screen {
 	
 	private BitmapFont font;
 	private Vector2 mousePosition = new Vector2(0, 0);
+	private Vector2 relativeMousePosition = new Vector2(0, 0);
 
 	public static Enemy enemy;	
 	public static Player player;
@@ -82,6 +83,7 @@ public class GameScreen implements Screen {
 	public float sprint = 1; //changes when sprinting
 
 	float playerCounter = 0;
+	
 	
 	
 	
@@ -110,19 +112,20 @@ public class GameScreen implements Screen {
 		player = new Player(12f, 10f, 100f, null); 
 		stage.addActor(player);
 		
-		
+		RayHandler.useDiffuseLight(true);
 		rayHandler = new RayHandler(world);
 		rayHandler.setAmbientLight(0f);
 		rayHandler.setShadows(true);
 		rayHandler.setBlur(true);
 		
-		//Use like 20-200 rays on average, color, how far out to project 
-//		playerLight = new PointLight(rayHandler, 500, null, 3.5f, player.xPos, player.yPos);
-//		playerLight.setSoftnessLength(2f);
-//		playerLight.setXray(false);
 		
-		playerCone = new ConeLight(rayHandler, 100, Color.BLACK, 6f, player.xPos, player.yPos, 0, 50f);
-		playerCone.setSoftnessLength(0);
+		//Use like 20-200 rays on average, color, how far out to project 
+		playerLight = new PointLight(rayHandler, 100, null, 2.5f, player.xPos, player.yPos);
+		playerLight.setSoftnessLength(2f);
+		playerLight.setXray(true);
+		
+		playerCone = new ConeLight(rayHandler, 300, null, 6f, player.xPos, player.yPos, 0, 30f);
+		playerCone.setSoftnessLength(2f);
 		playerCone.setXray(false);
 	
 		//enemy = new Enemy(4f, 4f, 0.95f, 0.95f, 100f);
@@ -186,9 +189,9 @@ public class GameScreen implements Screen {
 			}
 			
 			@Override
-			public boolean mouseMoved(int screenX, int screenY) {
-				mousePosition.set(screenX, screenY);
-				System.out.println("Moved: " + screenX);
+			public boolean mouseMoved(int mouseX, int mouseY) {
+				relativeMousePosition.x = mouseX;
+				relativeMousePosition.y = mouseY;
 				return false;
 			}
 		});
@@ -197,7 +200,7 @@ public class GameScreen implements Screen {
 	
 	@Override
 	public void render(float delta) {
-		ScreenUtils.clear(0.5f, 0.5f, 0.5f, 1);
+		ScreenUtils.clear(0.0f, 0.0f, 0.0f, 1);
 		camera.update();
 		game.batch.setProjectionMatrix(camera.combined);
 		game.batch.begin();
@@ -234,15 +237,18 @@ public class GameScreen implements Screen {
 //                viewport.getScreenY(),
 //                viewport.getScreenWidth(),
 //                viewport.getScreenHeight());
-        
-        //playerLight.setPosition(player.xPos, player.yPos);
-        playerCone.setPosition(mousePosition.x, mousePosition.y);
+        mousePosition.x = (player.xPos - (Constants.VIEWPORT_WIDTH/2)) + (((float)relativeMousePosition.x/Gdx.graphics.getWidth()) * Constants.VIEWPORT_WIDTH);
+		mousePosition.y = (player.yPos + (Constants.VIEWPORT_HEIGHT/2)) - (((float)relativeMousePosition.y/Gdx.graphics.getHeight()) * Constants.VIEWPORT_HEIGHT);
+		
+		
+        playerLight.setPosition(player.xPos, player.yPos);
+        playerCone.setPosition(player.xPos, player.yPos);
         playerCone.setDirection(getAngle(player.xPos, player.yPos, mousePosition));
-        
+    
         rayHandler.setCombinedMatrix(camera);
 		rayHandler.updateAndRender();
 		
-		debugRenderer.render(world, camera.combined);
+		//debugRenderer.render(world, camera.combined);
 		
 		world.step(Constants.FRAME_SPEED, 6, 2);
 		
