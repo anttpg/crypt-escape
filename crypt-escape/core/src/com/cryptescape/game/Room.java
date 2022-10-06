@@ -2,6 +2,8 @@ package com.cryptescape.game;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -19,20 +21,21 @@ public class Room {
 	private int[] relativeLocation = new int[2]; // [Col, Row] on the map
 	private float[] roomCorner = new float[2]; // room [y, x] real relative locations 
 	private float[] roomTop = new float[] {Constants.Y_ROOM_METERS,Constants.X_ROOM_METERS};
-	
 	private String roomType; 
-	private boolean[] doors;
+	
 	
 	//Seed is the string version of all the objects
 	private String[][] seed;
 	
 	//iItems stores all the interactable objects
 	private ArrayList<Interactable> iItems = new ArrayList<Interactable>();
+	private ArrayList<Door> doors = new ArrayList<Door>(Arrays.asList(null, null, null, null)); //Seperate from items
+	
 	
 	/**
 	* Defines a Room object, where L is the relative [Y,X] position of the room on the map (IE: [2,1] for 2 rows down, 1 col over).
 	* S is the String seed of what is within the room, RT is the room type, and d is the usable doors (IE: [T,T,F,T])
-	* 
+	* s
 	*/
 	public Room(int[] l, String[][] s, String rt) {	
 		// Get relative x/y location and calculate real coords based on that.
@@ -47,16 +50,6 @@ public class Room {
 		
 		seed = s;
 		roomType = rt;
-		
-		//roomTypes are {"open", "blocked", "bN3", "bS3", "bW1", "bE1", "bW3", "bE3"}
-		if(getRoomType().equals("open")) doors = new boolean[] {true,true,true,true};
-		else if(getRoomType().equals("blocked")) doors = new boolean[] {false,false,false,false};
-		else if(getRoomType().equals("bN3")) doors = new boolean[] {false,false,true,false};
-		else if(getRoomType().equals("bS3")) doors = new boolean[] {true,false,false,false};
-		else if(getRoomType().equals("bW1")) doors = new boolean[] {true,true,true,false};
-		else if(getRoomType().equals("bE1")) doors = new boolean[] {true,false,true,true};
-		else if(getRoomType().equals("bW3")) doors = new boolean[] {false,true,false,false};
-		else if(getRoomType().equals("bE3")) doors = new boolean[] {false,false,false,true};
 		String current = new String();
 		
 		
@@ -72,19 +65,28 @@ public class Room {
 					counter++;
 				} 
 				
+				
 				counter = 0;
 				for(String d : Constants.DOORTYPES) { //Of type Door
-					if( current.equals(d) ) iItems.add(new Door(col, row, current, this, counter));
+					if( current.equals(d) ) {
+						if(doors.get(counter) != null) {
+							doors.get(counter).setMissingDoor(col, row, current, this, counter);
+						}
+						else {
+							doors.set(counter, (new Door(col, row, current, this, counter)));
+						}
+					}
 					counter++;
 				}
 				
+				counter = 0;
 				if( current.equals("box") ) { //Of Type Box
 					iItems.add(new BoxObstacle(col, row, current, this));
 				} 
 				
 				if( current.equals("puddle") ) { //Of Type Box
 					iItems.add(new Puddle(col, row, current, this));
-				} 
+				}
 				
 				if ( current.equals("blocked") ) {
 					//doSOmething later
@@ -110,6 +112,10 @@ public class Room {
 		
 		for(Interactable i : iItems) {
 			i.draw(batch);
+		}
+		
+		for(Door d : doors) {
+			d.draw(batch);
 		}
 	}
 	
