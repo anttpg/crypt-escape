@@ -78,6 +78,8 @@ public class GameScreen implements Screen {
 	private PointLight playerLight;
 	private ConeLight playerCone;
 	
+	private boolean debugPerspective = false;
+	
 	private Music ambiance;
 	private int[] wasd = new int[] {0,0,0,0};
 	public float sprint = 1; //changes when sprinting
@@ -99,8 +101,10 @@ public class GameScreen implements Screen {
 		
 		//Different types of viewports for debugging
 		//viewport = new ExtendViewport(Constants.VIEWPORT_WIDTH*15, Constants.VIEWPORT_HEIGHT*15, camera);
-		//viewport = new ExtendViewport(Constants.VIEWPORT_WIDTH*5, Constants.VIEWPORT_HEIGHT*5, camera);
-		viewport = new ExtendViewport(Constants.VIEWPORT_WIDTH, Constants.VIEWPORT_HEIGHT, camera);
+		if(debugPerspective)
+			viewport = new ExtendViewport(Constants.VIEWPORT_WIDTH*3, Constants.VIEWPORT_HEIGHT*3, camera);
+		else
+			viewport = new ExtendViewport(Constants.VIEWPORT_WIDTH, Constants.VIEWPORT_HEIGHT, camera);
 		
 		ambiance = Gdx.audio.newMusic(Gdx.files.internal("caveAmbiance.mp3"));
 		ambiance.setLooping(true);
@@ -138,19 +142,8 @@ public class GameScreen implements Screen {
 		//X,Y, then SIZE AFTER REPEAT
 		BACKGROUND.setRegion(0, 0, Constants.CAMERA_WIDTH - Constants.X_BUFFER*2, Constants.CAMERA_HEIGHT - Constants.Y_BUFFER*2); 
 		
-		
-		//Obsolete with linear dampening
-//		BodyDef bodyDef = new BodyDef();  
-//		bodyDef.position.set(Constants.CAMERA_WIDTH / 2f, Constants.CAMERA_HEIGHT / 2f); //Set its position 
-//	    Body groundBody = world.createBody(bodyDef);  
-//	    PolygonShape groundshape = new PolygonShape();  
-//	    groundshape.setAsBox(Constants.CAMERA_WIDTH/2f, Constants.CAMERA_HEIGHT / 2f);  
-//	    BASE_FLOOR = groundBody.createFixture(groundshape, 0.0f);
-//	    groundshape.dispose();
-	    
-		
 		//Generate Rooms
-		generateRooms();
+		RoomGeneration.generateTemplates();
 		
 		
 		
@@ -246,10 +239,14 @@ public class GameScreen implements Screen {
         playerLight.setPosition(player.xPos, player.yPos);
         
         
-        rayHandler.setCombinedMatrix(camera);
-		rayHandler.updateAndRender();
+        
+		if(debugPerspective)
+			debugRenderer.render(world, camera.combined);
 		
-		//debugRenderer.render(world, camera.combined);
+		else {
+			rayHandler.setCombinedMatrix(camera);
+			rayHandler.updateAndRender();
+		}
 		
 		world.step(Constants.FRAME_SPEED, 6, 2);
 		
@@ -275,168 +272,9 @@ public class GameScreen implements Screen {
 
 	}
 	
-	private void generateRooms() {
-
-		// ROOM GENERATION BELOW
-		int[] p = new int[] {92, 4, 3, 1}; // Probability of a interactable type
-		String[] key = new String[] {"empty", "box", "puddle", "bat"}; //The cooresponding type
-		
-		RandomCollection<String> roomItemGen = new RandomCollection<String>();
-		for(int i = 0; i < p.length; i++) {
-			roomItemGen.add(p[i], key[i]);
-		}
-		
-		int[] p2 = new int[] {75, 5, 2, 2, 6, 6, 2, 2}; // Probability of room type
-		String[] key2 = new String[] {"open", "blocked", "bN3", "bS3", "bW1", "bE1", "bW3", "bE3"}; 
-		// Type names, open means all 4 doors are usable [T,T,T,T]. Blocked is the opposite [F,F,F,F]
-		// b stands for blocked, and then follows the direction and number of doors blocked
-		// EX: bN3 means the northmost 3 doors of that room are blocked. (the east, west, and north doors [F,F,T,F]
-		
-		RandomCollection<Integer> roomTypeGen = new RandomCollection<Integer>();
-		for(int i = 0; i < p.length; i++) {
-			roomTypeGen.add(p2[i], i);
-		}
-
-		// use ##.next() to get where in key[i] to use
-		String item;
-		String roomType;
-		String[][] seed = new String[Constants.Y_TILES][Constants.X_TILES];
-		ArrayList<String[][]> pregenTemplate = new ArrayList<String[][]>();
-
-		
-		//Fill pregens of room types (Walls, door, blocked, ect)
-		for(String k : key2) {
-			for(int y = 0; y < Constants.Y_TILES; y++) { //Loop through and fill the boundaries
-				for(int x = 0; x < Constants.X_TILES; x++) {
-					seed[y][x] = "empty";
-					
-					//NORTH-SOUTH
-					if(y == 0) { //SOUTH FACING
-						if(x == (Constants.X_TILES/2) || x == (Constants.X_TILES/2)-1) // If doorway
-							seed[y][x] = "southDoor";
-						else  // regular wall
-							seed[y][x] = "southWall";		
-					}
-					else if(y == Constants.Y_TILES-1) { // NORTH FACING
-						if(x == (Constants.X_TILES/2) || x == (Constants.X_TILES/2)-1) 
-							seed[y][x] = "northDoor";
-						else  
-	 						seed[y][x] = "northWall";
-					}
-					
-					//EAST-WEST
-					else if(x == 0) { //WEST FACING
-						if(y == (Constants.Y_TILES/2) || y == (Constants.Y_TILES/2)-1) // If doorway
-							seed[y][x] = "westDoor";
-						else  // regular wall
-							seed[y][x] = "westWall";
-						
-					}
-					else if(x == Constants.X_TILES-1) { //EAST FACING
-						if(y == (Constants.Y_TILES/2) || y == (Constants.Y_TILES/2)-1) 
-							seed[y][x] = "eastDoor";
-						else  
-	 						seed[y][x] = "eastWall";
-					}
-					
-
-					if((x == 0 || x == (Constants.X_TILES-1)) && (y == 0 || y == Constants.Y_TILES-1)) { //Corners
-						seed[y][x] = "blocked";
-					}
-
-					
-					// Type modifiers: 
-					if(k.equals("blocked")) 
-						seed[y][x] = "blocked";
-					
-					
-					else if(k.equals("bN3")) { //North 3 doors are blocked
-						if(y < (Constants.Y_TILES/2) + 3) seed[y][x] = "blocked";  
-						if (y == (Constants.Y_TILES/2)+3) seed[y][x] = "northWall"; 
-						if(y == (Constants.Y_TILES/2)+3 && (x == 0 || x == Constants.X_TILES-1)) seed[y][x] = "blocked";
-					}
-					
-					else if(k.equals("bS3")) { // South 3 doors are blocked
-						if(y > (Constants.Y_TILES/2) - 3) seed[y][x] = "blocked"; 
-						if (y == (Constants.Y_TILES/2)-3) seed[y][x] = "southWall"; 
-						if(y == (Constants.Y_TILES/2)-3 && (x == 0 || x == Constants.X_TILES-1)) seed[y][x] = "blocked";
-					}
-					
-					else if(k.equals("bW1")) { // West door is blocked
-						if(x < (Constants.X_TILES/2) - 3)  seed[y][x] = "blocked"; 
-						if(x == (Constants.X_TILES/2) - 3) seed[y][x] = "westWall";
-						if(x == (Constants.X_TILES/2) - 3 && (y == 0 || x == Constants.Y_TILES-1)) seed[y][x] = "blocked"; 
-					}
-					
-					else if(k.equals("bE1")) { // East door is blocked
-						if(x > (Constants.X_TILES/2) + 3)  seed[y][x] = "blocked"; 
-						if(x == (Constants.X_TILES/2) + 3) seed[y][x] = "eastWall";
-						if(x == (Constants.X_TILES/2) + 3 && (y == 0 || x == Constants.Y_TILES-1)) seed[y][x] = "blocked"; 
-					}
-
-					else if(k.equals("bW3")) { // West 3 doors are blocked
-						if(x < (Constants.X_TILES/2) + 3)  seed[y][x] = "blocked"; 
-						if(x == (Constants.X_TILES/2) + 3) seed[y][x] = "westWall"; 
-						if(x == (Constants.X_TILES/2) + 3 && (y == 0 || x == Constants.Y_TILES-1)) seed[y][x] = "blocked"; 
-					}
-					
-					else if(k.equals("bE3")) { // East 3 doors are blocked
-						if(x > (Constants.X_TILES/2) - 3)  seed[y][x] = "blocked"; 
-						if(x == (Constants.X_TILES/2) - 3) seed[y][x] = "eastWall";
-						if(x == (Constants.X_TILES/2) - 3 && (y == 0 || x == Constants.Y_TILES-1)) seed[y][x] = "blocked"; 
-					}
-				}
-			}
-			pregenTemplate.add(clone2dArray(seed));  
-		}	
-		
-		
-		
-		int index;
-		final ArrayList<String[][]> TEMPLATE = new ArrayList<String[][]>(Collections.unmodifiableList(pregenTemplate));
-		
-		for(int col = 0; col < Constants.NUM_OF_ROOMS_Y; col++) {
-			rooms.add(new ArrayList<Room>());  //instantiate all columns in the 2d array
-			
-			for(int row = 0; row < Constants.NUM_OF_ROOMS_X; row++) {
-				//For each room in an NxN grid, that will make up the playfield...
-				//DETERMINE: Room type, and what its filled with.
-				index = roomTypeGen.next();
-				roomType = key2[index];
-				seed = clone2dArray(TEMPLATE.get(index)); 
-				
-//				System.out.println(index); //TRYING TO DEBUG
-//				for(String t : key2) System.out.println(t);  
-//				printSeedArray(seed, roomType);
-				
-				for(int y = 1; y < Constants.Y_TILES-1; y++) { //Loop through and fill the seed (Excluding boundaries)
-					for(int x = 1; x < Constants.X_TILES-1; x++) {
-						if(seed[y][x].equals("empty")) {
-							seed[y][x] = roomItemGen.next();
-						}
-						
-						if(x == (Constants.X_TILES/2) || x == (Constants.X_TILES/2)-1) { //Exceptions are, if in front of door
-							if(y == 1 || y == Constants.Y_TILES-2) {
-								seed[y][x] = "empty";
-							}
-						}
-						
-						if(y == (Constants.Y_TILES/2) || y == (Constants.Y_TILES/2)-1) { //Exceptions are, if in front of door
-							if(x == 1 || x == Constants.X_TILES-2) {
-								seed[y][x] = "empty";
-							}
-						}
-						
-					}
-				}
-				rooms.get(col).add(new Room(new int[] {col+1, row}, seed.clone(), roomType));
-			}
-		}
-		
-		player.changeRoom(rooms.get(3).get(0));
-
-
-	}
+	
+	
+	
 	
 	public float getAngle(Float x, Float y, Vector2 target) {
 	    float angle = (float) Math.toDegrees(Math.atan2(target.y - y, target.x - x));
@@ -457,7 +295,7 @@ public class GameScreen implements Screen {
 		System.out.println();
 	}
 	
-	public String[][] clone2dArray(String[][] original) {
+	public static String[][] clone2dArray(String[][] original) {
 		return Arrays.stream(original).map(String[]::clone).toArray(String[][]::new);
 	}
 	

@@ -69,10 +69,10 @@ public class Room {
 				counter = 0;
 				for(String d : Constants.DOORTYPES) { //Of type Door
 					if( current.equals(d) ) {
-						if(doors.get(counter) != null) {
+						if(doors.get(counter) != null && d.equals("northDoor")) {
 							doors.get(counter).setMissingDoor(col, row, current, this, counter);
 						}
-						else {
+						else if(d.equals("northDoor")){
 							doors.set(counter, (new Door(col, row, current, this, counter)));
 						}
 					}
@@ -115,7 +115,7 @@ public class Room {
 		}
 		
 		for(Door d : doors) {
-			d.draw(batch);
+			if(d != null) d.draw(batch);
 		}
 	}
 	

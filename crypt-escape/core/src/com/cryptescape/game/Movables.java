@@ -16,7 +16,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
  * and intereact with other objects. Movables extends Image, and all movable
  * instances will be dynamic bodies
  */
-
 public abstract class Movables extends Actor{
 
 	// VARIABLES

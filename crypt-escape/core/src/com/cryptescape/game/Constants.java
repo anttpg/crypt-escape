@@ -32,7 +32,7 @@ public class Constants {
 	public static final float X_BUFFER = (CAMERA_WIDTH - X_ROOM_METERS)/2; //Border buffer
 	public static final float Y_BUFFER = (CAMERA_HEIGHT - Y_ROOM_METERS)/2;
 	
-	public static final int X_TILES = 24; //num of tiles in each room
+	public static final int X_TILES = 24; //num of tiles in each room, must be divisible by 3
 	public static final int Y_TILES = 18;
 	public static final float TILESIZE = X_ROOM_METERS/X_TILES;
 	public static final String[] WALLTYPES = new String[] {"northWall", "eastWall", "southWall", "westWall"};
