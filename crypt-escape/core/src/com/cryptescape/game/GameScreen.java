@@ -78,7 +78,7 @@ public class GameScreen implements Screen {
 	private PointLight playerLight;
 	private ConeLight playerCone;
 	
-	private boolean debugPerspective = false;
+	private boolean debugPerspective = true;
 	
 	private Music ambiance;
 	private int[] wasd = new int[] {0,0,0,0};
@@ -282,21 +282,6 @@ public class GameScreen implements Screen {
 	        angle += 360;
 	    }
 	    return angle;
-	}
-	
-	public void printSeedArray(String[][] org, String rt) {
-		System.out.println("Type of room should be: " + rt);
-		for(String[] s : org) {
-			for(String s2 : s) {
-				System.out.print(s2 + " ");
-			}
-			System.out.println();
-		}
-		System.out.println();
-	}
-	
-	public static String[][] clone2dArray(String[][] original) {
-		return Arrays.stream(original).map(String[]::clone).toArray(String[][]::new);
 	}
 	
 	@Override

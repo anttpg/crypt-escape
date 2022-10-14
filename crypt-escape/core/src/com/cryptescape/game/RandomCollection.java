@@ -4,6 +4,7 @@ import java.util.NavigableMap;
 import java.util.Random;
 import java.util.TreeMap;
 
+//Credit to 
 public class RandomCollection<E> {
     private final NavigableMap<Double, E> map = new TreeMap<Double, E>();
     private final Random random;

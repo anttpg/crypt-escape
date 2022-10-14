@@ -1,6 +1,7 @@
 package com.cryptescape.game;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +20,7 @@ public class RoomGeneration {
 		}
 		
 		// use ##.next() to get where in key[i] to use
-		String[][] seed = createEmptyNxN(Constants.Y_TILES, Constants.X_TILES);
+		String[][] seed = createEmptyNxN(Constants.Y_TILES, Constants.X_TILES, false);
 		
 		double[] p2 = new double[] {75, 5, 2, 2, 2, 2, 6, 6}; // Probability of room type
 		String[] key2 = new String[] {"open", "blocked", "bN3", "bE3", "bS3", "bW3", "bN1", "bE1", "bS1", "bW1", "hallNS", "hallEW", "cb"}; 
@@ -35,13 +36,18 @@ public class RoomGeneration {
 		}
 		
 			
-		pregenTemplate.add(GameScreen.clone2dArray(seed)); //open
+		pregenTemplate.add(clone2dArray(seed)); //open
 		pregenTemplate.add(createNxN(seed, new boolean[][] {{true,true,true}, {true,true,true}, {true,true,true}})); //blocked
 		repeat(createNxN(seed, new boolean[][] {{true,true,true}, {true,true,true}, {false,false,false}}), pregenTemplate); // 3 doors blocked
 		repeat(createNxN(seed, new boolean[][] {{true,true,true}, {false,false,false}, {false,false,false}}), pregenTemplate); // 1 door blocked
 		pregenTemplate.add(createNxN(seed, new boolean[][] {{true,false,true}, {true,false,true}, {true,false,true}})); //hall north -> south
 		pregenTemplate.add(createNxN(seed, new boolean[][] {{true,true,true}, {false,false,false}, {true,true,true}})); //hall east -> west
-		pregenTemplate.add(removeUselessWalls(addBlock3x3(seed, 1, 1))); // cb | Center blocked
+		pregenTemplate.add(addBlock3x3(seed, 1, 1)); // cb | Center blocked
+		
+		for(int i = 0; i < pregenTemplate.size(); i++) {
+			pregenTemplate.set(i, removeUselessWalls(pregenTemplate.get(i)));
+			printSeedArray(pregenTemplate.get(i), Integer.toString(i));
+		}
 		
 		final ArrayList<String[][]> TEMPLATE = new ArrayList<String[][]>(Collections.unmodifiableList(pregenTemplate)); //makes it unmodable
 		generateRooms(TEMPLATE, key2, roomTypeGen, roomItemGen);
@@ -64,7 +70,7 @@ public class RoomGeneration {
 				//DETERMINE: Room type, and what its filled with.
 				index = roomTypeGen.next();
 				roomType = key2[index];
-				String[][] seed = GameScreen.clone2dArray(TEMPLATE.get(index)); 
+				String[][] seed = clone2dArray(TEMPLATE.get(index)); 
 				
 //				System.out.println(index); //TRYING TO DEBUG
 //				for(String t : key2) System.out.println(t);  
@@ -92,13 +98,12 @@ public class RoomGeneration {
 				GameScreen.rooms.get(col).add(new Room(new int[] {col+1, row}, seed.clone(), roomType));
 			}
 		}
-		
 		GameScreen.player.changeRoom(GameScreen.rooms.get(3).get(0));
 	}
 	
 	
 	public static void repeat(String[][] s, ArrayList<String[][]> pregenTemplate) {
-		pregenTemplate.add(GameScreen.clone2dArray(s));
+		pregenTemplate.add(clone2dArray(s));
 		pregenTemplate.add(rotateArray(s, 1));
 		pregenTemplate.add(rotateArray(s, 2));
 		pregenTemplate.add(rotateArray(s, 3));
@@ -108,23 +113,23 @@ public class RoomGeneration {
 	 * Combinds two arrays, so long as original + offset > toCombind.length for both axis.
 	 */
 	private static String[][] combindArray(String[][] original, String[][] toCombind, int colStart, int rowStart) {
-		try {
-			for(int col = colStart; col < toCombind.length + rowStart; col++) {
-				for(int row = rowStart; row < toCombind[col].length + colStart; row++) {
+//		try {
+			for(int col = colStart; col < toCombind.length + colStart; col++) {
+				for(int row = rowStart; row < toCombind[col].length + rowStart; row++) {
 					original[col][row] = new String(toCombind[col-colStart][row-rowStart]);
 				}
 			}
-		} 
-		catch(Exception ArrayIndexOutOfBoundsException) {
-			System.out.println("Error: the size of Original + Offset vs toCombind is out of bounds. \n Original:" 
-		+ original.length + "   toCombind: " + toCombind.length + "     col: " + colStart + "   row: "+ rowStart);			
-		}
+//		} 
+//		catch(Exception ArrayIndexOutOfBoundsException) {
+//			System.out.println("Error: the size of Original + Offset vs toCombind is out of bounds. \n Original: " 
+//		+ original.length + "   toCombind: " + toCombind.length + "     col: " + colStart + "   row: "+ rowStart);			
+//		}
 		return original;
 	}
 	
 	/**
-	 * @param map; an 2d NxN map of boolean values. True means that area will be blocked
-	 * @param original: the seed to apply it to.
+	 * map; an 2d NxN map of boolean values. True means that area will be blocked
+	 * original: the seed to apply it to.
 	 */
 	private static String[][] createNxN(String[][] original, boolean[][] map) {
 		for(int col = 0; col < map.length; col++) {
@@ -133,10 +138,13 @@ public class RoomGeneration {
 					if(map.length == 3) {
 						original = addBlock3x3(original, col, row);
 					}
+					else {
+						
+					}
 				}
 			}
 		}
-		return removeUselessWalls(original);
+		return original;
 	}
 	
 	/**
@@ -146,7 +154,7 @@ public class RoomGeneration {
 	private static String[][] addBlock3x3(String[][] original, int col, int row) {
 		int height = (Constants.Y_TILES)/3;
 		int width = (Constants.X_TILES)/3;
-		String[][] combind = createEmptyNxN(height, width);
+		String[][] combind = createEmptyNxN(height, width, true);
 		
 		int colStart = (col * Constants.Y_TILES)/3;
 		int rowStart = (row * Constants.X_TILES)/3;
@@ -158,12 +166,14 @@ public class RoomGeneration {
 	/**
 	 * Creates an empty NxN room, COLxROW.
 	 * Keep col & row > 5 to prevent weird bugs
+	 * If block is TRUE, all squares inside will be blocked. Otherwise they will be empty.
 	 */
-	private static String[][] createEmptyNxN(int col, int row) {
+	private static String[][] createEmptyNxN(int col, int row, boolean block) {
 		String[][] s = new String[col][row];
 		for(int y = 0; y < col; y++) { //Loop through and fill the boundaries
 			for(int x = 0; x < row; x++) {
-				s[y][x] = "empty";
+				if(block) s[y][x] = "blocked";
+				else s[y][x] = "empty";
 				
 				//NORTH-SOUTH
 				if(y == 0) { //SOUTH FACING
@@ -205,14 +215,14 @@ public class RoomGeneration {
 	
 	/**
 	 * 
-	 * @param matrix
-	 * @return matrix rotated 90 degrees clockwise
+	 * matrix
+	 * matrix rotated 90 degrees clockwise
 	 */
 	
 	private static String[][] rotateClockWise90(String[][] matrix) {
 		 int sizeY = matrix.length;
 		 int sizeX = matrix[1].length;
-		 String[][] ret = GameScreen.clone2dArray(matrix);
+		 String[][] ret = clone2dArray(matrix);
 
 		 for (int i = 1; i < sizeY-1; ++i) 
 		  for (int j = 1; j < sizeX-1; ++j) 
@@ -235,27 +245,44 @@ public class RoomGeneration {
 		return matrix;	
 	}
 	
-	/**
-	 *  Removes the inaccessable walls from the array 
-	 */
 	
-	/** Removes walls that cannot be seen or accessed for performance increases */
+	/** Removes walls that cannot be seen or accessed for performance */
 	private static String[][] removeUselessWalls(String[][] r) {
 		for(int y = 0; y < r.length; y++) {
 			for(int x = 0; x < r[y].length; x++) {
-				if(x != 0 && !(x+1 > r[y].length)) {
+				if(x != 0 && (x+1 < r[y].length)) {
 					if(r[y][x-1].equals("blocked") && r[y][x+1].equals("blocked")) {
 						r[y][x] = "blocked";
 					}
 				}
-				if(y != 0 && !(y+1 > r.length)) {
+				else if(x == 0 && r[y][x+1].equals("blocked")) r[y][x] = "blocked";
+				else if(x == r[y].length && r[y][x-1].equals("blocked")) r[y][x] = "blocked";
+				
+				if(y != 0 && (y+1 < r.length)) {
 					if(r[y-1][x].equals("blocked") && r[y+1][x].equals("blocked")) {
 						r[y][x] = "blocked";
 					}
 				}
+				else if(y == 0 && r[y+1][x].equals("blocked")) r[y][x] = "blocked";
+				else if(y == r.length && r[y-1][x].equals("blocked")) r[y][x] = "blocked";
 			}
 		}
 		return r;
+	}
+	
+	public static void printSeedArray(String[][] org, String rt) {
+		System.out.println("Type of room should be: " + rt);
+		for(String[] s : org) {
+			for(String s2 : s) {
+				System.out.print(s2 + " ");
+			}
+			System.out.println();
+		}
+		System.out.println();
+	}
+	
+	public static String[][] clone2dArray(String[][] original) {
+		return Arrays.stream(original).map(String[]::clone).toArray(String[][]::new);
 	}
 	
 

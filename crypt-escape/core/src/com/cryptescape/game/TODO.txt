@@ -18,6 +18,12 @@ MY STUFF:
 -Display font text on screen
 
 
+Need to give credit for? FIGURE OUT:
+RandomCollection?
+AnimationHandler?
+
+
+
 FOR OTHERS: 
 -Add music
 -Sound effects on walking
