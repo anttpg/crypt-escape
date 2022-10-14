@@ -11,6 +11,7 @@ MY STUFF:
 -bigger rooms?
 -Enemy smells player hiding away or smthn
 -Make function to dim / brighten the light
+-fix roomGen rotate wall type
 
 -Zoom camera and have follow player to corner
 -Change to tilemap system instead of doing it manually?
