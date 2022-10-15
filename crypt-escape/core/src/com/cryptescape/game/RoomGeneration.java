@@ -45,9 +45,9 @@ public class RoomGeneration {
 		pregenTemplate.add(addBlock3x3(seed, 1, 1)); // cb | Center blocked
 		
 		for(int i = 0; i < pregenTemplate.size(); i++) {
-			System.out.println("BEFORE REMOVING WALLS: ");
-			printSeedArray(pregenTemplate.get(i), Integer.toString(i));
-			
+//			System.out.println("BEFORE REMOVING WALLS: ");
+//			printSeedArray(pregenTemplate.get(i), Integer.toString(i));
+//			
 			System.out.println("AFTER REMOVING WALLS: ");
 			pregenTemplate.set(i, removeUselessWalls(pregenTemplate.get(i)));
 			printSeedArray(pregenTemplate.get(i), Integer.toString(i) + ": " +key2[i]);
@@ -297,11 +297,12 @@ public class RoomGeneration {
 				}
 				
 				if(x == 0 && inaccessable(r[y][x+1])) r[y][x] = "blocked";  //checks for x=0 edge cases
-				if(x+1 == Constants.X_TILES && inaccessable(r[y][x-1])) r[y][x] = "blocked"; 
+				if(x+1 == r[y].length && inaccessable(r[y][x-1])) r[y][x] = "blocked"; 
+				//+1 to account for X_TILES being x+1 since x starts at 0
 				
 				if(y == 0 && inaccessable(r[y+1][x])) r[y][x] = "blocked";  //checks for y=0 edge cases
-				if(y+1 == Constants.Y_TILES && inaccessable(r[y-1][x])) r[y][x] = "blocked";
-			}
+				if(y+1 == r.length && inaccessable(r[y-1][x])) r[y][x] = "blocked";
+			};
 		}
 		return r;
 	}
