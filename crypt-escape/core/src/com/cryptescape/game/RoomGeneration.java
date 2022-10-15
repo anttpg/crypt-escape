@@ -23,10 +23,18 @@ public class RoomGeneration {
 		String[][] seed = createEmptyNxN(Constants.Y_TILES, Constants.X_TILES, false, false);
 		
 		double[] p2 = new double[] {75, 5, 2, 2, 2, 2, 6, 6}; // Probability of room type
-		String[] key2 = new String[] {"open", "blocked", "bN3", "bE3", "bS3", "bW3", "bN1", "bE1", "bS1", "bW1", "hallNS", "hallEW", "cb"}; 
+		String[] key2 = new String[] {
+				"open", "blocked", "cb", 
+				"aN3", "aE3", "aS3", "aW3", 
+				"bN3", "bE3", "bS3", "bW3", 
+				"aN1", "aE1", "aS1", "aW1", 
+				"bN1", "bE1", "bS1", "bW1",
+				"cN1", "cE1", "cS1", "cW1",
+				"hallNS", "hallEW"}; 
+		
 		// Type names, open means all 4 doors are usable [T,T,T,T]. Blocked is the opposite [F,F,F,F]
-		// b stands for blocked, and then follows the direction and number of doors blocked
-		// EX: bN3 means the northmost 3 doors of that room are blocked. (the east, west, and north doors [F,F,T,F]
+		// a stands for a-series (for multiple  skins), and then follows the direction and number of doors blocked
+		// EX: bN3 means the northmost 3 doors of that room are blocked. (the east, west, and north doors [F,F,T,F]), skin2
 		// hallNS is a north -> south hallway. East and west blocked
 		
 		ArrayList<String[][]> pregenTemplate = new ArrayList<String[][]>();
@@ -35,14 +43,53 @@ public class RoomGeneration {
 			roomTypeGen.add(p2[i], i);
 		}
 		
-			
+		//FORMAT: 3x3 bool Array. True means blocked in that section.	
 		pregenTemplate.add(clone2dArray(seed)); //open
-		pregenTemplate.add(createNxN(seed, new boolean[][] {{true,true,true}, {true,true,true}, {true,true,true}})); //blocked
-		repeat(createNxN(seed, new boolean[][] {{true,true,true}, {true,true,true}, {false,false,false}}), pregenTemplate); // 3 doors blocked
-		repeat(createNxN(seed, new boolean[][] {{true,true,true}, {false,false,false}, {false,false,false}}), pregenTemplate); // 1 door blocked
-		pregenTemplate.add(createNxN(seed, new boolean[][] {{true,false,true}, {true,false,true}, {true,false,true}})); //hall north -> south
-		pregenTemplate.add(createNxN(seed, new boolean[][] {{true,true,true}, {false,false,false}, {true,true,true}})); //hall east -> west
+		
 		pregenTemplate.add(addBlock3x3(seed, 1, 1)); // cb | Center blocked
+		
+		pregenTemplate.add(createNxN(seed, new boolean[][] {
+			{true,true,true}, 
+			{true,true,true}, 
+			{true,true,true}})); //blocked
+		
+		repeat(createNxN(seed, new boolean[][] {
+			{true,true,true}, 
+			{true,true,true}, 
+			{false,false,false}}), pregenTemplate); // 3 doors blocked
+		repeat(createNxN(seed, new boolean[][] {
+			{true,true,true}, 
+			{true,false,true}, 
+			{true,false,true}}), pregenTemplate); // 3 doors blocked (alternate B)
+		
+		repeat(createNxN(seed, new boolean[][] {
+			{true,true,true},
+			{false,false,false},
+			{false,false,false}}), pregenTemplate); // 1 door blocked
+		repeat(createNxN(seed, new boolean[][] {
+			{true,true,true},
+			{false,false,false},
+			{true,false,true}}), pregenTemplate); // 1 door blocked (alternate B)
+		repeat(createNxN(seed, new boolean[][] {
+			{true,true,true},
+			{false,true,false},
+			{false,false,false}}), pregenTemplate); // 1 door blocked (alternate C)
+		
+		pregenTemplate.add(createNxN(seed, new boolean[][] {
+			{true,false,true},
+			{true,false,true},
+			{true,false,true}})); //hall north -> south
+		
+		pregenTemplate.add(createNxN(seed, new boolean[][] {
+			{true,true,true},
+			{false,false,false},
+			{true,true,true}})); //hall east -> west
+		
+		
+		
+		
+		
+		
 		
 		for(int i = 0; i < pregenTemplate.size(); i++) {
 //			System.out.println("BEFORE REMOVING WALLS: ");
@@ -85,15 +132,17 @@ public class RoomGeneration {
 							seed[y][x] = roomItemGen.next();
 						}
 						
-						if(x == (Constants.X_TILES/2) || x == (Constants.X_TILES/2)-1) { //Exceptions are, if in front of door
-							if(y == 1 || y == Constants.Y_TILES-2) {
-								seed[y][x] = "empty";
+						if(!seed[y][x].equals("blocked")) { //Exceptions are, if in front of door
+							if(x == (Constants.X_TILES/2) || x == (Constants.X_TILES/2)-1) { //North-South
+								if(y == 1 || y == Constants.Y_TILES-2) {
+									seed[y][x] = "empty";
+								}
 							}
-						}
-						
-						if(y == (Constants.Y_TILES/2) || y == (Constants.Y_TILES/2)-1) { //Exceptions are, if in front of door
-							if(x == 1 || x == Constants.X_TILES-2) {
-								seed[y][x] = "empty";
+							
+							if(y == (Constants.Y_TILES/2) || y == (Constants.Y_TILES/2)-1) { //East/West
+								if(x == 1 || x == Constants.X_TILES-2) {
+									seed[y][x] = "empty";
+								}
 							}
 						}
 						
