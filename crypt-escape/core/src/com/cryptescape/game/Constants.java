@@ -27,8 +27,8 @@ public class Constants {
 	public static final float VIEWPORT_HEIGHT = CAMERA_HEIGHT / 3;
 	
 	//Room constants
-	public static final float Y_ROOM_METERS = CAMERA_HEIGHT - (CAMERA_HEIGHT/3); //pixel x/y of each room
-	public static final float X_ROOM_METERS = (int)((4/3.0) * Y_ROOM_METERS); 
+	public static final float Y_ROOM_METERS = CAMERA_HEIGHT - (CAMERA_HEIGHT/7.0f); //pixel x/y of each room
+	public static final float X_ROOM_METERS = Y_ROOM_METERS; 
 	public static final float X_BUFFER = (CAMERA_WIDTH - X_ROOM_METERS)/2; //Border buffer
 	public static final float Y_BUFFER = (CAMERA_HEIGHT - Y_ROOM_METERS)/2;
 	
@@ -36,21 +36,7 @@ public class Constants {
 	public static final int Y_TILES = 24;
 	public static final float TILESIZE = X_ROOM_METERS/X_TILES;
 	public static final String[] WALLTYPES = new String[] {"northWall", "eastWall", "southWall", "westWall"};
-	public static final String[] DOORTYPES = new String[] {"northDoor", "eastDoor", "southDoor", "westDoor"};
-
-	public static final Map<String, int[]> ROOMSIZES = new HashMap<String, int[]>() {{ 
-//		Tiles start where, and end where
-//		 Y, X bottom left, Y, X top right
-        put("open", new int[] {0, 0, Y_TILES, X_TILES} );      
-//  		put("blocked", new int[] {0, 0, Y_TILES, X_TILES});
-//        put("bN3", new int[] {0, 0, Y_TILES/2 - 3, X_TILES});
-//        put("bS3", new int[] {Y_TILES/2 + 3, 0, Y_TILES/2 - 3, X_TILES});
-//        put("bW1", new int[] {0, X_TILES/2 - 3, Y_TILES, X_TILES/2 + 3});
-//      	put("bE1", new int[] {0, 0, Y_TILES, X_TILES/2 + 3});
-//      	put("bW3", new int[] {0, X_TILES/2 + 3, Y_TILES, X_TILES/2 - 3});
-//      	put("bE3", new int[] {0, 0, Y_TILES, X_TILES/2 - 3});
-    }};
-	
+	public static final String[] DOORTYPES = new String[] {"northDoor", "eastDoor", "southDoor", "westDoor"};	
 	
 	public static float[][] edgeSizes = new float[][] { //v1X, v1Y, v2X, v2Y edge points>> into NESW
 		{-Constants.TILESIZE / 2f, -Constants.TILESIZE/2f, Constants.TILESIZE / 2f, -Constants.TILESIZE/2f}, 

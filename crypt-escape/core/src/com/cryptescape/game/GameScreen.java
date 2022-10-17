@@ -1,11 +1,15 @@
 package com.cryptescape.game;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -76,15 +80,18 @@ public class GameScreen implements Screen {
 	
 	private RayHandler rayHandler;
 	private PointLight playerLight;
-	private ConeLight playerCone;
-	
-	private boolean debugPerspective = true;
+	private ConeLight playerFlashlight;
+
+	private boolean debugPerspective = false;
+	private boolean runOnceTempDebugVariable = true;
 	
 	private Music ambiance;
 	private int[] wasd = new int[] {0,0,0,0};
 	public float sprint = 1; //changes when sprinting
 
 	float playerCounter = 0;
+	
+	
 	
 	
 	
@@ -100,16 +107,27 @@ public class GameScreen implements Screen {
 		camera.position.set(Constants.CAMERA_WIDTH/2, Constants.CAMERA_HEIGHT/2, 0);
 		
 		//Different types of viewports for debugging
-		//viewport = new ExtendViewport(Constants.VIEWPORT_WIDTH*15, Constants.VIEWPORT_HEIGHT*15, camera);
 		if(debugPerspective)
+			//viewport = new ExtendViewport(Constants.VIEWPORT_WIDTH*15, Constants.VIEWPORT_HEIGHT*15, camera);
 			viewport = new ExtendViewport(Constants.VIEWPORT_WIDTH*3, Constants.VIEWPORT_HEIGHT*3, camera);
 		else
 			viewport = new ExtendViewport(Constants.VIEWPORT_WIDTH, Constants.VIEWPORT_HEIGHT, camera);
+		
+		
 		
 		ambiance = Gdx.audio.newMusic(Gdx.files.internal("caveAmbiance.mp3"));
 		ambiance.setLooping(true);
 		
 		atlas = new TextureAtlas(Gdx.files.internal("packedImages/pack.atlas")); //loads images
+		
+		try {
+			Interactable.itemBounds = SaveReader.readObjectBounds(Gdx.files.internal("packedImages/bounds.txt")); //loads item bounds
+		} catch (IOException e) {
+			// If error occurs
+			e.printStackTrace();
+		}
+		
+
 	
 		
 		//DYNAMIC ACTOR GENERATION
@@ -123,27 +141,36 @@ public class GameScreen implements Screen {
 		rayHandler.setBlur(true);
 		
 		
-		//Use like 20-200 rays on average, color, how far out to project 
+		//rays, color, how far out to project 
 		playerLight = new PointLight(rayHandler, 100, null, 2.5f, player.xPos, player.yPos);
 		playerLight.setSoftnessLength(2f);
 		playerLight.setXray(true);
 		
-		playerCone = new ConeLight(rayHandler, 300, null, 6f, player.xPos, player.yPos, 0, 30f);
-		playerCone.setSoftnessLength(2f);
-		playerCone.setXray(false);
+		
+		playerFlashlight = new ConeLight(rayHandler, 300, Color.WHITE, 7f, player.xPos, player.yPos, 0, 20f);
+		playerFlashlight.setSoftnessLength(2f);
+		playerFlashlight.setXray(false);
 	
 		//enemy = new Enemy(4f, 4f, 0.95f, 0.95f, 100f);
 		//stage.addActor(enemy);
 		
-		Texture b = new Texture(Gdx.files.internal("imageAssets/stone.png"));
-		b.setWrap(TextureWrap.Repeat, TextureWrap.Repeat);
-		BACKGROUND = new TextureRegion(b);
-		
-		//X,Y, then SIZE AFTER REPEAT
-		BACKGROUND.setRegion(0, 0, Constants.CAMERA_WIDTH - Constants.X_BUFFER*2, Constants.CAMERA_HEIGHT - Constants.Y_BUFFER*2); 
-		
+		BACKGROUND = atlas.findRegion("stone");
 		//Generate Rooms
 		RoomGeneration.generateTemplates();
+		
+		boolean roomFound = false;
+		while(!roomFound) {
+			Random r = new Random();
+			int x = r.nextInt(Constants.NUM_OF_ROOMS_X-2)+1;
+			int y = r.nextInt(Constants.NUM_OF_ROOMS_Y-2)+1;
+			
+			if(!rooms.get(y).get(x).getRoomType().equals("blocked"))  {
+				GameScreen.player.changeRoom(GameScreen.rooms.get(y).get(x));
+				player.setPos(rooms.get(y).get(x).getRoomLocation()[1]+ Constants.CAMERA_WIDTH/3, rooms.get(y).get(x).getRoomLocation()[0]+Constants.CAMERA_HEIGHT/2);
+				System.out.println(player.xPos +"     "+ player.yPos);
+				roomFound = true;
+			}
+		}
 		
 		
 		
@@ -214,11 +241,21 @@ public class GameScreen implements Screen {
 		
 		player.getRoom().draw(game.batch); //draw the room that the player is currently in
 		
+		if(debugPerspective) {
+			for(int y = 0; y < rooms.size(); y++) {
+				for(int x = 0; x < rooms.size(); x++) {
+					rooms.get(y).get(x).draw(game.batch);
+				}
+			}
+		}
+		
 		player.setAcceleration((wasd[3]-wasd[1]), (wasd[0]-wasd[2]), sprint); //handles player movement
 		player.draw(game.batch);
+
 		
 //		enemy.implementAction(); //decides what the enemy will do
 //		enemy.draw(game.batch);
+		
 		game.batch.end();
 		
 		
@@ -226,24 +263,28 @@ public class GameScreen implements Screen {
         stage.draw();
         camera.position.set(player.xPos, player.yPos, 0); //So camera follows player
 		
-//		rayHandler.useCustomViewport(viewport.getScreenX(),
-//                viewport.getScreenY(),
-//                viewport.getScreenWidth(),
-//                viewport.getScreenHeight());
         mousePosition.x = (player.xPos - (Constants.VIEWPORT_WIDTH/2)) + (((float)relativeMousePosition.x/Gdx.graphics.getWidth()) * Constants.VIEWPORT_WIDTH);
 		mousePosition.y = (player.yPos + (Constants.VIEWPORT_HEIGHT/2)) - (((float)relativeMousePosition.y/Gdx.graphics.getHeight()) * Constants.VIEWPORT_HEIGHT);
+
 		
-        
-        playerCone.setPosition(player.xPos, player.yPos);
-        playerCone.setDirection(getAngle(player.xPos, player.yPos, mousePosition));
-        playerLight.setPosition(player.xPos, player.yPos);
-        
-        
-        
-		if(debugPerspective)
+		
+		if(debugPerspective) {
 			debugRenderer.render(world, camera.combined);
+			if(runOnceTempDebugVariable) {
+				player.getRoom().debugRoomSeed();
+				runOnceTempDebugVariable = false;
+			}
+		}
 		
+
 		else {
+			playerLight.setPosition(player.xPos, player.yPos);
+			playerLight.setDistance(player.getCandleLevel());
+			
+			playerFlashlight.setDistance(player.getBatteryLevel());
+			playerFlashlight.setPosition(player.xPos, player.yPos);
+	        playerFlashlight.setDirection(getAngle(player.xPos, player.yPos, mousePosition));
+	        
 			rayHandler.setCombinedMatrix(camera);
 			rayHandler.updateAndRender();
 		}

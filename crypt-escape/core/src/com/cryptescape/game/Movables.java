@@ -70,6 +70,10 @@ public abstract class Movables extends Actor{
 		
 	abstract void draw(SpriteBatch batch);
 	
+	public void setPos(float x, float y) {
+		body.setTransform(x, y, body.getAngle());
+	}
+	
 	public void setVelocity(float xV, float yV, float s) {
 		xVel = xV*s;
 		yVel = yV*s;

@@ -22,15 +22,26 @@ public class RoomGeneration {
 		// use ##.next() to get where in key[i] to use
 		String[][] seed = createEmptyNxN(Constants.Y_TILES, Constants.X_TILES, false, false);
 		
-		double[] p2 = new double[] {75, 5, 2, 2, 2, 2, 6, 6}; // Probability of room type
+		// Probability of room type
+		double[] p2 = new double[] {
+				10,10,1,  
+				1,1,1,1,
+				1,1,1,1,
+				1,1,1,1,
+				1,1,1,1,
+				1,1,1,1,
+				5,4,1,1,
+				10,10,10,10}; 
+		
 		String[] key2 = new String[] {
-				"open", "blocked", "cb", 
+				"open",  "cb", "blocked", 
 				"aN3", "aE3", "aS3", "aW3", 
 				"bN3", "bE3", "bS3", "bW3", 
 				"aN1", "aE1", "aS1", "aW1", 
 				"bN1", "bE1", "bS1", "bW1",
 				"cN1", "cE1", "cS1", "cW1",
-				"hallNS", "hallEW"}; 
+				"NE2", "SE2", "SW2", "NW2",
+				"hallNS", "hallEW", "trapNS", "trapEW"}; 
 		
 		// Type names, open means all 4 doors are usable [T,T,T,T]. Blocked is the opposite [F,F,F,F]
 		// a stands for a-series (for multiple  skins), and then follows the direction and number of doors blocked
@@ -39,7 +50,7 @@ public class RoomGeneration {
 		
 		ArrayList<String[][]> pregenTemplate = new ArrayList<String[][]>();
 		RandomCollection<Integer> roomTypeGen = new RandomCollection<Integer>();
-		for(int i = 0; i < p.length; i++) {
+		for(int i = 0; i < key2.length; i++) {
 			roomTypeGen.add(p2[i], i);
 		}
 		
@@ -75,6 +86,12 @@ public class RoomGeneration {
 			{false,true,false},
 			{false,false,false}}), pregenTemplate); // 1 door blocked (alternate C)
 		
+		repeat(createNxN(seed, new boolean[][] {
+			{true,false,true},
+			{true,false,false},
+			{true,true,true}}), pregenTemplate); // 2 doors blocked (L TURN)
+		
+		
 		pregenTemplate.add(createNxN(seed, new boolean[][] {
 			{true,false,true},
 			{true,false,true},
@@ -85,24 +102,36 @@ public class RoomGeneration {
 			{false,false,false},
 			{true,true,true}})); //hall east -> west
 		
+		pregenTemplate.add(createNxN(seed, new boolean[][] {
+			{true,false,true},
+			{true,true,true},
+			{true,false,true}})); //trap north-south
+		
+		pregenTemplate.add(createNxN(seed, new boolean[][] {
+			{true,true,true},
+			{false,true,false},
+			{true,true,true}})); //trap east-west
 		
 		
 		
-		
-		
-		
-		for(int i = 0; i < pregenTemplate.size(); i++) {
-//			System.out.println("BEFORE REMOVING WALLS: ");
-//			printSeedArray(pregenTemplate.get(i), Integer.toString(i));
-//			
-			System.out.println("AFTER REMOVING WALLS: ");
-			pregenTemplate.set(i, removeUselessWalls(pregenTemplate.get(i)));
-			printSeedArray(pregenTemplate.get(i), Integer.toString(i) + ": " +key2[i]);
-		}
+		for(int i = 0; i < pregenTemplate.size(); i++)
+			pregenTemplate.set(i, formatWalls(pregenTemplate.get(i)));
 		
 		final ArrayList<String[][]> TEMPLATE = new ArrayList<String[][]>(Collections.unmodifiableList(pregenTemplate)); //makes it unmodable
+		RoomGeneration.debugTemplates(TEMPLATE);
 		generateRooms(TEMPLATE, key2, roomTypeGen, roomItemGen);
 
+	}
+	
+	
+	public static void debugTemplates(ArrayList<String[][]> pregenTemplate) {
+		for(int i = 0; i < pregenTemplate.size(); i++) {
+			System.out.println("BEFORE REMOVING WALLS: ");
+			printSeedArray(pregenTemplate.get(i), Integer.toString(i));
+			
+			System.out.println("AFTER REMOVING WALLS: ");
+			printSeedArray(pregenTemplate.get(i), Integer.toString(i) + ": ");
+		}
 	}
 	
 	
@@ -139,7 +168,7 @@ public class RoomGeneration {
 								}
 							}
 							
-							if(y == (Constants.Y_TILES/2) || y == (Constants.Y_TILES/2)-1) { //East/West
+							if(y == (Constants.Y_TILES/2) || y == (Constants.Y_TILES/2)-1) { //East-West
 								if(x == 1 || x == Constants.X_TILES-2) {
 									seed[y][x] = "empty";
 								}
@@ -148,10 +177,11 @@ public class RoomGeneration {
 						
 					}
 				}
+				printSeedArray(seed, roomType);
 				GameScreen.rooms.get(col).add(new Room(new int[] {col+1, row}, seed.clone(), roomType));
+				
 			}
 		}
-		GameScreen.player.changeRoom(GameScreen.rooms.get(3).get(0));
 	}
 	
 	
@@ -329,8 +359,10 @@ public class RoomGeneration {
 	}
 	
 	
-	/** Removes walls that cannot be seen or accessed for performance */
-	private static String[][] removeUselessWalls(String[][] r) {
+	/** Removes walls that cannot be seen or accessed for performance, and fixes wall orientation*/
+	private static String[][] formatWalls(String[][] r) {
+		boolean flip = true;
+		boolean isWall = false;
 		for(int y = 0; y < r.length; y++) {
 			for(int x = 0; x < r[y].length; x++) {
 				
@@ -345,13 +377,69 @@ public class RoomGeneration {
 					}
 				}
 				
+				if (x != 0 && (x + 1 < r[y].length)) {
+					if (y != 0 && (y + 1 < r.length)) {
+						for (String w : Constants.WALLTYPES) {
+							if (r[y][x].equals(w)) {
+								isWall = true;
+							}
+							
+							if (x == 0 && !inaccessable(r[y][x+1]))
+								r[y][x] = "westWall"; // checks for x=0 edge cases
+							if (x + 1 == r[y].length && !inaccessable(r[y][x - 1]))
+								r[y][x] = "eastWall";
+
+							if (y == 0 && !inaccessable(r[y+1][x]))
+								r[y][x] = "southWall"; // checks for y=0 edge cases
+							if (y + 1 == r.length && !inaccessable(r[y - 1][x]))
+								r[y][x] = "northWall";
+
+							// -1 INSTEAD OF +1 FOR N/S BECAUSE Y GOES DOWN.
+							if (!inaccessable(r[y - 1][x]))
+								if (!r[y][x].equals("southWall"))
+									if (isWall)
+										r[y][x] = "southWall";
+
+							if (!inaccessable(r[y + 1][x]))
+								if (!r[y][x].equals("northWall"))
+									if (isWall)
+										r[y][x] = "northWall";
+
+							if (!inaccessable(r[y][x - 1]))
+								if (!r[y][x].equals("eastWall"))
+									if (isWall)
+										r[y][x] = "eastWall";
+
+							if (!inaccessable(r[y][x + 1]))
+								if (!r[y][x].equals("westWall"))
+									if (isWall)
+										r[y][x] = "westWall";
+
+							isWall = false;
+						}
+					}
+				}
+				
 				if(x == 0 && inaccessable(r[y][x+1])) r[y][x] = "blocked";  //checks for x=0 edge cases
 				if(x+1 == r[y].length && inaccessable(r[y][x-1])) r[y][x] = "blocked"; 
 				//+1 to account for X_TILES being x+1 since x starts at 0
 				
 				if(y == 0 && inaccessable(r[y+1][x])) r[y][x] = "blocked";  //checks for y=0 edge cases
 				if(y+1 == r.length && inaccessable(r[y-1][x])) r[y][x] = "blocked";
-			};
+				
+				
+				
+				for(String w : Constants.WALLTYPES) { //Wall direction edge cases
+					if(r[y][x].equals(w)) {		
+						if(x == 0 && !inaccessable(r[y][x+1])) r[y][x] = "westWall";  //checks for x=0 edge cases
+						if(x+1 == r[y].length && !inaccessable(r[y][x-1])) r[y][x] = "eastWall";
+								
+						// -1 INSTEAD OF +1 FOR N/S BECAUSE Y GOES DOWN.
+						if(y == 0 && !inaccessable(r[y+1][x])) r[y][x] = "northWall";  //checks for y=0 edge cases
+						if(y+1 == r.length && !inaccessable(r[y-1][x])) r[y][x] = "southWall";
+					}
+				}
+			}
 		}
 		return r;
 	}
@@ -380,7 +468,10 @@ public class RoomGeneration {
 				for(String w : Constants.WALLTYPES)
 					if(s2.equals(w))
 						s2 = s2.toUpperCase();
-				System.out.print(s2.substring(0,5) + " ");
+				if(s2.length() > 5)
+					System.out.print(s2.substring(0,5) + " ");
+				else
+					System.out.print(s2);
 			}
 			System.out.println();
 		}
@@ -389,11 +480,5 @@ public class RoomGeneration {
 	
 	public static String[][] clone2dArray(String[][] original) {
 		return Arrays.stream(original).map(String[]::clone).toArray(String[][]::new);
-	}
-	
-
-	
-	private static void testMethods() {
-		
 	}
 }

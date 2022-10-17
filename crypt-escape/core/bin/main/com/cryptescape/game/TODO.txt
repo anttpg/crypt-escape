@@ -12,6 +12,9 @@ MY STUFF:
 -Enemy smells player hiding away or smthn
 -Make function to dim / brighten the light
 -fix roomGen rotate wall type
+-if candle runs out, die and end game
+-candle burning hud
+
 
 -Zoom camera and have follow player to corner
 -Change to tilemap system instead of doing it manually?
@@ -22,6 +25,7 @@ MY STUFF:
 Need to give credit for? FIGURE OUT:
 RandomCollection?
 AnimationHandler?
+inGameConsole- add credits.
 
 
 

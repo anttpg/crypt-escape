@@ -101,13 +101,13 @@ public class Door {
 		else if(animationPhase == 2) {
 			timer += Gdx.graphics.getDeltaTime();
 			if (timer > 1.5f) {
+				relativeTime = (rightAnimation.getAnimationDuration() - (timer-1.5f));
+				rightDoor.setTextureRegion(rightAnimation.getKeyFrame(relativeTime));
+				leftDoor.setTextureRegion(leftAnimation.getKeyFrame(relativeTime));
 				if(timer > rightAnimation.getAnimationDuration()+1.5f) {
 					animationPhase = 0;
 					timer = 0;
 				}
-				relativeTime = (rightAnimation.getAnimationDuration() - (timer-1.5f));
-				rightDoor.setTextureRegion(rightAnimation.getKeyFrame(relativeTime));
-				leftDoor.setTextureRegion(leftAnimation.getKeyFrame(relativeTime));
 			}
 		}
 		

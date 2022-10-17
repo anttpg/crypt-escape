@@ -29,6 +29,7 @@ public class Room {
 	
 	//iItems stores all the interactable objects
 	private ArrayList<Interactable> iItems = new ArrayList<Interactable>();
+	private ArrayList<float[]> background = new ArrayList<float[]>();
 	private ArrayList<Door> doors = new ArrayList<Door>(Arrays.asList(null, null, null, null)); //Seperate from items
 	
 	
@@ -41,9 +42,8 @@ public class Room {
 		// Get relative x/y location and calculate real coords based on that.
 		relativeLocation = l;
 		
-		int[] bounds = Constants.ROOMSIZES.get(rt);
-		roomCorner[0] = Constants.CAMERA_HEIGHT * (Constants.NUM_OF_ROOMS_Y - l[0]) + (Constants.Y_BUFFER + (bounds[0]*Constants.TILESIZE)); 
-		roomCorner[1] = Constants.CAMERA_WIDTH * (l[1]) + (Constants.X_BUFFER + (bounds[1]*Constants.TILESIZE));
+		roomCorner[0] = Constants.CAMERA_HEIGHT * (Constants.NUM_OF_ROOMS_Y - l[0]) + (Constants.Y_BUFFER + (Constants.TILESIZE)); 
+		roomCorner[1] = Constants.CAMERA_WIDTH * (l[1]) + (Constants.X_BUFFER + (Constants.TILESIZE));
 //		roomTop[0] = Constants.CAMERA_HEIGHT * (Constants.Y_MAPSIZE - l[0]) + (Constants.Y_BUFFER + (bounds[2]*Constants.TILESIZE));
 //		roomTop[1] = Constants.CAMERA_WIDTH * (l[1]) + (Constants.X_BUFFER + (bounds[3]*Constants.TILESIZE));
 //		
@@ -88,8 +88,10 @@ public class Room {
 					iItems.add(new Puddle(col, row, current, this));
 				}
 				
-				if ( current.equals("blocked") ) {
-					//doSOmething later
+				if ( !current.equals("blocked") ) { //If NOT BLOCKED, then add to background
+					float xCorner = getRoomLocation()[1] + (Constants.X_ROOM_METERS * (row/(float)Constants.X_TILES));
+					float yCorner = getRoomLocation()[0] + (Constants.Y_ROOM_METERS * ((Math.abs(Constants.Y_TILES-col)-1)/(float)Constants.Y_TILES));
+					background.add(new float[] {yCorner, xCorner});
 				}
 				
 				if ( current.equals("empty") ) {
@@ -106,8 +108,12 @@ public class Room {
 	
 	public void draw(SpriteBatch batch) {
 		//Render background first, then
+		
 		batch.disableBlending();
-		batch.draw(GameScreen.BACKGROUND, roomCorner[1]+Constants.TILESIZE, roomCorner[0]+Constants.TILESIZE, roomTop[1]-Constants.TILESIZE*2, roomTop[0]-Constants.TILESIZE*2);
+		for(float[] b : background) { //fucky typecasting since java doesnt have tuples
+			batch.draw(GameScreen.BACKGROUND, b[1], b[0], Constants.TILESIZE, Constants.TILESIZE);
+		}
+		
 		batch.enableBlending();
 		
 		for(Interactable i : iItems) {
@@ -118,6 +124,7 @@ public class Room {
 			if(d != null) d.draw(batch);
 		}
 	}
+
 	
 	
 	//IMPLETMENT THESE LATER

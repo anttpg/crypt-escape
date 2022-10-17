@@ -23,13 +23,13 @@ public class Menu implements Screen {
 
 	final MainCE game;
 	private Stage stage;
-	private static int size[] = new int[] { 4, 4 };
+	private static int size[];
 	OrthographicCamera camera;
 
 	public Menu(final MainCE gam) {
 		game = gam;
 		stage = new Stage(new ScreenViewport());
-		size[0] = 4; // testing constants
+		size = new int[] { 14, 14 }; // testing constants
 
 		camera = new OrthographicCamera(Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);
 		camera.position.set(Constants.CAMERA_WIDTH / 2, Constants.CAMERA_HEIGHT / 2, 0);

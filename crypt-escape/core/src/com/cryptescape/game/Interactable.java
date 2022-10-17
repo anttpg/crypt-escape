@@ -1,5 +1,7 @@
 package com.cryptescape.game;
 
+import java.util.HashMap;
+
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -13,16 +15,19 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 public class Interactable {
 	private Fixture fixture;
 	private Room parent;
+	private String bounds;
+	private TextureRegion texture;
 	private int col;
 	private int row;
-	private TextureRegion texture;
 	private float xCorner;
 	private float yCorner;
+	
+	public static HashMap<String, String> itemBounds;
 	
 	public Interactable(int c, int r, String current, Room p) {
 		parent = p;
 		row = r;
-		col = c;
+		col = Math.abs(Constants.Y_TILES-c)-1;
 		setItemLocation();
 	}
 	
@@ -39,10 +44,10 @@ public class Interactable {
 				);
 	}
 	
-	public void createStaticEdge(int c) {
-		BodyDef bodyDef = new BodyDef();  
+	public void createStaticEdge(int c) {         
+		BodyDef bodyDef = new BodyDef();                   
 		bodyDef.position.set(getItemLocation()); //Set its position 
-		Body bd = GameScreen.world.createBody(bodyDef);  
+		Body bd = GameScreen.world.createBody(bodyDef);                      
 		
 		EdgeShape edge = new EdgeShape(); //Walls/Doors dont need to be a full box
 		
@@ -55,19 +60,38 @@ public class Interactable {
 	
 	
 	public void createStaticBox() {
-		BodyDef bodyDef = new BodyDef();  
-		bodyDef.position.set(getItemLocation()); //Set its position 
-		Body bd = GameScreen.world.createBody(bodyDef);  
+		BodyDef bodyDef = new BodyDef(); 
 		
-		PolygonShape box = new PolygonShape();  // Create a polygon shape 
-
-		box.setAsBox(Constants.TILESIZE / 2f, Constants.TILESIZE / 2f);
-		fixture = bd.createFixture(box, 0.0f);
-		box.dispose();
+		if (bounds == null) {
+			bodyDef.position.set(getItemLocation()); //Set its position 
+			Body bd = GameScreen.world.createBody(bodyDef);  
+			PolygonShape box = new PolygonShape();  // Create a polygon shape 
+			box.setAsBox(Constants.TILESIZE / 2f, Constants.TILESIZE / 2f);
+			fixture = bd.createFixture(box, 0.0f);
+			box.dispose();
+		}
+		else {
+			String[] b = bounds.split(",");
+			
+			Vector2 corner = new Vector2(getItemLocation().x + (Constants.TILESIZE * ( Integer.valueOf(b[0]) / texture.getRegionWidth())), 
+					getItemLocation().y + (Constants.TILESIZE * (Integer.valueOf(b[1]) / texture.getRegionHeight())));
+			bodyDef.position.set(corner); //Set its position 
+			Body bd = GameScreen.world.createBody(bodyDef);  
+			PolygonShape box = new PolygonShape();  // Create a polygon shape
+			
+			box.setAsBox(Constants.TILESIZE / 2f, Constants.TILESIZE / 2f);
+			fixture = bd.createFixture(box, 0.0f);
+			box.dispose();
+		}
 	}
 	
 	public Fixture getFixture() {
 		return fixture;
+	}
+	
+	public void checkBounds(String name) {
+		if(itemBounds.get(name) != null) 
+			bounds = itemBounds.get(name);
 	}
 	
 	public void setTextureRegion(TextureRegion t) {
@@ -81,5 +105,4 @@ public class Interactable {
 	public void debugInteractable(Fixture f, int col, int row) {
 		System.out.println("Position of item at col  " + col + "  and row  " + row + "  : " + f.getBody().getPosition());
 	}
-	
 }

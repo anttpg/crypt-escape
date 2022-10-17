@@ -1,5 +1,7 @@
 package com.cryptescape.game;
 
+import java.util.Random;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -26,11 +28,12 @@ public class Player extends Movables {
 	private TextureAtlas textureAtlas;
 	private TextureRegion frame;
 	private float elapsedTime = 1f;
-	
 	private float scale;
 	
-
-
+	private float batteryLevel = 0f;
+	private float candleLevel = 3.5f;
+	private float offset;
+	private Random rand = new Random();
 
 	/**
 	* Defines a Player object. Player extends Movables. 
@@ -67,7 +70,8 @@ public class Player extends Movables {
 		body.applyForceToCenter(forceVector, true);
 		this.updateTick();
 
-		if (elapsedTime > 0.3) {
+		if (elapsedTime > 0.15) {
+			offset = rand.nextFloat(0f, 0.2f);
 			elapsedTime = 0;
 
 			if(Math.abs(xVel) > 0.0001 || Math.abs(yVel) > 0.0001) { //A weird function made to control animation speed
@@ -133,12 +137,15 @@ public class Player extends Movables {
     
     public void changeRoom(Room r) {
     	currentRoom = r;
-    	
-    	//Change the size of the background proportional to the current room REMEBER ITS IN X/Y
-    	int[] bounds = Constants.ROOMSIZES.get(r.getRoomType());
-    	GameScreen.BACKGROUND.setRegion(0, 0, 
-    			(bounds[3]*Constants.TILESIZE) - (bounds[1]*Constants.TILESIZE) - Constants.TILESIZE*2,
-    			(bounds[2]*Constants.TILESIZE) - (bounds[0]*Constants.TILESIZE) - Constants.TILESIZE*2
-    			);
-    }   
+    }  
+    
+    public float getCandleLevel() {
+    	candleLevel -= (Constants.FRAME_SPEED/90);
+    	return candleLevel + offset;
+    }
+    
+    public float getBatteryLevel() {
+    	//batteryLevel -= Constants.FRAME_SPEED;
+    	return batteryLevel;
+    }
 }
