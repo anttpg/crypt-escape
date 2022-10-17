@@ -70,16 +70,19 @@ public class Interactable {
 			fixture = bd.createFixture(box, 0.0f);
 			box.dispose();
 		}
+		
 		else {
 			String[] b = bounds.split(",");
+			Vector2 corner = new Vector2( //Normalizes it based on current location
+					getItemLocation().x + (Constants.TILESIZE * ( Integer.valueOf(b[0]) / (float)texture.getRegionWidth())), 
+					getItemLocation().y + (Constants.TILESIZE * (Integer.valueOf(b[1]) / (float)texture.getRegionHeight())));
 			
-			Vector2 corner = new Vector2(getItemLocation().x + (Constants.TILESIZE * ( Integer.valueOf(b[0]) / texture.getRegionWidth())), 
-					getItemLocation().y + (Constants.TILESIZE * (Integer.valueOf(b[1]) / texture.getRegionHeight())));
 			bodyDef.position.set(corner); //Set its position 
 			Body bd = GameScreen.world.createBody(bodyDef);  
 			PolygonShape box = new PolygonShape();  // Create a polygon shape
 			
-			box.setAsBox(Constants.TILESIZE / 2f, Constants.TILESIZE / 2f);
+			box.setAsBox((Constants.TILESIZE - ( Constants.TILESIZE * ( Integer.valueOf(b[0]) / (float)texture.getRegionWidth()) ) - (Constants.TILESIZE - ( Constants.TILESIZE * ( Integer.valueOf(b[2]) / (float)texture.getRegionWidth()) ))) / 2f, 
+					(Constants.TILESIZE - ( Constants.TILESIZE * ( Integer.valueOf(b[1]) / (float)texture.getRegionHeight()) ) - (Constants.TILESIZE - ( Constants.TILESIZE * ( Integer.valueOf(b[3]) / (float)texture.getRegionHeight())) )) / 2f);
 			fixture = bd.createFixture(box, 0.0f);
 			box.dispose();
 		}

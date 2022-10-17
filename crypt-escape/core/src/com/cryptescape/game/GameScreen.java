@@ -17,6 +17,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -82,7 +83,7 @@ public class GameScreen implements Screen {
 	private PointLight playerLight;
 	private ConeLight playerFlashlight;
 
-	private boolean debugPerspective = false;
+	private boolean debugPerspective = true;
 	private boolean runOnceTempDebugVariable = true;
 	
 	private Music ambiance;
@@ -107,7 +108,7 @@ public class GameScreen implements Screen {
 		camera.position.set(Constants.CAMERA_WIDTH/2, Constants.CAMERA_HEIGHT/2, 0);
 		
 		//Different types of viewports for debugging
-		if(debugPerspective)
+		if(!debugPerspective)
 			//viewport = new ExtendViewport(Constants.VIEWPORT_WIDTH*15, Constants.VIEWPORT_HEIGHT*15, camera);
 			viewport = new ExtendViewport(Constants.VIEWPORT_WIDTH*3, Constants.VIEWPORT_HEIGHT*3, camera);
 		else
@@ -120,13 +121,15 @@ public class GameScreen implements Screen {
 		
 		atlas = new TextureAtlas(Gdx.files.internal("packedImages/pack.atlas")); //loads images
 		
+
+		FileHandle file = Gdx.files.internal("packedImages/bounds.txt");
+		
 		try {
-			Interactable.itemBounds = SaveReader.readObjectBounds(Gdx.files.internal("packedImages/bounds.txt")); //loads item bounds
-		} catch (IOException e) {
-			// If error occurs
+			Interactable.itemBounds = SaveReader.readObjectBounds(file.readString());
+		} catch (IndexOutOfBoundsException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 
 	
 		
