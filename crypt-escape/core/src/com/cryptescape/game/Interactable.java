@@ -73,16 +73,17 @@ public class Interactable {
 		
 		else {
 			String[] b = bounds.split(",");
-			Vector2 corner = new Vector2( //Normalizes it based on current location
-					getItemLocation().x + (Constants.TILESIZE * ( Integer.valueOf(b[0]) / (float)texture.getRegionWidth())), 
-					getItemLocation().y + (Constants.TILESIZE * (Integer.valueOf(b[1]) / (float)texture.getRegionHeight())));
+			float hx = ((Constants.TILESIZE - ( Constants.TILESIZE * ( Float.valueOf(b[0]) / (float)texture.getRegionWidth()) ) - (Constants.TILESIZE - ( Constants.TILESIZE * ( Float.valueOf(b[2]) / (float)texture.getRegionWidth()) ))) / 2f);
+			float hy = ((Constants.TILESIZE - ( Constants.TILESIZE * ( Float.valueOf(b[1]) / (float)texture.getRegionHeight()) ) - (Constants.TILESIZE - ( Constants.TILESIZE * ( Float.valueOf(b[3]) / (float)texture.getRegionHeight())) )) / 2f);
+			Vector2 corner = new Vector2((getItemLocation().x - Constants.TILESIZE/2) + hx + ( Constants.TILESIZE * ( Float.valueOf(b[0]) / (float)texture.getRegionWidth())),
+					(getItemLocation().y - Constants.TILESIZE/2) + hy + ( Constants.TILESIZE * ( Float.valueOf(b[1]) / (float)texture.getRegionHeight())));  //Normalizes it based on current location
 			
 			bodyDef.position.set(corner); //Set its position 
 			Body bd = GameScreen.world.createBody(bodyDef);  
 			PolygonShape box = new PolygonShape();  // Create a polygon shape
-			
-			box.setAsBox((Constants.TILESIZE - ( Constants.TILESIZE * ( Integer.valueOf(b[0]) / (float)texture.getRegionWidth()) ) - (Constants.TILESIZE - ( Constants.TILESIZE * ( Integer.valueOf(b[2]) / (float)texture.getRegionWidth()) ))) / 2f, 
-					(Constants.TILESIZE - ( Constants.TILESIZE * ( Integer.valueOf(b[1]) / (float)texture.getRegionHeight()) ) - (Constants.TILESIZE - ( Constants.TILESIZE * ( Integer.valueOf(b[3]) / (float)texture.getRegionHeight())) )) / 2f);
+			box.setAsBox(hx, hy);
+
+			System.out.println(Float.valueOf(b[0]) + ": " + Float.valueOf(b[1]) + ": " +(float)texture.getRegionWidth() + ": " + (float)texture.getRegionHeight());
 			fixture = bd.createFixture(box, 0.0f);
 			box.dispose();
 		}

@@ -244,14 +244,14 @@ public class GameScreen implements Screen {
 		
 		player.getRoom().draw(game.batch); //draw the room that the player is currently in
 		
-		if(debugPerspective) {
-			for(int y = 0; y < rooms.size(); y++) {
-				for(int x = 0; x < rooms.size(); x++) {
-					rooms.get(y).get(x).draw(game.batch);
-				}
-			}
-		}
-		
+//		if(debugPerspective) {
+//			for(int y = 0; y < rooms.size(); y++) {
+//				for(int x = 0; x < rooms.size(); x++) {
+//					rooms.get(y).get(x).draw(game.batch);
+//				}
+//			}
+//		}
+//		
 		player.setAcceleration((wasd[3]-wasd[1]), (wasd[0]-wasd[2]), sprint); //handles player movement
 		player.draw(game.batch);
 

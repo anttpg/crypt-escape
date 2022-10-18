@@ -11,7 +11,7 @@ public class RoomGeneration {
 	
 	public static void generateTemplates() {
 		// ROOM GENERATION BELOW
-		int[] p = new int[] {92, 4, 3, 1}; // Probability of a interactable type
+		int[] p = new int[] {52, 40, 3, 1}; // Probability of a interactable type
 		String[] key = new String[] {"empty", "box", "puddle", "bat"}; //The cooresponding type
 		
 		RandomCollection<String> roomItemGen = new RandomCollection<String>();
