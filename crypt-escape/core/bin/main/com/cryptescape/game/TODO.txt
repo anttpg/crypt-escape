@@ -4,22 +4,14 @@ MY STUFF:
 
 -Door opening baseed on range from player 
 -Boxes openable and animation
--Box border
 -Able to hide in closets or stuff
--Different room types of different angles
 -BIG BOX/WALL!
--bigger rooms?
 -Enemy smells player hiding away or smthn
 -Make function to dim / brighten the light
--fix roomGen rotate wall type
 -if candle runs out, die and end game
 -candle burning hud
 -mushroom decoratable
-
-
 -Zoom camera and have follow player to corner
--Change to tilemap system instead of doing it manually?
--Fix that fucking stone tiling issue??
 -Display font text on screen
 
 
@@ -29,8 +21,16 @@ AnimationHandler?
 inGameConsole- add credits.
 
 
-
 FOR OTHERS: 
 -Add music
 -Sound effects on walking
 -MAKE THE FUCKING AI MOVE AND SHIT
+
+
+Completed:
+-Change to tilemap system instead of doing it manually?
+-Fix that fucking stone tiling issue??
+-fix roomGen rotate wall type
+-bigger rooms?
+-Box border
+-Different room types of different angles
