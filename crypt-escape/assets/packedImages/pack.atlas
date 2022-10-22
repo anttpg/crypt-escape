@@ -6,526 +6,610 @@ filter: Nearest, Nearest
 repeat: none
 blockedTile
   rotate: false
-  xy: 489, 540
+  xy: 536, 647
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
 box1
   rotate: false
-  xy: 458, 642
+  xy: 204, 289
   size: 115, 115
   orig: 115, 115
   offset: 0, 0
   index: -1
 box2
   rotate: false
-  xy: 276, 530
+  xy: 204, 182
   size: 105, 105
   orig: 105, 105
   offset: 0, 0
   index: -1
 box3
   rotate: false
-  xy: 383, 424
+  xy: 324, 643
   size: 104, 104
   orig: 104, 104
   offset: 0, 0
   index: -1
 box4
   rotate: false
-  xy: 383, 530
+  xy: 430, 642
   size: 104, 105
   orig: 104, 105
   offset: 0, 0
   index: -1
 box5
   rotate: false
-  xy: 802, 870
+  xy: 802, 860
   size: 142, 142
   orig: 142, 142
   offset: 0, 0
   index: -1
 box6
   rotate: false
-  xy: 276, 423
+  xy: 204, 75
   size: 105, 105
   orig: 105, 105
   offset: 0, 0
   index: -1
 eastDoor
   rotate: false
-  xy: 489, 438
+  xy: 802, 758
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
-eastWall
+eastWall1
   rotate: false
-  xy: 204, 270
-  size: 140, 144
-  orig: 140, 144
+  xy: 276, 406
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: -1
+eastWall2
+  rotate: false
+  xy: 308, 407
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: -1
+eastWall3
+  rotate: false
+  xy: 321, 305
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: -1
+eastWall4
+  rotate: false
+  xy: 321, 273
+  size: 30, 30
+  orig: 30, 30
   offset: 0, 0
   index: -1
 error
   rotate: false
-  xy: 702, 746
+  xy: 946, 938
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: -1
 landmine1
   rotate: false
-  xy: 2, 214
+  xy: 2, 204
   size: 200, 200
   orig: 200, 200
   offset: 0, 0
   index: -1
 landmine2
   rotate: false
-  xy: 600, 812
+  xy: 600, 802
   size: 200, 200
   orig: 200, 200
   offset: 0, 0
   index: -1
 landmine3
   rotate: false
-  xy: 2, 12
+  xy: 2, 2
   size: 200, 200
   orig: 200, 200
   offset: 0, 0
   index: -1
 monsterE
   rotate: false
-  xy: 946, 948
+  xy: 204, 9
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 0
 monsterE
   rotate: false
-  xy: 946, 882
+  xy: 946, 872
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 1
 monsterE
   rotate: false
-  xy: 346, 255
+  xy: 480, 576
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 2
 monsterE
   rotate: false
-  xy: 346, 189
+  xy: 480, 510
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 3
 monsterW
   rotate: false
-  xy: 346, 123
+  xy: 480, 444
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 0
 monsterW
   rotate: false
-  xy: 338, 57
+  xy: 546, 581
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 1
 monsterW
   rotate: false
-  xy: 575, 644
+  xy: 546, 515
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 2
 monsterW
   rotate: false
-  xy: 641, 644
+  xy: 546, 449
   size: 64, 64
   orig: 64, 64
   offset: 0, 0
   index: 3
 nDoor
   rotate: false
-  xy: 768, 778
+  xy: 904, 826
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 northDoor
   rotate: false
-  xy: 802, 768
+  xy: 276, 541
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
 northDoorLeft
   rotate: false
-  xy: 768, 744
-  size: 32, 32
-  orig: 32, 32
+  xy: 946, 841
+  size: 30, 29
+  orig: 30, 29
   offset: 0, 0
   index: 0
 northDoorLeft
   rotate: false
-  xy: 276, 658
-  size: 32, 32
-  orig: 32, 32
+  xy: 978, 841
+  size: 30, 29
+  orig: 30, 29
   offset: 0, 0
   index: 1
 northDoorLeft
   rotate: false
-  xy: 412, 287
-  size: 32, 32
-  orig: 32, 32
+  xy: 938, 810
+  size: 30, 29
+  orig: 30, 29
   offset: 0, 0
   index: 2
 northDoorLeft
   rotate: false
-  xy: 702, 712
-  size: 32, 32
-  orig: 32, 32
+  xy: 938, 779
+  size: 30, 29
+  orig: 30, 29
   offset: 0, 0
   index: 3
 northDoorLeft
   rotate: false
-  xy: 412, 253
-  size: 32, 32
-  orig: 32, 32
+  xy: 970, 810
+  size: 30, 29
+  orig: 30, 29
   offset: 0, 0
   index: 4
 northDoorRight
   rotate: false
-  xy: 412, 219
+  xy: 276, 648
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 0
 northDoorRight
   rotate: false
-  xy: 412, 185
+  xy: 270, 41
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 1
 northDoorRight
   rotate: false
-  xy: 412, 151
+  xy: 652, 768
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 2
 northDoorRight
   rotate: false
-  xy: 448, 390
+  xy: 904, 792
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 3
 northDoorRight
   rotate: false
-  xy: 448, 356
+  xy: 686, 768
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 4
-northWall
+northWall1
   rotate: false
-  xy: 204, 2
-  size: 132, 120
-  orig: 132, 120
+  xy: 970, 779
+  size: 30, 29
+  orig: 30, 29
+  offset: 0, 0
+  index: -1
+northWall2
+  rotate: false
+  xy: 938, 748
+  size: 30, 29
+  orig: 30, 29
+  offset: 0, 0
+  index: -1
+northWall3
+  rotate: false
+  xy: 970, 748
+  size: 30, 29
+  orig: 30, 29
+  offset: 0, 0
+  index: -1
+northWall4
+  rotate: false
+  xy: 646, 635
+  size: 30, 29
+  orig: 30, 29
   offset: 0, 0
   index: -1
 playerE
   rotate: false
-  xy: 448, 322
+  xy: 904, 758
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 0
 playerE
   rotate: false
-  xy: 591, 610
+  xy: 720, 768
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 1
 playerE
   rotate: false
-  xy: 591, 576
+  xy: 754, 768
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 2
 playerE
   rotate: false
-  xy: 625, 610
+  xy: 270, 7
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 3
 playerN
   rotate: false
-  xy: 659, 542
+  xy: 612, 477
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 1
 playerN
   rotate: false
-  xy: 591, 440
+  xy: 612, 443
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 3
 playerNE
   rotate: false
-  xy: 591, 542
+  xy: 340, 405
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 0
 playerNE
   rotate: false
-  xy: 625, 576
+  xy: 374, 404
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 1
 playerNE
   rotate: false
-  xy: 659, 610
+  xy: 408, 404
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 2
 playerNE
   rotate: false
-  xy: 591, 508
+  xy: 442, 404
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 3
 playerNW
   rotate: false
-  xy: 625, 542
+  xy: 612, 613
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 0
 playerN
   rotate: false
-  xy: 625, 542
+  xy: 612, 613
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 0
 playerNW
   rotate: false
-  xy: 659, 576
+  xy: 612, 579
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 1
 playerNW
   rotate: false
-  xy: 591, 474
+  xy: 612, 545
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 2
 playerN
   rotate: false
-  xy: 591, 474
+  xy: 612, 545
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 2
 playerNW
   rotate: false
-  xy: 625, 508
+  xy: 612, 511
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 3
 playerS
   rotate: false
-  xy: 707, 678
+  xy: 672, 700
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 0
 playerS
   rotate: false
-  xy: 707, 644
+  xy: 672, 666
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 1
 playerS
   rotate: false
-  xy: 693, 610
+  xy: 706, 700
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 2
 playerS
   rotate: false
-  xy: 693, 576
+  xy: 706, 666
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 3
 playerSE
   rotate: false
-  xy: 625, 474
+  xy: 652, 734
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 0
 playerSE
   rotate: false
-  xy: 625, 474
+  xy: 652, 734
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 2
 playerSE
   rotate: false
-  xy: 659, 508
+  xy: 686, 734
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 1
 playerSE
   rotate: false
-  xy: 625, 440
+  xy: 720, 734
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 3
 playerSW
   rotate: false
-  xy: 659, 474
+  xy: 754, 734
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 0
 playerSW
   rotate: false
-  xy: 659, 474
+  xy: 754, 734
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 2
 playerSW
   rotate: false
-  xy: 659, 440
+  xy: 638, 700
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 1
 playerSW
   rotate: false
-  xy: 412, 117
+  xy: 638, 666
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 3
 playerW
   rotate: false
-  xy: 693, 542
+  xy: 740, 700
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 0
 playerW
   rotate: false
-  xy: 693, 508
+  xy: 740, 666
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 1
 playerW
   rotate: false
-  xy: 693, 474
+  xy: 321, 371
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 2
 playerW
   rotate: false
-  xy: 693, 440
+  xy: 321, 337
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 3
 puddle1
   rotate: false
-  xy: 324, 759
+  xy: 324, 749
   size: 274, 253
   orig: 274, 253
   offset: 0, 0
   index: -1
 puddle2
   rotate: false
-  xy: 2, 692
+  xy: 2, 682
   size: 320, 320
   orig: 320, 320
   offset: 0, 0
   index: -1
 puddle3
   rotate: false
-  xy: 2, 416
+  xy: 2, 406
   size: 272, 274
   orig: 272, 274
   offset: 0, 0
   index: -1
 southDoor
   rotate: false
-  xy: 600, 710
+  xy: 276, 439
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
-southWall
+southWall1
   rotate: false
-  xy: 324, 637
-  size: 132, 120
-  orig: 132, 120
+  xy: 311, 241
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: -1
+southWall2
+  rotate: false
+  xy: 311, 209
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: -1
+southWall3
+  rotate: false
+  xy: 311, 177
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: -1
+southWall4
+  rotate: false
+  xy: 311, 145
+  size: 30, 30
+  orig: 30, 30
   offset: 0, 0
   index: -1
 stone
   rotate: false
-  xy: 338, 5
+  xy: 600, 750
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
   index: -1
 stoneWall
   rotate: false
-  xy: 904, 768
+  xy: 378, 540
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
 westDoor
   rotate: false
-  xy: 346, 321
+  xy: 378, 438
   size: 100, 100
   orig: 100, 100
   offset: 0, 0
   index: -1
-westWall
+westWall1
   rotate: false
-  xy: 204, 124
-  size: 140, 144
-  orig: 140, 144
+  xy: 311, 113
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: -1
+westWall2
+  rotate: false
+  xy: 311, 81
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: -1
+westWall3
+  rotate: false
+  xy: 774, 702
+  size: 30, 30
+  orig: 30, 30
+  offset: 0, 0
+  index: -1
+westWall4
+  rotate: false
+  xy: 774, 670
+  size: 30, 30
+  orig: 30, 30
   offset: 0, 0
   index: -1

@@ -83,7 +83,6 @@ public class Interactable {
 			PolygonShape box = new PolygonShape();  // Create a polygon shape
 			box.setAsBox(hx, hy);
 
-			System.out.println(Float.valueOf(b[0]) + ": " + Float.valueOf(b[1]) + ": " +(float)texture.getRegionWidth() + ": " + (float)texture.getRegionHeight());
 			fixture = bd.createFixture(box, 0.0f);
 			box.dispose();
 		}

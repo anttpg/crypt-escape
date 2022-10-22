@@ -25,13 +25,14 @@ import box2dLight.RayHandler;
 
 public class Player extends Movables {
 	private AnimationHandler playerAnimation;
-	private TextureAtlas textureAtlas;
+	private TextureAtlas textureAtlas; 
 	private TextureRegion frame;
 	private float elapsedTime = 1f;
 	private float scale;
 	
 	private float batteryLevel = 0f;
-	private float candleLevel = 3.5f;
+	private float maxCandleLevel = 4.5f;
+	private float candleLevel = maxCandleLevel;
 	private float offset;
 	private Random rand = new Random();
 
@@ -140,7 +141,7 @@ public class Player extends Movables {
     }  
     
     public float getCandleLevel() {
-    	candleLevel -= (Constants.FRAME_SPEED/90);
+    	candleLevel -= (Constants.FRAME_SPEED/(30*maxCandleLevel));
     	return candleLevel + offset;
     }
     

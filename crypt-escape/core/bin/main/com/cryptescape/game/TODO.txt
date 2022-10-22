@@ -4,26 +4,26 @@ MY STUFF:
 
 -Door opening baseed on range from player 
 -Boxes openable and animation
+-doors cause player to teleport to next room
 -Able to hide in closets or stuff
 -BIG BOX/WALL!
 -Enemy smells player hiding away or smthn
--Make function to dim / brighten the light
+
 -if candle runs out, die and end game
 -candle burning hud
 -mushroom decoratable
 -Zoom camera and have follow player to corner
 -Display font text on screen
+-load from save game
 
-
-Need to give credit for? FIGURE OUT:
-RandomCollection?
-AnimationHandler?
-inGameConsole- add credits.
-
-
-FOR OTHERS: 
--Add music
--Sound effects on walking
+-fix corner generation, and add textures for each corner wall
+-Pillars
+-Extend wall/pillar images w/o other interactable
+-Music manager
+-Multiple doors
+-FIX DOORS DAMNIT
+-make east/west doors art
+-Sound effects on walking (timed to vel / tilesize, so that it is relative)
 -MAKE THE FUCKING AI MOVE AND SHIT
 
 
@@ -34,3 +34,10 @@ Completed:
 -bigger rooms?
 -Box border
 -Different room types of different angles
+-Redo wall skins
+-Make function to dim / brighten the light
+
+Need to give credit for? FIGURE OUT BEFORE PUBLISH:
+RandomCollection?
+AnimationHandler?
+inGameConsole- add credits if used?

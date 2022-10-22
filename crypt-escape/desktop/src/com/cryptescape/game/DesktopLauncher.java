@@ -31,7 +31,7 @@ public class DesktopLauncher {
 //			TexturePacker.process("../assets/imageAssets", "../assets/packedImages", "pack");
 //			// ../ sets path back one folder, then reads from the general assets folder
 //		}
-//		
+		
 
 		
 		//main window

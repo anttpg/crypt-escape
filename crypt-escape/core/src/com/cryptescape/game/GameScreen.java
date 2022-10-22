@@ -3,6 +3,9 @@ package com.cryptescape.game;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -10,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.stream.Stream;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -76,17 +80,18 @@ public class GameScreen implements Screen {
 
 	public static Enemy enemy;	
 	public static Player player;
-	public static TextureRegion BACKGROUND;
+	
 	private Fixture BASE_FLOOR;
 	
 	private RayHandler rayHandler;
 	private PointLight playerLight;
 	private ConeLight playerFlashlight;
 
-	private boolean debugPerspective = true;
+	private boolean debugPerspective = false;
 	private boolean runOnceTempDebugVariable = true;
 	
-	private Music ambiance;
+	private MusicManager music;
+	
 	private int[] wasd = new int[] {0,0,0,0};
 	public float sprint = 1; //changes when sprinting
 
@@ -108,16 +113,29 @@ public class GameScreen implements Screen {
 		camera.position.set(Constants.CAMERA_WIDTH/2, Constants.CAMERA_HEIGHT/2, 0);
 		
 		//Different types of viewports for debugging
-		if(!debugPerspective)
+		if(debugPerspective)
 			//viewport = new ExtendViewport(Constants.VIEWPORT_WIDTH*15, Constants.VIEWPORT_HEIGHT*15, camera);
 			viewport = new ExtendViewport(Constants.VIEWPORT_WIDTH*3, Constants.VIEWPORT_HEIGHT*3, camera);
 		else
 			viewport = new ExtendViewport(Constants.VIEWPORT_WIDTH, Constants.VIEWPORT_HEIGHT, camera);
 		
 		
+		try (Stream<Path> paths = Files.walk(Paths.get(Gdx.files.internal("soundDesign/music").file().getAbsolutePath()))) {
+		    paths
+		    .filter(Files::isRegularFile)
+		    .forEach(System.out::println);
+		} 
+		catch(Exception e) {
+			e.printStackTrace();
+		}
 		
-		ambiance = Gdx.audio.newMusic(Gdx.files.internal("caveAmbiance.mp3"));
-		ambiance.setLooping(true);
+//		Gdx.files.
+//		
+//		ambiance = Gdx.audio.newMusic(Gdx.files.internal("COPYRIGHTED-SubwooferLullaby.mp3"));
+//		ambiance2 = Gdx.audio.newMusic(Gdx.files.internal("COPYRIGHTED-caveAmbiance.mp3"));
+//		ambiance2.setVolume(0.15f);
+//		ambiance.setLooping(true);
+//		ambiance2.setLooping(true);
 		
 		atlas = new TextureAtlas(Gdx.files.internal("packedImages/pack.atlas")); //loads images
 		
@@ -127,7 +145,6 @@ public class GameScreen implements Screen {
 		try {
 			Interactable.itemBounds = SaveReader.readObjectBounds(file.readString());
 		} catch (IndexOutOfBoundsException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -157,7 +174,6 @@ public class GameScreen implements Screen {
 		//enemy = new Enemy(4f, 4f, 0.95f, 0.95f, 100f);
 		//stage.addActor(enemy);
 		
-		BACKGROUND = atlas.findRegion("stone");
 		//Generate Rooms
 		RoomGeneration.generateTemplates();
 		
@@ -244,14 +260,7 @@ public class GameScreen implements Screen {
 		
 		player.getRoom().draw(game.batch); //draw the room that the player is currently in
 		
-//		if(debugPerspective) {
-//			for(int y = 0; y < rooms.size(); y++) {
-//				for(int x = 0; x < rooms.size(); x++) {
-//					rooms.get(y).get(x).draw(game.batch);
-//				}
-//			}
-//		}
-//		
+		
 		player.setAcceleration((wasd[3]-wasd[1]), (wasd[0]-wasd[2]), sprint); //handles player movement
 		player.draw(game.batch);
 
@@ -273,10 +282,6 @@ public class GameScreen implements Screen {
 		
 		if(debugPerspective) {
 			debugRenderer.render(world, camera.combined);
-			if(runOnceTempDebugVariable) {
-				player.getRoom().debugRoomSeed();
-				runOnceTempDebugVariable = false;
-			}
 		}
 		
 
@@ -293,18 +298,6 @@ public class GameScreen implements Screen {
 		}
 		
 		world.step(Constants.FRAME_SPEED, 6, 2);
-		
-//		System.out.println(camera.position);
-//		Room cr = rooms.get(0).get(0);
-//		for(String[] s : cr.getSeed()) {
-//			for(String s2 : s) {
-//				System.out.print(s2 + " ");
-//			}
-//			System.out.println();
-//		}
-//		cr.debugRoomPosition();
-//		cr = rooms.get(3).get(0);
-//		cr.debugRoomPosition();
 		
 		
 //		try {
@@ -340,9 +333,6 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void show() {
-		// start the playback of the background music
-		// when the screen is shown
-		ambiance.play();
 		
 		//log 
 		Gdx.app.log("MainScreen","show");

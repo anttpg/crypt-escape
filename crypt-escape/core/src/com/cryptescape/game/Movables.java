@@ -28,11 +28,13 @@ public abstract class Movables extends Actor{
 	public final float maxVel; // pixels/tick
 	public float speed = 1; //changes when sprinting
 	
-	public Body body;
-	public Room currentRoom; 
-	public Fixture fixture;
-	public Vector2 forceVector = new Vector2();
 	public boolean visible;
+	public Room currentRoom; 
+	
+	private Fixture fixture;
+	protected Body body;
+	protected Vector2 forceVector = new Vector2();
+	
 
 	// CONSTRUCTORS
 	public Movables(float x, float y, float mv, Room s) {
@@ -90,10 +92,6 @@ public abstract class Movables extends Actor{
 		
 
 	public void updateTick() {
-//		if(-maxVel*speed < xVel+xAcc && xVel+xAcc < maxVel*speed) xVel += xAcc;
-//		if(-maxVel*speed < yVel+yAcc && yVel+yAcc < maxVel*speed) yVel += yAcc;
-//		if(!(-maxVel*speed < xVel && xVel < maxVel*speed)) xVel -= xVel/10; //Checks for fucky problem when switching sides
-//		if(!(-maxVel*speed < yVel && yVel < maxVel*speed)) yVel -= yVel/10; // If maxspeed eclipsed do this
 		xVel = this.body.getLinearVelocity().x;
 		yVel = this.body.getLinearVelocity().y;
 

@@ -23,6 +23,7 @@ public class Room {
 	private float[] roomTop = new float[] {Constants.Y_ROOM_METERS,Constants.X_ROOM_METERS};
 	private String roomType; 
 	
+	public static final TextureRegion BACKGROUND = GameScreen.atlas.findRegion("stone");
 	
 	//Seed is the string version of all the objects
 	private String[][] seed;
@@ -110,8 +111,8 @@ public class Room {
 		//Render background first, then
 		
 		batch.disableBlending();
-		for(float[] b : background) { //fucky typecasting since java doesnt have tuples
-			batch.draw(GameScreen.BACKGROUND, b[1], b[0], Constants.TILESIZE, Constants.TILESIZE);
+		for(float[] b : background) {
+			batch.draw(BACKGROUND, b[1], b[0], Constants.TILESIZE, Constants.TILESIZE);
 		}
 		
 		batch.enableBlending();

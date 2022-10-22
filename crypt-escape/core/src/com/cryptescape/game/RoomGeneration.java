@@ -30,8 +30,8 @@ public class RoomGeneration {
 				1,1,1,1,
 				1,1,1,1,
 				1,1,1,1,
-				5,4,1,1,
-				10,10,10,10}; 
+				5,4,10,10,
+				10,10,1,1}; 
 		
 		String[] key2 = new String[] {
 				"open",  "cb", "blocked", 
@@ -118,7 +118,6 @@ public class RoomGeneration {
 			pregenTemplate.set(i, formatWalls(pregenTemplate.get(i)));
 		
 		final ArrayList<String[][]> TEMPLATE = new ArrayList<String[][]>(Collections.unmodifiableList(pregenTemplate)); //makes it unmodable
-		RoomGeneration.debugTemplates(TEMPLATE);
 		generateRooms(TEMPLATE, key2, roomTypeGen, roomItemGen);
 
 	}
@@ -177,7 +176,6 @@ public class RoomGeneration {
 						
 					}
 				}
-				printSeedArray(seed, roomType);
 				GameScreen.rooms.get(col).add(new Room(new int[] {col+1, row}, seed.clone(), roomType));
 				
 			}
@@ -307,9 +305,13 @@ public class RoomGeneration {
 				}
 				
 
-				if((x == 0 || x == (row-1)) && (y == 0 || y == col-1) && !isGrid) { //Corners (Minus blocked segments)
-					s[y][x] = "blocked";
+				if((x == 0) && (y == 0 || y == col-1) && !isGrid) { //Corners (Minus blocked segments)
+					s[y][x] = "westWall";
 				}
+				if((x == (row-1)) && (y == 0 || y == col-1) && !isGrid) { //Corners (Minus blocked segments)
+					s[y][x] = "eastWall";
+				}
+				
 			}
 		}
 		return s;
