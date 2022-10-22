@@ -21,6 +21,7 @@ MY STUFF:
 -Extend wall/pillar images w/o other interactable
 -Music manager
 -Multiple doors
+-Box to detect door collision and interaction
 -FIX DOORS DAMNIT
 -make east/west doors art
 -Sound effects on walking (timed to vel / tilesize, so that it is relative)

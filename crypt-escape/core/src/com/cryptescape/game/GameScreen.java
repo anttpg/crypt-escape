@@ -184,7 +184,7 @@ public class GameScreen implements Screen {
 			int y = r.nextInt(Constants.NUM_OF_ROOMS_Y-2)+1;
 			
 			if(!rooms.get(y).get(x).getRoomType().equals("blocked"))  {
-				GameScreen.player.changeRoom(GameScreen.rooms.get(y).get(x));
+				GameScreen.player.setStartingRoom(GameScreen.rooms.get(y).get(x));
 				player.setPos(rooms.get(y).get(x).getRoomLocation()[1]+ Constants.CAMERA_WIDTH/3, rooms.get(y).get(x).getRoomLocation()[0]+Constants.CAMERA_HEIGHT/2);
 				System.out.println(player.xPos +"     "+ player.yPos);
 				roomFound = true;

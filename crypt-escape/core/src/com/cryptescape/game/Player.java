@@ -44,7 +44,7 @@ public class Player extends Movables {
 	* to meters, not pixels. 
 	*/
 	public Player(float x, float y, float t, Room s) {
-		super(x, y, 2.1f, s);
+		super(x, y, 2.1f, s, new float[] {8f,16f});
 		scale = t;
 		
         //effects
@@ -136,10 +136,25 @@ public class Player extends Movables {
     	return currentRoom;
     }
     
-    public void changeRoom(Room r) {
+    /**
+     * ONLY USE TO SET THE STARTING ROOM, WILL NOT GO THROUGH DOOR CHECK SEQUENCE
+     */
+    public void setStartingRoom(Room r) {
     	currentRoom = r;
-    }  
+    } 
     
+    
+    public boolean changeRoom(Room r, Door d) {
+    	if(d.getPartner() != null) {
+    		Vector2 exitPos = new Vector2(d.getExitPosition());
+    		super.setPos(exitPos.x, exitPos.y);
+    		currentRoom = d.getPartnerRoom();
+    		return true;
+    	}
+    	return false;
+    }
+    
+
     public float getCandleLevel() {
     	candleLevel -= (Constants.FRAME_SPEED/(30*maxCandleLevel));
     	return candleLevel + offset;

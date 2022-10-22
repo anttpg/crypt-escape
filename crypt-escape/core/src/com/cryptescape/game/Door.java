@@ -4,19 +4,25 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
 
 public class Door {
 	private Interactable leftDoor; // Top if side, left if top
 	private Interactable rightDoor; // Bottom if side, right if top
 	private Animation<TextureRegion> leftAnimation;
 	private Animation<TextureRegion> rightAnimation;
+	private Door partner = null;
 	
 	private int animationPhase = 0;
 	private float timer;
 	private float relativeTime;
+	private final String type;
 	private final float ANIMATION_SPEED = Constants.FRAME_SPEED * 20;
+
 	
 	public Door(int col, int row, String current, Room p, int c) {
+		type = current;
+		
 		leftAnimation = new Animation<TextureRegion>(Constants.FRAME_SPEED, GameScreen.atlas.findRegions(current + "Left"));
 		rightAnimation = new Animation<TextureRegion>(Constants.FRAME_SPEED, GameScreen.atlas.findRegions(current + "Right"));
 		leftAnimation.setFrameDuration(ANIMATION_SPEED);
@@ -113,5 +119,43 @@ public class Door {
 		
 		leftDoor.draw(batch);
 		rightDoor.draw(batch);
+	}
+	
+	/**
+	 * Sets the partner Door for this item, if Null no such door exists.
+	 */
+	public void setPartner(Door p) {
+		partner = p;
+	}
+	
+	public Door getPartner() {
+		return partner;
+	}
+	
+	/**
+	 * specifies coords on an XY plane of where player should teleport to to exit from the related door
+	 */
+	public Vector2 getExitPosition() {
+		
+		float[] offset;
+		if(partner.type.equals("northDoor"))
+			offset = new float[] {0, -Constants.TILESIZE};
+		else if(partner.type.equals("southDoor"))
+			offset = new float[] {0, Constants.TILESIZE};
+		else if(partner.type.equals("eastDoor"))
+			offset = new float[] {-Constants.TILESIZE, 0};
+		else if(partner.type.equals("westDoor"))
+			offset = new float[] {Constants.TILESIZE, 0};
+		
+		else 
+			offset = null;
+		
+		return new Vector2(
+				partner.leftDoor.getItemLocation().x/2f + partner.rightDoor.getItemLocation().x/2f + offset[0],
+				partner.leftDoor.getItemLocation().y/2f + partner.rightDoor.getItemLocation().y/2f + offset[1]);
+	}
+	
+	public Room getPartnerRoom() {
+		return partner.leftDoor.getParentRoom();
 	}
 }

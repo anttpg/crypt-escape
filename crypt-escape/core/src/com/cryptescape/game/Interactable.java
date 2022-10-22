@@ -36,7 +36,7 @@ public class Interactable {
 		yCorner = parent.getRoomLocation()[0] + (Constants.Y_ROOM_METERS * (col/(float)Constants.Y_TILES));		
 	}
 	
-	private Vector2 getItemLocation() {
+	public Vector2 getItemLocation() {
 		return new Vector2( // vectors are in x,y,z
 				parent.getRoomLocation()[1] + (Constants.X_ROOM_METERS * (row/(float)Constants.X_TILES)) + Constants.TILESIZE/2,
 				//Original corner        + Location at X tiles over          
@@ -107,5 +107,9 @@ public class Interactable {
 	
 	public void debugInteractable(Fixture f, int col, int row) {
 		System.out.println("Position of item at col  " + col + "  and row  " + row + "  : " + f.getBody().getPosition());
+	}
+	
+	public Room getParentRoom() {
+		return parent;
 	}
 }

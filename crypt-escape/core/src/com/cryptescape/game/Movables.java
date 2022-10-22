@@ -36,12 +36,15 @@ public abstract class Movables extends Actor{
 	protected Vector2 forceVector = new Vector2();
 	
 
-	// CONSTRUCTORS
-	public Movables(float x, float y, float mv, Room s) {
+	/**
+	 * maxV is the maximum X OR Y velocity, not combinded.
+	 * boundsSize is XY the collision box will be divided by to get where on the object to register action from
+	 */
+	public Movables(float x, float y, float maxV, Room startRoom, float[] boundsSize) {
 		xPos = x;
 		yPos = y;
-		maxVel = mv;
-		currentRoom = s;
+		maxVel = maxV;
+		currentRoom = startRoom;
 		
         //physics body definitions
         BodyDef bodyDef = new BodyDef();
@@ -53,7 +56,7 @@ public abstract class Movables extends Actor{
         
 
         PolygonShape shape = new PolygonShape();
-        shape.setAsBox(Constants.TILESIZE/6, Constants.TILESIZE/16);
+        shape.setAsBox(Constants.TILESIZE/boundsSize[0], Constants.TILESIZE/boundsSize[1]);
         FixtureDef fixtureDef = new FixtureDef();
         
         //Physics rules
@@ -72,6 +75,9 @@ public abstract class Movables extends Actor{
 		
 	abstract void draw(SpriteBatch batch);
 	
+	/**
+	 * Use this verison of the method to make sure Movables X and Y are updated
+	 */
 	public void setPos(float x, float y) {
 		body.setTransform(x, y, body.getAngle());
 	}
