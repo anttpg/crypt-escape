@@ -120,22 +120,19 @@ public class GameScreen implements Screen {
 			viewport = new ExtendViewport(Constants.VIEWPORT_WIDTH, Constants.VIEWPORT_HEIGHT, camera);
 		
 		
+		ArrayList<String> songNames = new ArrayList<String>();		
+		System.out.println(Gdx.files.internal("soundDesign/music").toString());
 		try (Stream<Path> paths = Files.walk(Paths.get(Gdx.files.internal("soundDesign/music").file().getAbsolutePath()))) {
 		    paths
 		    .filter(Files::isRegularFile)
-		    .forEach(System.out::println);
+		    .forEach(p -> songNames.add(p.getFileName().toString()));
 		} 
 		catch(Exception e) {
 			e.printStackTrace();
 		}
 		
-//		Gdx.files.
-//		
-//		ambiance = Gdx.audio.newMusic(Gdx.files.internal("COPYRIGHTED-SubwooferLullaby.mp3"));
-//		ambiance2 = Gdx.audio.newMusic(Gdx.files.internal("COPYRIGHTED-caveAmbiance.mp3"));
-//		ambiance2.setVolume(0.15f);
-//		ambiance.setLooping(true);
-//		ambiance2.setLooping(true);
+		music = new MusicManager(songNames);
+
 		
 		atlas = new TextureAtlas(Gdx.files.internal("packedImages/pack.atlas")); //loads images
 		
@@ -263,13 +260,13 @@ public class GameScreen implements Screen {
 		
 		player.setAcceleration((wasd[3]-wasd[1]), (wasd[0]-wasd[2]), sprint); //handles player movement
 		player.draw(game.batch);
-
 		
 //		enemy.implementAction(); //decides what the enemy will do
 //		enemy.draw(game.batch);
 		
 		game.batch.end();
 		
+		music.update();
 		
         stage.act();
         stage.draw();
@@ -333,7 +330,7 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void show() {
-		
+		music.playRandomSong();
 		//log 
 		Gdx.app.log("MainScreen","show");
 	}
