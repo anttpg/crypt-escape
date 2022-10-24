@@ -16,6 +16,7 @@ public class MusicManager {
 	Random random = new Random();
 	Music currentSong;
 	float elapsedTime = 0;
+	private boolean wait = false;
 	
 	/**
 	 * Searches for each song in songNames and adds it to songs (song must exist inside of the MUSIC folder)
@@ -37,8 +38,12 @@ public class MusicManager {
 		songs.put(s, song);
 	}
 	
-	public void setSongVolume(String s, float volume) {
+	public void setVolume(String s, float volume) {
 		songs.get(s).setVolume(volume);
+	}
+	
+	public void setPlayingVolume(float volume) {
+		currentSong.setVolume(volume);
 	}
 
 	public void debugSongs() {
@@ -46,14 +51,20 @@ public class MusicManager {
 	}
 	
 	public void update() {
-		if(!currentSong.isPlaying()) {
+		if(!wait && !currentSong.isPlaying()) {
 			playRandomSong();
 		}
+		
 		elapsedTime += Gdx.graphics.getDeltaTime();
 	}
 	
-	public void playSong() {
-		//TODO
+	/**
+	 * Overrides the current song and starts playing the specified song
+	 */
+	public void playSong(String s) {
+		currentSong.stop();
+		currentSong = songs.get(s);
+		currentSong.play();
 	}
 	
 	public void playRandomSong() {

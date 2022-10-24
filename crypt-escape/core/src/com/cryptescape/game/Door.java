@@ -6,12 +6,11 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 
-public class Door {
-	private Interactable leftDoor; // Top if side, left if top
-	private Interactable rightDoor; // Bottom if side, right if top
-	private Animation<TextureRegion> leftAnimation;
-	private Animation<TextureRegion> rightAnimation;
+public class Door  extends Interactable {
+	private Animation<TextureRegion> animation;
 	private Door partner = null;
+	
+	private boolean TEMPVARIABLEhasAnimation = false;
 	
 	private int animationPhase = 0;
 	private float timer;
@@ -21,117 +20,72 @@ public class Door {
 
 	
 	public Door(int col, int row, String current, Room p, int c) {
+		super(col, row, current, p);
 		type = current;
 		
-		leftAnimation = new Animation<TextureRegion>(Constants.FRAME_SPEED, GameScreen.atlas.findRegions(current + "Left"));
-		rightAnimation = new Animation<TextureRegion>(Constants.FRAME_SPEED, GameScreen.atlas.findRegions(current + "Right"));
-		leftAnimation.setFrameDuration(ANIMATION_SPEED);
-		rightAnimation.setFrameDuration(ANIMATION_SPEED);
+
+		animation = new Animation<TextureRegion>(Constants.FRAME_SPEED, GameScreen.atlas.findRegions(current));
+		animation.setFrameDuration(ANIMATION_SPEED);
 		
-		if (c == 2 || c == 0) {
-			if (row == (Constants.X_TILES / 2)) {
-				rightDoor = new Interactable(col, row, current, p);
-				rightDoor.createStaticEdge(c);
-				rightDoor.setTextureRegion(rightAnimation.getKeyFrame(0f));
-
-			} else {
-				leftDoor = new Interactable(col, row, current, p);
-				leftDoor.createStaticEdge(c);
-				leftDoor.setTextureRegion(leftAnimation.getKeyFrame(0f));
-			}
+		if(animation.getKeyFrames().length == 0) { 
+			super.setTextureRegion(GameScreen.atlas.findRegion(current));
 		}
-
 		else {
-			if (col == (Constants.Y_TILES / 2)) {
-				leftDoor = new Interactable(col, row, current, p);
-				leftDoor.createStaticEdge(c);
-				leftDoor.setTextureRegion(leftAnimation.getKeyFrame(0f));
-
-			} else {
-				rightDoor = new Interactable(col, row, current, p);
-				rightDoor.createStaticEdge(c);
-				rightDoor.setTextureRegion(rightAnimation.getKeyFrame(0f));
-			}
+			super.setTextureRegion(animation.getKeyFrame(0f));
+			TEMPVARIABLEhasAnimation = true ;
 		}
+			
+		
+		super.createStaticEdge(c);
+		super.createInteractionRadius(Constants.TILESIZE, Constants.TILESIZE);
 	}
-
 	
-	public void setMissingDoor(int col, int row, String current, Room p, int c) {
-		if (leftDoor != null) {
-			if (c == 2 || c == 0) {
-				rightDoor = new Interactable(col, row, current, p);
-				rightDoor.createStaticEdge(c);
-				rightDoor.setTextureRegion(rightAnimation.getKeyFrame(0f));
-
-			} else {
-				rightDoor = new Interactable(col, row, current, p);
-				rightDoor.createStaticEdge(c);
-				rightDoor.setTextureRegion(rightAnimation.getKeyFrame(0f));
-
-			}
-		} 
-		
-		else {
-			if (c == 2 || c == 0) {
-				leftDoor = new Interactable(col, row, current, p);
-				leftDoor.createStaticEdge(c);
-				leftDoor.setTextureRegion(leftAnimation.getKeyFrame(0f));
-			}
-
-			else {
-				leftDoor = new Interactable(col, row, current, p);
-				leftDoor.createStaticEdge(c);
-				leftDoor.setTextureRegion(leftAnimation.getKeyFrame(0f));
-
-			}
-		}	
-	}
 	
 	public void draw(SpriteBatch batch) {
-		if(animationPhase == 0) {
-			timer += Gdx.graphics.getDeltaTime();
-			if(timer > 3f) {
-				timer = 0;
-				animationPhase = 1;
+		if(TEMPVARIABLEhasAnimation) {
+			if(animationPhase == 0) {
+				timer += Gdx.graphics.getDeltaTime();
+				if(timer > 3f) {
+					timer = 0;
+					animationPhase = 1;
+				}
 			}
-		}
-		if(animationPhase == 1) {
-			timer += Gdx.graphics.getDeltaTime();
-			rightDoor.setTextureRegion(rightAnimation.getKeyFrame(timer));
-			leftDoor.setTextureRegion(leftAnimation.getKeyFrame(timer));
-			if(timer > rightAnimation.getAnimationDuration()) {
-				animationPhase = 2;
-				timer = 0;
-			}
-		}
-		else if(animationPhase == 2) {
-			timer += Gdx.graphics.getDeltaTime();
-			if (timer > 1.5f) {
-				relativeTime = (rightAnimation.getAnimationDuration() - (timer-1.5f));
-				rightDoor.setTextureRegion(rightAnimation.getKeyFrame(relativeTime));
-				leftDoor.setTextureRegion(leftAnimation.getKeyFrame(relativeTime));
-				if(timer > rightAnimation.getAnimationDuration()+1.5f) {
-					animationPhase = 0;
+			if(animationPhase == 1) {
+				timer += Gdx.graphics.getDeltaTime();
+				super.setTextureRegion(animation.getKeyFrame(timer));
+				if(timer > animation.getAnimationDuration()) {
+					animationPhase = 2;
 					timer = 0;
 				}
 			}
+			else if(animationPhase == 2) {
+				timer += Gdx.graphics.getDeltaTime();
+				if (timer > 1.5f) {
+					relativeTime = (animation.getAnimationDuration() - (timer-1.5f));
+					super.setTextureRegion(animation.getKeyFrame(relativeTime));
+					if(timer > animation.getAnimationDuration()+1.5f) {
+						animationPhase = 0;
+						timer = 0;
+					}
+				}
+			}
 		}
-		
-		leftDoor.draw(batch);
-		rightDoor.draw(batch);
+		super.draw(batch);
 	}
 	
-	/**
-	 * Sets the partner Door for this item, if Null no such door exists.
-	 */
+
 	public void setPartner(Door p) {
 		partner = p;
 	}
 	
+	/**
+	 * Gets the partner Door for this item, if Null no such door exists.
+	 */
 	public Door getPartner() {
 		return partner;
 	}
-	
+
+
 	/**
 	 * specifies coords on an XY plane of where player should teleport to to exit from the related door
 	 */
@@ -150,12 +104,12 @@ public class Door {
 		else 
 			offset = null;
 		
-		return new Vector2(
-				partner.leftDoor.getItemLocation().x/2f + partner.rightDoor.getItemLocation().x/2f + offset[0],
-				partner.leftDoor.getItemLocation().y/2f + partner.rightDoor.getItemLocation().y/2f + offset[1]);
+		return new Vector2(partner.getItemLocation().x + offset[0], partner.getItemLocation().y + offset[1]);
 	}
 	
 	public Room getPartnerRoom() {
-		return partner.leftDoor.getParentRoom();
+		return partner.getParentRoom();
 	}
+
+	
 }

@@ -87,15 +87,17 @@ public class GameScreen implements Screen {
 	private PointLight playerLight;
 	private ConeLight playerFlashlight;
 
-	private boolean debugPerspective = false;
+	private boolean debugPerspective = true;
 	private boolean runOnceTempDebugVariable = true;
 	
 	private MusicManager music;
 	
 	private int[] wasd = new int[] {0,0,0,0};
 	public float sprint = 1; //changes when sprinting
-
+	public static boolean e_pressed;
+	
 	float playerCounter = 0;
+	
 	
 	
 	
@@ -109,6 +111,7 @@ public class GameScreen implements Screen {
 	public GameScreen(final MainCE gam) {
 		this.game = gam;
 		
+		ContactManager.createCollisionListener();
 		camera = new OrthographicCamera(Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);
 		camera.position.set(Constants.CAMERA_WIDTH/2, Constants.CAMERA_HEIGHT/2, 0);
 		
@@ -134,9 +137,10 @@ public class GameScreen implements Screen {
 		music = new MusicManager(songNames);
 
 		
+		
 		atlas = new TextureAtlas(Gdx.files.internal("packedImages/pack.atlas")); //loads images
 		
-
+		
 		FileHandle file = Gdx.files.internal("packedImages/bounds.txt");
 		
 		try {
@@ -206,6 +210,10 @@ public class GameScreen implements Screen {
 					wasd[3] = 1;
 				if (keycode == Input.Keys.SHIFT_LEFT)
 					sprint = 1.6f; //Except here since its a multiplier
+				
+				if (keycode == Input.Keys.E)
+					e_pressed = true;
+				
 				return false;
 			}
 
@@ -221,6 +229,11 @@ public class GameScreen implements Screen {
 					wasd[3] = 0;
 				if (keycode == Input.Keys.SHIFT_LEFT)
 					sprint = 1;
+				
+				if (keycode == Input.Keys.E)
+					e_pressed = false;
+				
+				
 				return false;
 			}
 			
@@ -259,6 +272,7 @@ public class GameScreen implements Screen {
 		
 		
 		player.setAcceleration((wasd[3]-wasd[1]), (wasd[0]-wasd[2]), sprint); //handles player movement
+		player.update();
 		player.draw(game.batch);
 		
 //		enemy.implementAction(); //decides what the enemy will do

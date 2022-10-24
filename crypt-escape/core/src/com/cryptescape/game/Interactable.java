@@ -10,6 +10,7 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 
 public class Interactable {
@@ -17,12 +18,14 @@ public class Interactable {
 	private Room parent;
 	private String bounds;
 	private TextureRegion texture;
+	private boolean playerInRange = false;
 	private int col;
 	private int row;
 	private float xCorner;
 	private float yCorner;
 	
 	public static HashMap<String, String> itemBounds;
+	protected Body interactionBody;
 	
 	public Interactable(int c, int r, String current, Room p) {
 		parent = p;
@@ -88,6 +91,40 @@ public class Interactable {
 		}
 	}
 	
+	
+	/**
+	 * Creates a rectangle that you cannot touch, but can be seen when the player enters.
+	 * Use for interaction decisions.
+	 * hx: the half-width of the rect.
+	 * hy: the half-height of the rect.   
+	 */
+	public void createInteractionRadius(float hx, float hy) {
+		BodyDef bodyDef = new BodyDef();
+		bodyDef.position.set(getItemLocation()); // Set its position
+		interactionBody = GameScreen.world.createBody(bodyDef);
+		
+		PolygonShape box = new PolygonShape(); // Create a polygon shape
+		box.setAsBox(hx, hy);
+		
+	    FixtureDef fixtureDef = new FixtureDef();
+	    fixtureDef.shape = box;
+		fixtureDef.isSensor = true;
+		fixtureDef.density = 0f;
+		fixtureDef.friction = 0f;
+		fixtureDef.restitution = 0f;
+		fixture = interactionBody.createFixture(fixtureDef);
+		box.dispose();
+
+	}
+
+	public boolean isPlayerInRange() {
+		return playerInRange;
+	}
+
+	public void setPlayerInRange(boolean playerInRange) {
+		this.playerInRange = playerInRange;
+	}
+	
 	public Fixture getFixture() {
 		return fixture;
 	}
@@ -105,6 +142,10 @@ public class Interactable {
 		batch.draw(texture, xCorner, yCorner, Constants.TILESIZE, Constants.TILESIZE);
 	}
 	
+	public Body getInteractionBody() {
+		return interactionBody;
+	}
+
 	public void debugInteractable(Fixture f, int col, int row) {
 		System.out.println("Position of item at col  " + col + "  and row  " + row + "  : " + f.getBody().getPosition());
 	}

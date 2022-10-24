@@ -28,6 +28,7 @@ public class Player extends Movables {
 	private TextureAtlas textureAtlas; 
 	private TextureRegion frame;
 	private float elapsedTime = 1f;
+	private float teleportCooldown = 0f;
 	private float scale;
 	
 	private float batteryLevel = 0f;
@@ -144,16 +145,28 @@ public class Player extends Movables {
     } 
     
     
-    public boolean changeRoom(Room r, Door d) {
+    public boolean changeRoom(Door d) {
     	if(d.getPartner() != null) {
     		Vector2 exitPos = new Vector2(d.getExitPosition());
     		super.setPos(exitPos.x, exitPos.y);
     		currentRoom = d.getPartnerRoom();
     		return true;
     	}
+    	System.out.println("partner is null");
     	return false;
     }
     
+	public void update() {
+		if (teleportCooldown < 0 && GameScreen.e_pressed) {
+			for (Door d : currentRoom.getDoors()) {
+				if (d != null && d.isPlayerInRange()) {
+					GameScreen.player.changeRoom(d);
+					teleportCooldown = 3f;
+				}
+			}
+		}
+		teleportCooldown -= Gdx.graphics.getDeltaTime();
+	}
 
     public float getCandleLevel() {
     	candleLevel -= (Constants.FRAME_SPEED/(30*maxCandleLevel));

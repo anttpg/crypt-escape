@@ -106,4 +106,8 @@ public abstract class Movables extends Actor{
 		super.setX(xPos);
 		super.setY(yPos);
 	}
+	
+	public Body getBody() {
+		return body;
+	}
 }

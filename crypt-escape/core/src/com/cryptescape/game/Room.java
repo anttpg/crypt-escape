@@ -18,7 +18,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 public class Room {
 	
 	private boolean discovered;
-	private int[] relativeLocation = new int[2]; // [Col, Row] on the map
+	private int[] relativeLocation = new int[2]; // [Col, Row] on the map FROM THE TOP, NOT BOTTOM CORNER
 	private float[] roomCorner = new float[2]; // room [y, x] real relative locations 
 	private float[] roomTop = new float[] {Constants.Y_ROOM_METERS,Constants.X_ROOM_METERS};
 	private String roomType; 
@@ -59,6 +59,21 @@ public class Room {
 			for(int row = 0; row < Constants.X_TILES; row++) { 
 				current = seed[col][row];
 				
+				
+				counter = 0;
+				for(String d : Constants.DOORTYPES) { //Of type Door
+					if( current.equals(d) ) {
+						if(doors.get(counter) == null) {
+							doors.set(counter, new Door(col, row, current, this, counter));
+						}
+						
+						else { //Temp to deal with 2 wide doors .-.
+							current = current.replaceFirst("Door", "Wall");
+						}
+					}
+					counter++;
+				}
+				
 				counter = 0;
 				//Checking if the current item should be a static object
 				for(String w : Constants.WALLTYPES) { //Of type wall
@@ -66,19 +81,6 @@ public class Room {
 					counter++;
 				} 
 				
-				
-				counter = 0;
-				for(String d : Constants.DOORTYPES) { //Of type Door
-					if( current.equals(d) ) {
-						if(doors.get(counter) != null && d.equals("northDoor")) {
-							doors.get(counter).setMissingDoor(col, row, current, this, counter);
-						}
-						else if(d.equals("northDoor")){
-							doors.set(counter, (new Door(col, row, current, this, counter)));
-						}
-					}
-					counter++;
-				}
 				
 				counter = 0;
 				if( current.equals("box") ) { //Of Type Box
@@ -162,7 +164,29 @@ public class Room {
 			System.out.println("");
 		}
 	}
+	
+	public void determinePartners() {
+		if(relativeLocation[0]-1 != 0 && doors.get(0) != null) {
+				doors.get(0).setPartner(GameScreen.rooms.get(relativeLocation[0]-2).get(relativeLocation[1]).getDoors().get(2));
+		}
+		
+		if(relativeLocation[0] != Constants.NUM_OF_ROOMS_Y && doors.get(2) != null) {
+				doors.get(2).setPartner(GameScreen.rooms.get(relativeLocation[0]).get(relativeLocation[1]).getDoors().get(0));
+		}
+		
+		if(relativeLocation[1] != 0 && doors.get(3) != null) {
+			doors.get(3).setPartner(GameScreen.rooms.get(relativeLocation[0]-1).get(relativeLocation[1]-1).getDoors().get(1));
+		}
+		
+		if(relativeLocation[1] != Constants.NUM_OF_ROOMS_X-1 && doors.get(1) != null) {
+			doors.get(1).setPartner(GameScreen.rooms.get(relativeLocation[0]-1).get(relativeLocation[1]+1).getDoors().get(3));
+		}
+		
+	}
 
+	public ArrayList<Door> getDoors() {
+		return doors;
+	}
 
 	public String getRoomType() {
 		return roomType;

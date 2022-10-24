@@ -24,7 +24,7 @@ public class RoomGeneration {
 		
 		// Probability of room type
 		double[] p2 = new double[] {
-				10,10,1,  
+				100,10,1,  
 				1,1,1,1,
 				1,1,1,1,
 				1,1,1,1,
@@ -119,7 +119,12 @@ public class RoomGeneration {
 		
 		final ArrayList<String[][]> TEMPLATE = new ArrayList<String[][]>(Collections.unmodifiableList(pregenTemplate)); //makes it unmodable
 		generateRooms(TEMPLATE, key2, roomTypeGen, roomItemGen);
-
+		
+		for(int col = 0; col < GameScreen.rooms.size(); col++) {
+			for(int row = 0; row < GameScreen.rooms.get(col).size(); row++) {
+				GameScreen.rooms.get(col).get(row).determinePartners();
+			}
+		}
 	}
 	
 	

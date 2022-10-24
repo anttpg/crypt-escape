@@ -25,13 +25,14 @@ public class DesktopLauncher {
 		
 		
 		//Temp disabled
-//		System.out.println("Do you want to repack assets? If unsure what this means, type no. (y/n)");
-//		Scanner s = new Scanner(System.in);
-//		if (s.nextLine().equals("y")) {
-//			TexturePacker.process("../assets/imageAssets", "../assets/packedImages", "pack");
-//			// ../ sets path back one folder, then reads from the general assets folder
-//		}
-		
+		if(false) {
+    		System.out.println("Do you want to repack assets? If unsure what this means, type no. (y/n)");
+    		Scanner s = new Scanner(System.in);
+    		if (s.nextLine().equals("y")) {
+    			TexturePacker.process("../assets/imageAssets", "../assets/packedImages", "pack");
+    			// ../ sets path back one folder, then reads from the general assets folder
+    		}
+		}
 
 		
 		//main window
