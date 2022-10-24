@@ -87,10 +87,11 @@ public class GameScreen implements Screen {
 	private PointLight playerLight;
 	private ConeLight playerFlashlight;
 
-	private boolean debugPerspective = true;
+	private boolean debugPerspective = false;
 	private boolean runOnceTempDebugVariable = true;
 	
-	private MusicManager music;
+	public MusicManager music;
+	public static SfxManager sounds;
 	
 	private int[] wasd = new int[] {0,0,0,0};
 	public float sprint = 1; //changes when sprinting
@@ -124,7 +125,6 @@ public class GameScreen implements Screen {
 		
 		
 		ArrayList<String> songNames = new ArrayList<String>();		
-		System.out.println(Gdx.files.internal("soundDesign/music").toString());
 		try (Stream<Path> paths = Files.walk(Paths.get(Gdx.files.internal("soundDesign/music").file().getAbsolutePath()))) {
 		    paths
 		    .filter(Files::isRegularFile)
@@ -133,8 +133,19 @@ public class GameScreen implements Screen {
 		catch(Exception e) {
 			e.printStackTrace();
 		}
-		
 		music = new MusicManager(songNames);
+
+		
+		ArrayList<String> soundNames = new ArrayList<String>();		
+		try (Stream<Path> paths2 = Files.walk(Paths.get(Gdx.files.internal("soundDesign/sfx").file().getAbsolutePath()))) {
+		    paths2
+		    .filter(Files::isRegularFile)
+		    .forEach(p -> soundNames.add(p.getFileName().toString()));
+		} 
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+		sounds = new SfxManager(soundNames);
 
 		
 		

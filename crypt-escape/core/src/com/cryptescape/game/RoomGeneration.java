@@ -24,7 +24,7 @@ public class RoomGeneration {
 		
 		// Probability of room type
 		double[] p2 = new double[] {
-				100,10,1,  
+				10,10,1,  
 				1,1,1,1,
 				1,1,1,1,
 				1,1,1,1,

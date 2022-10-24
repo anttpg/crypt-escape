@@ -147,12 +147,11 @@ public class Player extends Movables {
     
     public boolean changeRoom(Door d) {
     	if(d.getPartner() != null) {
-    		Vector2 exitPos = new Vector2(d.getExitPosition());
-    		super.setPos(exitPos.x, exitPos.y);
-    		currentRoom = d.getPartnerRoom();
+    		d.startAnimation();
     		return true;
     	}
-    	System.out.println("partner is null");
+    	
+    	d.blockedDoorAnimation();
     	return false;
     }
     
@@ -161,6 +160,7 @@ public class Player extends Movables {
 			for (Door d : currentRoom.getDoors()) {
 				if (d != null && d.isPlayerInRange()) {
 					GameScreen.player.changeRoom(d);
+					
 					teleportCooldown = 3f;
 				}
 			}
