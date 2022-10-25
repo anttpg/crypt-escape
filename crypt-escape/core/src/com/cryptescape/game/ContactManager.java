@@ -5,7 +5,7 @@ import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
 
-public class ContactManager implements ContactListener {
+public class ContactManager {
 
 	public static void createCollisionListener() {
 		GameScreen.world.setContactListener(new ContactListener() {
