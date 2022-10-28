@@ -40,6 +40,8 @@ public class Menu implements Screen {
 	OrthographicCamera camera;
 	ExtendViewport viewport;
 	
+	boolean pressed = false;
+	
 	float sourceX = 0;
 	float sourceX2 = 0;
 	float sourceX3 = 0;
@@ -47,13 +49,15 @@ public class Menu implements Screen {
 	float yCorner;
 	
 	float timer = 0;
+	float fallTimer = 0;
 	
 	final float velocity = 175;
 	Texture groundReel;
 	Texture grassReel;
 	Texture treeReel;
-	Animation playerWalking;
-
+	Animation<TextureRegion> playerWalking;
+	Animation<TextureRegion> playerFalling;
+	Animation<TextureRegion> hole;
 
 	public Menu(final MainCE gam) {
 		game = gam;
@@ -66,17 +70,26 @@ public class Menu implements Screen {
 		stage = new Stage(viewport);
 		camera.update();
 
-		// Temp disabled
+		
 //		Scanner s = new Scanner(System.in);
 //		System.out.println("Do you want launch a graphical menu? (y/n)");
-//		if (s.nextLine().equals("y")) {
-		
-		
+//		if (s.nextLine().equals("n")) {
+//			pressed = true;
+//			fallTimer = 15;
+//		}
+//		
 		GameScreen.atlas = new TextureAtlas(Gdx.files.internal("packedImages/pack.atlas")); //loads images for later
 		
 		playerWalking = new Animation<TextureRegion>(Constants.FRAME_SPEED, GameScreen.atlas.findRegions("playerW"));
 		playerWalking.setFrameDuration(Constants.FRAME_SPEED*10);
 		playerWalking.setPlayMode(Animation.PlayMode.LOOP);
+		
+		playerFalling = new Animation<TextureRegion>(Constants.FRAME_SPEED, GameScreen.atlas.findRegions("playerFalling"));
+		playerFalling.setFrameDuration(Constants.FRAME_SPEED*6);
+		
+		hole = new Animation<TextureRegion>(Constants.FRAME_SPEED, GameScreen.atlas.findRegions("hole"));
+		hole.setFrameDuration(Constants.FRAME_SPEED*3);
+		
 
 		groundReel = new Texture(Gdx.files.internal("groundReel.png"));
 	    groundReel.setWrap(Texture.TextureWrap.Repeat, Texture.TextureWrap.ClampToEdge);
@@ -105,7 +118,7 @@ public class Menu implements Screen {
 		playButton.addListener(new InputListener() {
 			@Override
 			public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-				game.setScreen(new GameScreen(game));
+				pressed = true;
 			}
 
 			@Override
@@ -124,44 +137,44 @@ public class Menu implements Screen {
 		ScreenUtils.clear(0, 0.2f, 0.8f, 1);
 		game.batch.setProjectionMatrix(camera.combined);
 		
-		timer += Gdx.graphics.getDeltaTime();
 		xCorner = camera.position.x - camera.viewportWidth/2f;
 		yCorner = camera.position.y - camera.viewportHeight/2f;
 		
+		
 		game.batch.begin();
+		
+		if(pressed) {
+			if(fallTimer > 2) 
+				game.setScreen(new GameScreen(game));
+			
+			fallTimer += Gdx.graphics.getDeltaTime();
+		}
+		
+		else {
+			timer += Gdx.graphics.getDeltaTime();
+			sourceX3 = (sourceX3 - Gdx.graphics.getDeltaTime() * velocity/6f) % groundReel.getWidth();
+			sourceX2 = (sourceX2 - Gdx.graphics.getDeltaTime() * velocity/3f) % groundReel.getWidth();
+			sourceX = (sourceX - Gdx.graphics.getDeltaTime() * velocity) % groundReel.getWidth();
+		}
 		
 		
 		//All reels drawn here
-		sourceX3 = (sourceX3 - Gdx.graphics.getDeltaTime() * velocity/6f) % groundReel.getWidth();
-		game.batch.draw(treeReel,
-	               // position and size of texture
-	               xCorner, yCorner, treeReel.getWidth(), SQUARE*8f, 
-	               // srcX, srcY, srcWidth, srcHeight
-	               (int) sourceX3, 0, treeReel.getWidth(), treeReel.getHeight(),
-	               // flipX, flipY
-	               false, false);
+		drawReel(treeReel, 8f, sourceX3);
+		drawReel(groundReel, 1.5f, sourceX2);
+		drawReel(grassReel, 4f, sourceX);
 		
-		sourceX2 = (sourceX2 - Gdx.graphics.getDeltaTime() * velocity/3f) % groundReel.getWidth();
-		game.batch.draw(groundReel,
-	               // position and size of texture
-	               xCorner, yCorner, groundReel.getWidth(), SQUARE*1.5f, 
-	               // srcX, srcY, srcWidth, srcHeight
-	               (int) sourceX2, 0, groundReel.getWidth(), groundReel.getHeight(),
-	               // flipX, flipY
-	               false, false);
+		if(!pressed) 
+			game.batch.draw(playerWalking.getKeyFrame(timer), 
+					xCorner + camera.viewportWidth/1.25f, yCorner + 5, SQUARE*2, SQUARE*2);
 		
-		game.batch.draw((TextureRegion)playerWalking.getKeyFrame(timer), xCorner + camera.viewportWidth/1.25f, 
-				yCorner + 5, SQUARE*2, SQUARE*2);
-		
-		sourceX = (sourceX - Gdx.graphics.getDeltaTime() * velocity) % groundReel.getWidth();
-		game.batch.draw(grassReel,
-	               // position and size of texture
-	               xCorner, yCorner, grassReel.getWidth(), SQUARE*4, 
-	               // srcX, srcY, srcWidth, srcHeight
-	               (int) sourceX, 0, grassReel.getWidth(), grassReel.getHeight(),
-	               // flipX, flipY
-	               false, false);
-		
+		else {
+			game.batch.draw(hole.getKeyFrame(fallTimer), xCorner + camera.viewportWidth/1.25f, 
+					yCorner + 5, SQUARE*2, SQUARE*2);
+			game.batch.draw(playerFalling.getKeyFrame(fallTimer), xCorner + camera.viewportWidth/1.25f, 
+					yCorner + 10, SQUARE*2, SQUARE*2);
+		}
+			
+
 		
 		
 		game.batch.end();
@@ -170,6 +183,17 @@ public class Menu implements Screen {
 		stage.act();
 		stage.draw();
 		camera.update();
+	}
+	
+	
+	public void drawReel(Texture reel, float scale, float source) {
+		game.batch.draw(reel,
+	               // position and size of texture
+	               xCorner, yCorner, reel.getWidth(), SQUARE*scale, 
+	               // srcX, srcY, srcWidth, srcHeight
+	               (int) source, 0, reel.getWidth(), reel.getHeight(),
+	               // flipX, flipY
+	               false, false);
 	}
 
 	// Y, X map size gen

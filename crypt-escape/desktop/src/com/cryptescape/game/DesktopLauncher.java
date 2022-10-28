@@ -9,6 +9,7 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.cryptescape.game.MainCE;
 
 import com.badlogic.gdx.tools.texturepacker.TexturePacker;
+import com.badlogic.gdx.tools.texturepacker.TexturePacker.Settings;
 //FUCK THIS TOOK FOREVER
 //Trying to add to the gradle build path took so long to figure out :(
 
@@ -28,8 +29,12 @@ public class DesktopLauncher {
 		if(false) {
     		System.out.println("Do you want to repack assets? If unsure what this means, type no. (y/n)");
     		Scanner s = new Scanner(System.in);
+    		
     		if (s.nextLine().equals("y")) {
-    			TexturePacker.process("../assets/imageAssets", "../assets/packedImages", "pack");
+    		    Settings settings = new Settings();
+    		    settings.combineSubdirectories = true;
+    		    settings.flattenPaths = true;
+    			TexturePacker.process(settings, "../assets/imageAssets", "../assets/packedImages", "pack");
     			// ../ sets path back one folder, then reads from the general assets folder
     		}
 		}
