@@ -160,20 +160,21 @@ public class Menu implements Screen {
 		
 		//All reels drawn here
 		drawReel(treeReel, 8f, sourceX3);
-		drawReel(groundReel, 1.5f, sourceX2);
-		drawReel(grassReel, 4f, sourceX);
+		drawReel(groundReel, 2.5f, sourceX2);
+
 		
 		if(!pressed) 
 			game.batch.draw(playerWalking.getKeyFrame(timer), 
-					xCorner + camera.viewportWidth/1.25f, yCorner + 5, SQUARE*2, SQUARE*2);
+					xCorner + camera.viewportWidth/2f, yCorner + 5, SQUARE*2, SQUARE*2);
 		
 		else {
-			game.batch.draw(hole.getKeyFrame(fallTimer), xCorner + camera.viewportWidth/1.25f, 
+			game.batch.draw(hole.getKeyFrame(fallTimer), xCorner + camera.viewportWidth/2f, 
 					yCorner + 5, SQUARE*2, SQUARE*2);
-			game.batch.draw(playerFalling.getKeyFrame(fallTimer), xCorner + camera.viewportWidth/1.25f, 
+			game.batch.draw(playerFalling.getKeyFrame(fallTimer), xCorner + camera.viewportWidth/2f, 
 					yCorner + 10, SQUARE*2, SQUARE*2);
 		}
-			
+		
+		drawReel(grassReel, 4f, sourceX);
 
 		
 		
