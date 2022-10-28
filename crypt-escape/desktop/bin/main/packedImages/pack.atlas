@@ -256,13 +256,13 @@ candleHolder
   orig: 64, 64
   offset: 0, 0
   index: -1
-hole0
+hole
   rotate: false
   xy: 276, 663
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
-  index: -1
+  index: 0
 playerFalling
   rotate: false
   xy: 276, 663
@@ -270,62 +270,62 @@ playerFalling
   orig: 32, 32
   offset: 0, 0
   index: 10
-hole1
+hole
   rotate: false
   xy: 276, 430
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
-  index: -1
-hole2
+  index: 1
+hole
   rotate: false
   xy: 408, 466
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
-  index: -1
-hole3
+  index: 2
+hole
   rotate: false
   xy: 540, 546
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
-  index: -1
-hole4
+  index: 3
+hole
   rotate: false
   xy: 310, 430
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
-  index: -1
-hole5
+  index: 4
+hole
   rotate: false
   xy: 442, 466
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
-  index: -1
-hole6
+  index: 5
+hole
   rotate: false
   xy: 540, 512
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
-  index: -1
-hole7
+  index: 6
+hole
   rotate: false
   xy: 344, 430
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
-  index: -1
-hole8
+  index: 7
+hole
   rotate: false
   xy: 476, 466
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
-  index: -1
+  index: 8
 playerE
   rotate: false
   xy: 319, 362
