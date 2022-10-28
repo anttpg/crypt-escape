@@ -66,6 +66,7 @@ public class Player extends Movables {
 		playerAnimation.add("playerSW", new Animation<TextureRegion>(Constants.FRAME_SPEED, GameScreen.atlas.findRegions("playerSW")));
 		playerAnimation.add("error", new Animation<TextureRegion>(Constants.FRAME_SPEED, GameScreen.atlas.findRegions("error")));
 		playerAnimation.setCurrent("playerS");
+//		playerAnimation.setPlayModes(Animation.PlayMode.LOOP);
 
 	}
 	

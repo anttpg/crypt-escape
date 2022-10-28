@@ -102,14 +102,6 @@ public class GameScreen implements Screen {
 	
 	
 	
-	
-	
-	
-	
-	
-
-	
-	
 	public GameScreen(final MainCE gam) {
 		this.game = gam;
 		
@@ -152,10 +144,6 @@ public class GameScreen implements Screen {
 		}
 		sounds = new SfxManager(soundNames);
 
-		
-		
-		atlas = new TextureAtlas(Gdx.files.internal("packedImages/pack.atlas")); //loads images
-		
 		
 		FileHandle file = Gdx.files.internal("packedImages/bounds.txt");
 		
@@ -337,6 +325,7 @@ public class GameScreen implements Screen {
         //Update the regular player viewport for next iteration.
         stage.act();
         stage.draw();
+        
         music.update();
 		world.step(Constants.FRAME_SPEED, 6, 2);
 

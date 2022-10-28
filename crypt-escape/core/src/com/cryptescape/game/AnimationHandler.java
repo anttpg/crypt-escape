@@ -26,6 +26,10 @@ public class AnimationHandler {
         timer = 0;
         looping = true;
     }
+    
+    public void setPlayModes(Animation.PlayMode mode) {
+    	animations.forEach((name, anima) -> anima.setPlayMode(mode));
+    }
  
     public void setCurrent(String name, boolean looping){
         setCurrent(name);
