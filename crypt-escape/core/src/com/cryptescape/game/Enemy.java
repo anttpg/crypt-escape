@@ -128,13 +128,7 @@ public class Enemy extends Movables {
 	}
 
 	public void debugEnemy() {
-		System.out.println(enemyAnimation.toString());
-		System.out.println("Enemy X: " + this.getX() + " EnemyY: " + this.getY());
-		System.out.println("Enemy xV: " + xVel + " Enemy yV: " + yVel);
-		System.out.println("Enemy xA: " + xAcc + " Enemy yA: " + yAcc);
-		System.out.println("Jolt: " + jolt[0] + "  " + jolt[1] + "  " + jolt[2] + "  " + jolt[3]);
-		System.out.println(Math.abs(-15.217f * Math.abs(this.xVel) + 0.6522f));
-		System.out.println("");
+
 	}
 	
 }

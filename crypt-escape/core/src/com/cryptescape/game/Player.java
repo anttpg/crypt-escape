@@ -32,9 +32,12 @@ public class Player extends Movables {
 	private float scale;
 	
 	private float batteryLevel = 0f;
-	private float maxCandleLevel = 4.5f;
+	
+	public float maxCandleLevel = 4.5f;
 	private float candleLevel = maxCandleLevel;
+	public float burnPerTick = Constants.FRAME_SPEED/(15f*maxCandleLevel); //15 is exactly 5 minutes to get to 0.
 	private float offset;
+	
 	private Random rand = new Random();
 
 	/**
@@ -169,7 +172,7 @@ public class Player extends Movables {
 	}
 
     public float getCandleLevel() {
-    	candleLevel -= (Constants.FRAME_SPEED/(30*maxCandleLevel));
+    	candleLevel -= (burnPerTick);
     	return candleLevel + offset;
     }
     
@@ -177,4 +180,12 @@ public class Player extends Movables {
     	//batteryLevel -= Constants.FRAME_SPEED;
     	return batteryLevel;
     }
+
+	public float getMaxCandleLevel() {
+		return maxCandleLevel;
+	}
+
+	public float getBurnPerTick() {
+		return burnPerTick;
+	}  
 }

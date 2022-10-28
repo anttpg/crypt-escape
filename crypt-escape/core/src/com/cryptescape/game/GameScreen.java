@@ -73,6 +73,7 @@ public class GameScreen implements Screen {
 	public static OrthographicCamera camera;
 	public static Viewport viewport;
 	public static TextureAtlas atlas;
+	public static PlayerHud hud;
 	
 	private BitmapFont font;
 	private Vector2 mousePosition = new Vector2(0, 0);
@@ -116,10 +117,12 @@ public class GameScreen implements Screen {
 		camera = new OrthographicCamera(Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);
 		camera.position.set(Constants.CAMERA_WIDTH/2, Constants.CAMERA_HEIGHT/2, 0);
 		
+		
 		//Different types of viewports for debugging
-		if(debugPerspective)
-			//viewport = new ExtendViewport(Constants.VIEWPORT_WIDTH*15, Constants.VIEWPORT_HEIGHT*15, camera);
+		if(debugPerspective) {
 			viewport = new ExtendViewport(Constants.VIEWPORT_WIDTH*3, Constants.VIEWPORT_HEIGHT*3, camera);
+			//viewport = new ExtendViewport(Constants.VIEWPORT_WIDTH*15, Constants.VIEWPORT_HEIGHT*15, camera);
+		}
 		else
 			viewport = new ExtendViewport(Constants.VIEWPORT_WIDTH, Constants.VIEWPORT_HEIGHT, camera);
 		
@@ -133,6 +136,8 @@ public class GameScreen implements Screen {
 		catch(Exception e) {
 			e.printStackTrace();
 		}
+
+		
 		music = new MusicManager(songNames);
 
 		
@@ -166,6 +171,9 @@ public class GameScreen implements Screen {
 		player = new Player(12f, 10f, 100f, null); 
 		stage.addActor(player);
 		
+        hud = new PlayerHud(game.batch);
+    	
+        
 		RayHandler.useDiffuseLight(true);
 		rayHandler = new RayHandler(world);
 		rayHandler.setAmbientLight(0f);
@@ -261,8 +269,13 @@ public class GameScreen implements Screen {
 	@Override
 	public void render(float delta) {
 		ScreenUtils.clear(0.0f, 0.0f, 0.0f, 1);
-		camera.update();
+		
+
 		game.batch.setProjectionMatrix(camera.combined);
+		camera.position.set(player.xPos, player.yPos, 0); //So camera follows player
+		camera.update();
+		
+		
 		game.batch.begin();
 		
 		
@@ -291,23 +304,17 @@ public class GameScreen implements Screen {
 		
 		game.batch.end();
 		
-		music.update();
-		
-        stage.act();
-        stage.draw();
-        camera.position.set(player.xPos, player.yPos, 0); //So camera follows player
-		
-        mousePosition.x = (player.xPos - (Constants.VIEWPORT_WIDTH/2)) + (((float)relativeMousePosition.x/Gdx.graphics.getWidth()) * Constants.VIEWPORT_WIDTH);
-		mousePosition.y = (player.yPos + (Constants.VIEWPORT_HEIGHT/2)) - (((float)relativeMousePosition.y/Gdx.graphics.getHeight()) * Constants.VIEWPORT_HEIGHT);
-
 		
 		
+		//Then render lights
 		if(debugPerspective) {
 			debugRenderer.render(world, camera.combined);
 		}
-		
 
 		else {
+	        mousePosition.x = (player.xPos - (Constants.VIEWPORT_WIDTH/2)) + (((float)relativeMousePosition.x/Gdx.graphics.getWidth()) * Constants.VIEWPORT_WIDTH);
+			mousePosition.y = (player.yPos + (Constants.VIEWPORT_HEIGHT/2)) - (((float)relativeMousePosition.y/Gdx.graphics.getHeight()) * Constants.VIEWPORT_HEIGHT);
+			
 			playerLight.setPosition(player.xPos, player.yPos);
 			playerLight.setDistance(player.getCandleLevel());
 			
@@ -319,15 +326,19 @@ public class GameScreen implements Screen {
 			rayHandler.updateAndRender();
 		}
 		
+		//Finally draw hud over it all.
+		game.batch.setProjectionMatrix(hud.getStage().getCamera().combined);
+		
+        //Draw the Hud
+        hud.update();
+        hud.getStage().act(delta);
+        hud.getStage().draw();
+		
+        //Update the regular player viewport for next iteration.
+        stage.act();
+        stage.draw();
+        music.update();
 		world.step(Constants.FRAME_SPEED, 6, 2);
-		
-		
-//		try {
-//		    Thread.sleep(50);                 //2000 milliseconds is one second.
-//		} catch(InterruptedException ex) {
-//		    Thread.currentThread().interrupt();
-//		}
-		
 
 	}
 	
@@ -350,7 +361,7 @@ public class GameScreen implements Screen {
         camera.viewportHeight = (Constants.CAMERA_WIDTH / width) * height;
         camera.update();
         viewport.update(width, height);
-        
+        hud.getStage().getViewport().update(width, height);
 	}
 
 	@Override
@@ -376,6 +387,6 @@ public class GameScreen implements Screen {
 	public void dispose() {
 		rayHandler.dispose();
 		world.dispose();
-			
+		hud.dispose();
 	}
 }

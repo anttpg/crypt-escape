@@ -25,8 +25,7 @@ public class Door  extends Interactable {
 		type = current;
 		
 
-		animation = new Animation<TextureRegion>(Constants.FRAME_SPEED, GameScreen.atlas.findRegions(current));
-		animation.setFrameDuration(ANIMATION_SPEED);
+		animation = new Animation<TextureRegion>(ANIMATION_SPEED, GameScreen.atlas.findRegions(current));
 		
 		if(animation.getKeyFrames().length == 0) { 
 			super.setTextureRegion(GameScreen.atlas.findRegion(current));

@@ -61,7 +61,7 @@ public abstract class Movables extends Actor{
         
         //Physics rules
         fixtureDef.shape = shape;
-        fixtureDef.density = 12f;
+        fixtureDef.density = 20f;
         fixtureDef.friction = 0.5f;
         fixtureDef.restitution= 0.05f;
         fixture = body.createFixture(fixtureDef);
