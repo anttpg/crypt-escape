@@ -77,7 +77,10 @@ public class Menu implements Screen {
 //			pressed = true;
 //			fallTimer = 15;
 //		}
-//		
+		
+		pressed = true;
+		fallTimer = 15;
+		
 		GameScreen.atlas = new TextureAtlas(Gdx.files.internal("packedImages/pack.atlas")); //loads images for later
 		
 		playerWalking = new Animation<TextureRegion>(Constants.FRAME_SPEED, GameScreen.atlas.findRegions("playerW"));
@@ -235,6 +238,10 @@ public class Menu implements Screen {
 	@Override
 	public void dispose() {
 		stage.dispose();
+		groundReel.dispose();
+		grassReel.dispose();
+		treeReel.dispose();
+		
 	}
 
 }

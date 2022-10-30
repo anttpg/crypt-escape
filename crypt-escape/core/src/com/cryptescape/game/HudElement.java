@@ -9,7 +9,8 @@ public class HudElement extends Actor {
     private Animation<TextureRegion> animation;
     private TextureRegion currentRegion;
     private float time = 0;
-    private float scale = 3f;
+    private float width = 100f;
+    private float height = 100f;
     
     private float x = 100f;
     private float y = 650f;
@@ -30,7 +31,11 @@ public class HudElement extends Actor {
     @Override
     public void draw(Batch batch, float parentAlpha) {
         super.draw(batch, parentAlpha);
-        batch.draw(currentRegion, getX(), getY(), currentRegion.getRegionWidth()*scale, currentRegion.getRegionHeight()*scale);
+        batch.draw(currentRegion, getX(), getY(), width, height);
+    }
+    
+    public void resize(int width, int height) {
+        System.out.println(animation + "  " +  this.width + "  " + this.height);
     }
     
     public Animation getAnimation() {
@@ -49,7 +54,7 @@ public class HudElement extends Actor {
     	//System.out.println(super.getY() + "    keyframe" + candle.getAnimation().getKeyFrameIndex( candle.getTime() ) + "        length" + (float) candle.getAnimation().getKeyFrames().length + "   current"  + currentRegion.getRegionHeight()*scale);
 		
     	if(currentRegion.getRegionHeight() != 0 && candle.getAnimation().getKeyFrameIndex( candle.getTime() ) != 0) {
-    		super.setY(y - ( candle.getAnimation().getKeyFrameIndex( candle.getTime() )  / (( (float) candle.getAnimation().getKeyFrames().length ) / (currentRegion.getRegionHeight()*scale*(5/8f))) ) );
+    		super.setY(y - ( candle.getAnimation().getKeyFrameIndex( candle.getTime() )  / (( (float) candle.getAnimation().getKeyFrames().length ) / (height*(5/8f))) ) );
     		
     	}
     	else

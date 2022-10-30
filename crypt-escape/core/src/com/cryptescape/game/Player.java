@@ -77,7 +77,7 @@ public class Player extends Movables {
 		this.updateTick();
 
 		if (elapsedTime > 0.15) {
-			offset = rand.nextFloat(0f, 0.2f);
+			offset = rand.nextFloat()*0.2f;
 			elapsedTime = 0;
 
 			if(Math.abs(xVel) > 0.0001 || Math.abs(yVel) > 0.0001) { //A weird function made to control animation speed

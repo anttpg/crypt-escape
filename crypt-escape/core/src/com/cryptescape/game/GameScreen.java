@@ -76,17 +76,14 @@ public class GameScreen implements Screen {
 	public static PlayerHud hud;
 	
 	private BitmapFont font;
-	private Vector2 mousePosition = new Vector2(0, 0);
-	private Vector2 relativeMousePosition = new Vector2(0, 0);
+	public static Vector2 relativeMousePosition = new Vector2(0, 0);
 
 	public static Enemy enemy;	
 	public static Player player;
 	
 	private Fixture BASE_FLOOR;
 	
-	private RayHandler rayHandler;
-	private PointLight playerLight;
-	private ConeLight playerFlashlight;
+
 
 	private boolean debugPerspective = false;
 	private boolean runOnceTempDebugVariable = true;
@@ -94,8 +91,8 @@ public class GameScreen implements Screen {
 	public MusicManager music;
 	public static SfxManager sounds;
 	
-	private int[] wasd = new int[] {0,0,0,0};
-	public float sprint = 1; //changes when sprinting
+	public static int[] wasd = new int[] {0,0,0,0};
+	public static float sprint = 1; //changes when sprinting
 	public static boolean e_pressed;
 	
 	float playerCounter = 0;
@@ -119,33 +116,11 @@ public class GameScreen implements Screen {
 			viewport = new ExtendViewport(Constants.VIEWPORT_WIDTH, Constants.VIEWPORT_HEIGHT, camera);
 		
 		
-		ArrayList<String> songNames = new ArrayList<String>();		
-		try (Stream<Path> paths = Files.walk(Paths.get(Gdx.files.internal("soundDesign/music").file().getAbsolutePath()))) {
-		    paths
-		    .filter(Files::isRegularFile)
-		    .forEach(p -> songNames.add(p.getFileName().toString()));
-		} 
-		catch(Exception e) {
-			e.printStackTrace();
-		}
+		music = new MusicManager("soundDesign/music"); //Load Music
+		sounds = new SfxManager("soundDesign/sfx"); //Load SFX
 
 		
-		music = new MusicManager(songNames);
-
-		
-		ArrayList<String> soundNames = new ArrayList<String>();		
-		try (Stream<Path> paths2 = Files.walk(Paths.get(Gdx.files.internal("soundDesign/sfx").file().getAbsolutePath()))) {
-		    paths2
-		    .filter(Files::isRegularFile)
-		    .forEach(p -> soundNames.add(p.getFileName().toString()));
-		} 
-		catch(Exception e) {
-			e.printStackTrace();
-		}
-		sounds = new SfxManager(soundNames);
-
-		
-		FileHandle file = Gdx.files.internal("packedImages/bounds.txt");
+		FileHandle file = Gdx.files.internal("packedImages/bounds.txt"); //Loads interactable item boundaries
 		
 		try {
 			Interactable.itemBounds = SaveReader.readObjectBounds(file.readString());
@@ -162,95 +137,17 @@ public class GameScreen implements Screen {
         hud = new PlayerHud(game.batch);
     	
         
-		RayHandler.useDiffuseLight(true);
-		rayHandler = new RayHandler(world);
-		rayHandler.setAmbientLight(0f);
-		rayHandler.setShadows(true);
-		rayHandler.setBlur(true);
-		
-		
-		//rays, color, how far out to project 
-		playerLight = new PointLight(rayHandler, 100, null, 2.5f, player.xPos, player.yPos);
-		playerLight.setSoftnessLength(2f);
-		playerLight.setXray(true);
-		
-		
-		playerFlashlight = new ConeLight(rayHandler, 300, Color.WHITE, 7f, player.xPos, player.yPos, 0, 20f);
-		playerFlashlight.setSoftnessLength(2f);
-		playerFlashlight.setXray(false);
-	
 		//enemy = new Enemy(4f, 4f, 0.95f, 0.95f, 100f);
 		//stage.addActor(enemy);
 		
-		//Generate Rooms
-		RoomGeneration.generateTemplates();
 		
-		boolean roomFound = false;
-		while(!roomFound) {
-			Random r = new Random();
-			int x = r.nextInt(Constants.NUM_OF_ROOMS_X-2)+1;
-			int y = r.nextInt(Constants.NUM_OF_ROOMS_Y-2)+1;
-			
-			if(!rooms.get(y).get(x).getRoomType().equals("blocked"))  {
-				GameScreen.player.setStartingRoom(GameScreen.rooms.get(y).get(x));
-				player.setPos(rooms.get(y).get(x).getRoomLocation()[1]+ Constants.CAMERA_WIDTH/3, rooms.get(y).get(x).getRoomLocation()[0]+Constants.CAMERA_HEIGHT/2);
-				System.out.println(player.xPos +"     "+ player.yPos);
-				roomFound = true;
-			}
-		}
+		RoomGeneration.generateTemplates(); //Generate Rooms
+		RoomGeneration.findRoom(); //Finds the player starting room
 		
+		InputHandler.createInput(); //Setup input
 		
-		
-		//INPUT HANDLING
-		//All calculated per tick, and stored as 0 or 1
-		
-		Gdx.input.setInputProcessor(new InputAdapter() {	
-			@Override
-			public boolean keyDown(int keycode) {
-				if (keycode == Input.Keys.W)
-					wasd[0] = 1;
-				if (keycode == Input.Keys.A)
-					wasd[1] = 1;
-				if (keycode == Input.Keys.S)
-					wasd[2] = 1;
-				if (keycode == Input.Keys.D)
-					wasd[3] = 1;
-				if (keycode == Input.Keys.SHIFT_LEFT)
-					sprint = 1.6f; //Except here since its a multiplier
-				
-				if (keycode == Input.Keys.E)
-					e_pressed = true;
-				
-				return false;
-			}
-
-			@Override
-			public boolean keyUp(int keycode) {
-				if (keycode == Input.Keys.W)
-					wasd[0] = 0;
-				if (keycode == Input.Keys.A)
-					wasd[1] = 0;
-				if (keycode == Input.Keys.S)
-					wasd[2] = 0;
-				if (keycode == Input.Keys.D)
-					wasd[3] = 0;
-				if (keycode == Input.Keys.SHIFT_LEFT)
-					sprint = 1;
-				
-				if (keycode == Input.Keys.E)
-					e_pressed = false;
-				
-				
-				return false;
-			}
-			
-			@Override
-			public boolean mouseMoved(int mouseX, int mouseY) {
-				relativeMousePosition.x = mouseX;
-				relativeMousePosition.y = mouseY;
-				return false;
-			}
-		});
+		LightingManager.createLights(); //Creates Lighting
+	
 	}
 
 	
@@ -267,17 +164,10 @@ public class GameScreen implements Screen {
 		game.batch.begin();
 		
 		
-		game.batch.disableBlending(); //save resources when not needed
-		//debugging tools ->
-		game.font.draw(game.batch, "FPS: "+ Gdx.graphics.getFramesPerSecond(), 1f, Constants.CAMERA_HEIGHT-1f);
-		game.font.draw(game.batch, "Player xV: " + player.xVel + "Player yV: " + player.yVel,  1f, Constants.CAMERA_HEIGHT-1.5f);
-		game.font.draw(game.batch, "Player xA: " + player.xAcc + "Player yA: " + player.yAcc, 1f, Constants.CAMERA_HEIGHT-2f);
-		//game.font.draw(game.batch, player.debugPlayer(), 1f, Constants.HEIGHT-3f);
+		//game.batch.disableBlending(); //save resources when not needed
+		//game.batch.enableBlending();
 		
-		
-		game.batch.enableBlending();
-		
-		//IMPORTANT <<< DO ALL RENDERING IN THE ORDER OF WHICH YOU WANT IT TO APPEAR
+		//IMPORTANT <<< DO ALL RENDERING IN THE ORDER OF WHICH YOU WANT IT TO APPEAR. THERE IS NO Z MODIFIER YET
 		// Ie: Enemy on top of Player on top of Room.
 		
 		player.getRoom().draw(game.batch); //draw the room that the player is currently in
@@ -294,37 +184,25 @@ public class GameScreen implements Screen {
 		
 		
 		
-		//Then render lights
+		
 		if(debugPerspective) {
 			debugRenderer.render(world, camera.combined);
 		}
 
-		else {
-	        mousePosition.x = (player.xPos - (Constants.VIEWPORT_WIDTH/2)) + (((float)relativeMousePosition.x/Gdx.graphics.getWidth()) * Constants.VIEWPORT_WIDTH);
-			mousePosition.y = (player.yPos + (Constants.VIEWPORT_HEIGHT/2)) - (((float)relativeMousePosition.y/Gdx.graphics.getHeight()) * Constants.VIEWPORT_HEIGHT);
-			
-			playerLight.setPosition(player.xPos, player.yPos);
-			playerLight.setDistance(player.getCandleLevel());
-			
-			playerFlashlight.setDistance(player.getBatteryLevel());
-			playerFlashlight.setPosition(player.xPos, player.yPos);
-	        playerFlashlight.setDirection(getAngle(player.xPos, player.yPos, mousePosition));
-	        
-			rayHandler.setCombinedMatrix(camera);
-			rayHandler.updateAndRender();
+		else {  //Else render lights
+		    LightingManager.updateLights();
 		}
 		
-		//Finally draw hud over it all.
-		game.batch.setProjectionMatrix(hud.getStage().getCamera().combined);
 		
-        //Draw the Hud
+        //Update/Draw the game stage
+        stage.act();
+        stage.draw();
+		
+        //Update/Draw the Hud
+        game.batch.setProjectionMatrix(hud.getStage().getCamera().combined);
         hud.update();
         hud.getStage().act(delta);
         hud.getStage().draw();
-		
-        //Update the regular player viewport for next iteration.
-        stage.act();
-        stage.draw();
         
         music.update();
 		world.step(Constants.FRAME_SPEED, 6, 2);
@@ -334,14 +212,7 @@ public class GameScreen implements Screen {
 	
 	
 	
-	
-	public float getAngle(Float x, Float y, Vector2 target) {
-	    float angle = (float) Math.toDegrees(Math.atan2(target.y - y, target.x - x));
-	    if(angle < 0){
-	        angle += 360;
-	    }
-	    return angle;
-	}
+
 	
 	@Override
 	public void resize(int width, int height) {
@@ -350,7 +221,12 @@ public class GameScreen implements Screen {
         camera.viewportHeight = (Constants.CAMERA_WIDTH / width) * height;
         camera.update();
         viewport.update(width, height);
-        hud.getStage().getViewport().update(width, height);
+        
+        System.out.println("Main camera: " + camera.viewportWidth + "  " + camera.viewportHeight);
+        System.out.println("Main viewport: " + viewport.getScreenWidth() + "  " + viewport.getScreenHeight());
+        System.out.println("stage screen: "  + stage.getWidth() + " " + stage.getHeight());
+        
+        hud.resize(width, height);
 	}
 
 	@Override
@@ -374,7 +250,7 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void dispose() {
-		rayHandler.dispose();
+		LightingManager.dispose();
 		world.dispose();
 		hud.dispose();
 	}

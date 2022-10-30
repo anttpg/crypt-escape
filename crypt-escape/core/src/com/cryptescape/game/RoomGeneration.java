@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 public class RoomGeneration {
 	
@@ -488,4 +489,20 @@ public class RoomGeneration {
 	public static String[][] clone2dArray(String[][] original) {
 		return Arrays.stream(original).map(String[]::clone).toArray(String[][]::new);
 	}
+	
+	public static void findRoom() {
+        boolean roomFound = false;
+        while (!roomFound) {
+            Random r = new Random();
+            int x = r.nextInt(Constants.NUM_OF_ROOMS_X - 2) + 1;
+            int y = r.nextInt(Constants.NUM_OF_ROOMS_Y - 2) + 1;
+
+            if (!GameScreen.rooms.get(y).get(x).getRoomType().equals("blocked")) {
+                GameScreen.player.setStartingRoom(GameScreen.rooms.get(y).get(x));
+                GameScreen.player.setPos(GameScreen.rooms.get(y).get(x).getRoomLocation()[1] + Constants.CAMERA_WIDTH / 3,
+                        GameScreen.rooms.get(y).get(x).getRoomLocation()[0] + Constants.CAMERA_HEIGHT / 2);
+                roomFound = true;
+            }
+        }
+    }
 }

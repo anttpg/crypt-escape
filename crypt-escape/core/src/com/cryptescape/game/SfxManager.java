@@ -1,10 +1,13 @@
 package com.cryptescape.game;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.stream.Stream;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
@@ -24,7 +27,18 @@ public class SfxManager {
 		
 	}
 	
-	public SfxManager(ArrayList<String> soundN) {
+	public SfxManager(String path) {
+	    
+	       ArrayList<String> soundN = new ArrayList<String>();     
+	        try (Stream<Path> paths2 = Files.walk(Paths.get(Gdx.files.internal(path).file().getAbsolutePath()))) {
+	            paths2
+	            .filter(Files::isRegularFile)
+	            .forEach(p -> soundN.add(p.getFileName().toString()));
+	        } 
+	        catch(Exception e) {
+	            e.printStackTrace();
+	        }
+	    
 		for(String s : soundN) {
 			Sound sound = Gdx.audio.newSound(Gdx.files.internal("soundDesign/sfx/" + s));
 			sounds.put(s, sound);

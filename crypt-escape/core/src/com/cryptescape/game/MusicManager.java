@@ -1,10 +1,13 @@
 package com.cryptescape.game;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+import java.util.stream.Stream;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
@@ -25,7 +28,19 @@ public class MusicManager {
 		
 	}
 	
-	public MusicManager(ArrayList<String> songN) {
+	public MusicManager(String path) {
+	       
+        ArrayList<String> songN = new ArrayList<String>();      
+        try (Stream<Path> paths = Files.walk(Paths.get(Gdx.files.internal(path).file().getAbsolutePath()))) {
+            paths
+            .filter(Files::isRegularFile)
+            .forEach(p -> songN.add(p.getFileName().toString()));
+        } 
+        catch(Exception e) {
+            e.printStackTrace();
+        }
+        
+	    
 		for(String s : songN) {
 			Music song = Gdx.audio.newMusic(Gdx.files.internal("soundDesign/music/" + s));
 			songs.put(s, song);
