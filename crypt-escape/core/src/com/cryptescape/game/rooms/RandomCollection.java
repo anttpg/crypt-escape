@@ -1,4 +1,4 @@
-package com.cryptescape.game;
+package com.cryptescape.game.rooms;
 
 import java.util.NavigableMap;
 import java.util.Random;

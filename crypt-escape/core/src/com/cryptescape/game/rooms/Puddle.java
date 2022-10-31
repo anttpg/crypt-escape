@@ -1,6 +1,8 @@
-package com.cryptescape.game;
+package com.cryptescape.game.rooms;
 
 import java.util.Random;
+
+import com.cryptescape.game.GameScreen;
 
 public class Puddle extends Interactable {
 

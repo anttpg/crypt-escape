@@ -1,4 +1,4 @@
-package com.cryptescape.game;
+package com.cryptescape.game.rooms;
 
 import java.util.HashMap;
 
@@ -12,6 +12,8 @@ import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.cryptescape.game.Constants;
+import com.cryptescape.game.GameScreen;
 
 public class Interactable {
 	private Fixture fixture;

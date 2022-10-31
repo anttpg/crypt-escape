@@ -1,4 +1,4 @@
-package com.cryptescape.game;
+package com.cryptescape.game.rooms;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -6,6 +6,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+
+import com.cryptescape.game.Constants;
+import com.cryptescape.game.GameScreen;
 
 public class RoomGeneration {
 	

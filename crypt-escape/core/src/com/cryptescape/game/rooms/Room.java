@@ -1,4 +1,4 @@
-package com.cryptescape.game;
+package com.cryptescape.game.rooms;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,6 +14,9 @@ import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.cryptescape.game.Constants;
+import com.cryptescape.game.GameScreen;
+import com.cryptescape.game.Wall;
 
 public class Room {
 	

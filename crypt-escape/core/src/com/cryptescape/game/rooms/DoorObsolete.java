@@ -1,3 +1,4 @@
+package com.cryptescape.game.rooms;
 //package com.cryptescape.game;
 //
 //import com.badlogic.gdx.Gdx;

@@ -1,4 +1,4 @@
-package com.cryptescape.game;
+package com.cryptescape.game.rooms;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.cryptescape.game.Constants;
+import com.cryptescape.game.GameScreen;
 
 public class Door  extends Interactable {
 	private Animation<TextureRegion> animation;

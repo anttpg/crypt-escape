@@ -19,6 +19,8 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.cryptescape.game.rooms.Door;
+import com.cryptescape.game.rooms.Room;
 
 import box2dLight.RayHandler;
 

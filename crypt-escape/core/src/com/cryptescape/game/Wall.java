@@ -2,6 +2,9 @@ package com.cryptescape.game;
 
 import java.util.Random;
 
+import com.cryptescape.game.rooms.Interactable;
+import com.cryptescape.game.rooms.Room;
+
 public class Wall extends Interactable {
 	
 	public Wall(int col, int row, String current, Room p, int c) {
