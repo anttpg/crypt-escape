@@ -40,9 +40,7 @@ public class HudElement extends Actor {
         setWidth(getStage().getHeight()/scale);
         setHeight(getStage().getHeight()/scale);
         y = getY();
-        
-        System.out.println(getX() + " " + getY() + " " + getHeight() + " " + getWidth());
-        System.out.println("Stage width/height: " +  getStage().getWidth() + "  " + getStage().getHeight());
+
     }
     
     public Animation getAnimation() {

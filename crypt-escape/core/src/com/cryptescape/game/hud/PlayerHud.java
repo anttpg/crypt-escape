@@ -23,9 +23,10 @@ import com.cryptescape.game.InputHandler;
 public class PlayerHud {
     private Stage overlayStage;
     private Stage inventoryStage;
+    private Inventory inventory;
+    
     private Table table;
  
-    private ExtendViewport hud;
     private ArrayList<HudElement> overlayElements = new ArrayList<HudElement>();
     private HudElement candle;
     private CandleFlame flame;
@@ -40,6 +41,8 @@ public class PlayerHud {
     public PlayerHud(SpriteBatch spriteBatch) {
         overlayStage = new Stage(new ExtendViewport(GameScreen.stage.getWidth(), GameScreen.stage.getHeight()), spriteBatch); 
         inventoryStage = new Stage(new ExtendViewport(GameScreen.stage.getWidth(), GameScreen.stage.getHeight()), spriteBatch); 
+        inventory = new Inventory(inventoryStage);
+        
         
         candle = new HudElement(new Animation<TextureRegion>(1, GameScreen.atlas.findRegions("candle")));
         candle.setDuration(BURN_SPEED);
@@ -68,45 +71,47 @@ public class PlayerHud {
     }
     
     public void resize(int width, int height) {
-        if(InputHandler.tab_pressed) {
-            //DOSOMETHING
-        }
-        
-        else {
-            overlayStage.getViewport().update(width, height, true);
-            for(HudElement e : overlayElements) 
-                e.resize(width, height);
-        }
-       
-       System.out.println("Hud camera: " + overlayStage.getCamera().viewportWidth + "  " + overlayStage.getCamera().viewportHeight);
-       System.out.println("Hud stages: " + overlayStage.getWidth() + "  " + overlayStage.getHeight());
-       
+        inventoryStage.getViewport().update(width, height, true);
+        inventory.resize(width, height);
+
+        overlayStage.getViewport().update(width, height, true);
+        for (HudElement e : overlayElements)
+            e.resize(width, height);
     }
 
-    public Stage getStage() { 
-        if(InputHandler.tab_pressed) 
-            return inventoryStage;
-        
-        else 
-            return overlayStage; 
+    
+    public Inventory getInventory() {
+        return inventory;
     }
     
- 
+    public Stage getInventoryStage() {
+        return inventoryStage;
+    }
 
     public void dispose() {
         overlayStage.dispose();
+        inventoryStage.dispose();
     }
     
     
-    public void update() {
+    public void update(float delta, SpriteBatch batch) {
         if(InputHandler.tab_pressed) {
-            //Dosomething
+            batch.setProjectionMatrix(inventoryStage.getCamera().combined);
+            inventory.update();
+            inventory.render(batch);
+            
+            inventoryStage.act(delta);
+            inventoryStage.draw();
         }
         
         else {
+            batch.setProjectionMatrix(overlayStage.getCamera().combined);
             flame.updateFlame(candle);
             burntime -= Gdx.graphics.getDeltaTime();
             timer.setText(String.format("%06d", (int)burntime));
+            
+            overlayStage.act(delta);
+            overlayStage.draw();
         }
     }
     

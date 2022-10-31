@@ -35,7 +35,7 @@ public class InputHandler {
                 if (keycode == Input.Keys.E)
                     e_pressed = true;
                 if (keycode == Input.Keys.TAB)
-                    tab_pressed = true;
+                    tab_pressed = !tab_pressed;
                 
                 return false;
             }
@@ -55,8 +55,6 @@ public class InputHandler {
 
                 if (keycode == Input.Keys.E)
                     e_pressed = false;
-                if (keycode == Input.Keys.TAB)
-                    tab_pressed = true;
                 
                 return false;
             }

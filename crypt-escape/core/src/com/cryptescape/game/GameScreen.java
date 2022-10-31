@@ -202,10 +202,11 @@ public class GameScreen implements Screen {
         stage.draw();
 		
         //Update/Draw the Hud
-        game.batch.setProjectionMatrix(hud.getStage().getCamera().combined);
-        hud.update();
-        hud.getStage().act(delta);
-        hud.getStage().draw();
+        hud.update(delta, game.batch);
+
+        
+        //Draw DebugRender
+        hud.getInventory().getDebugRenderer().render(hud.getInventory().getWorld(), hud.getInventoryStage().getCamera().combined);
         
         music.update();
 		world.step(Constants.FRAME_SPEED, 6, 2);
@@ -221,10 +222,6 @@ public class GameScreen implements Screen {
         camera.viewportHeight = (Constants.CAMERA_WIDTH / width) * height;
         camera.update();
         viewport.update(width, height);
-        
-        System.out.println("Main camera width/height: " + camera.viewportWidth + "  " + camera.viewportHeight);
-        System.out.println("Main screen width/height: " + viewport.getScreenWidth() + "  " + viewport.getScreenHeight());
-        System.out.println("Main stages width/height: "  + stage.getWidth() + " " + stage.getHeight());
         
         hud.resize(width, height);
 	}
