@@ -18,13 +18,15 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.cryptescape.game.Constants;
 import com.cryptescape.game.GameScreen;
+import com.cryptescape.game.InputHandler;
 
 public class PlayerHud {
-    private Stage stage;
+    private Stage overlayStage;
+    private Stage inventoryStage;
     private Table table;
  
     private ExtendViewport hud;
-    private ArrayList<HudElement> elements = new ArrayList<HudElement>();
+    private ArrayList<HudElement> overlayElements = new ArrayList<HudElement>();
     private HudElement candle;
     private CandleFlame flame;
    
@@ -36,15 +38,15 @@ public class PlayerHud {
     private float burntime = BURN_SPEED;
     
     public PlayerHud(SpriteBatch spriteBatch) {
-        stage = new Stage(new ExtendViewport(GameScreen.stage.getWidth(), GameScreen.stage.getHeight()), spriteBatch); 
-        
+        overlayStage = new Stage(new ExtendViewport(GameScreen.stage.getWidth(), GameScreen.stage.getHeight()), spriteBatch); 
+        inventoryStage = new Stage(new ExtendViewport(GameScreen.stage.getWidth(), GameScreen.stage.getHeight()), spriteBatch); 
         
         candle = new HudElement(new Animation<TextureRegion>(1, GameScreen.atlas.findRegions("candle")));
         candle.setDuration(BURN_SPEED);
-        elements.add(candle);
+        overlayElements.add(candle);
         
         flame = new CandleFlame(new Animation<TextureRegion>(Constants.FRAME_SPEED*8, GameScreen.atlas.findRegions("candleFlame")));
-        elements.add(flame);
+        overlayElements.add(flame);
         
         
         table = new Table();
@@ -60,37 +62,52 @@ public class PlayerHud {
         
         
         
-        stage.addActor(table);
-        stage.addActor(candle);
-        stage.addActor(flame);
+        overlayStage.addActor(table);
+        overlayStage.addActor(candle);
+        overlayStage.addActor(flame);
     }
     
     public void resize(int width, int height) {
-       stage.getViewport().update(width, height, true);
+        if(InputHandler.tab_pressed) {
+            //DOSOMETHING
+        }
+        
+        else {
+            overlayStage.getViewport().update(width, height, true);
+            for(HudElement e : overlayElements) 
+                e.resize(width, height);
+        }
        
-       System.out.println("Hud camera: " + stage.getCamera().viewportWidth + "  " + stage.getCamera().viewportHeight);
-       System.out.println("Hud stages: " + stage.getWidth() + "  " + stage.getHeight());
+       System.out.println("Hud camera: " + overlayStage.getCamera().viewportWidth + "  " + overlayStage.getCamera().viewportHeight);
+       System.out.println("Hud stages: " + overlayStage.getWidth() + "  " + overlayStage.getHeight());
        
-       for(HudElement e : elements) {
-           e.resize(width, height);
-       }
     }
 
     public Stage getStage() { 
-    	return stage; 
+        if(InputHandler.tab_pressed) 
+            return inventoryStage;
+        
+        else 
+            return overlayStage; 
     }
+    
  
 
     public void dispose() {
-        stage.dispose();
+        overlayStage.dispose();
     }
     
     
     public void update() {
-    	flame.updateFlame(candle);
-    	
-    	burntime -= Gdx.graphics.getDeltaTime();
-        timer.setText(String.format("%06d", (int)burntime));
+        if(InputHandler.tab_pressed) {
+            //Dosomething
+        }
+        
+        else {
+            flame.updateFlame(candle);
+            burntime -= Gdx.graphics.getDeltaTime();
+            timer.setText(String.format("%06d", (int)burntime));
+        }
     }
     
 }
