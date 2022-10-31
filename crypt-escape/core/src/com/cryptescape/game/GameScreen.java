@@ -76,7 +76,7 @@ public class GameScreen implements Screen {
 	public static PlayerHud hud;
 	
 	private BitmapFont font;
-	public static Vector2 relativeMousePosition = new Vector2(0, 0);
+
 
 	public static Enemy enemy;	
 	public static Player player;
@@ -91,9 +91,7 @@ public class GameScreen implements Screen {
 	public MusicManager music;
 	public static SfxManager sounds;
 	
-	public static int[] wasd = new int[] {0,0,0,0};
-	public static float sprint = 1; //changes when sprinting
-	public static boolean e_pressed;
+
 	
 	float playerCounter = 0;
 	
@@ -173,7 +171,7 @@ public class GameScreen implements Screen {
 		player.getRoom().draw(game.batch); //draw the room that the player is currently in
 		
 		
-		player.setAcceleration((wasd[3]-wasd[1]), (wasd[0]-wasd[2]), sprint); //handles player movement
+		player.setAcceleration((InputHandler.wasd[3]-InputHandler.wasd[1]), (InputHandler.wasd[0]-InputHandler.wasd[2]), InputHandler.sprint); //handles player movement
 		player.update();
 		player.draw(game.batch);
 		
@@ -181,7 +179,6 @@ public class GameScreen implements Screen {
 //		enemy.draw(game.batch);
 		
 		game.batch.end();
-		
 		
 		
 		
@@ -222,9 +219,9 @@ public class GameScreen implements Screen {
         camera.update();
         viewport.update(width, height);
         
-        System.out.println("Main camera: " + camera.viewportWidth + "  " + camera.viewportHeight);
-        System.out.println("Main viewport: " + viewport.getScreenWidth() + "  " + viewport.getScreenHeight());
-        System.out.println("stage screen: "  + stage.getWidth() + " " + stage.getHeight());
+        System.out.println("Main camera width/height: " + camera.viewportWidth + "  " + camera.viewportHeight);
+        System.out.println("Main screen width/height: " + viewport.getScreenWidth() + "  " + viewport.getScreenHeight());
+        System.out.println("Main stages width/height: "  + stage.getWidth() + " " + stage.getHeight());
         
         hud.resize(width, height);
 	}

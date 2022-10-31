@@ -34,16 +34,9 @@ public class PlayerHud {
     private float burntime = BURN_SPEED;
     
     public PlayerHud(SpriteBatch spriteBatch) {
-    	hud = new ExtendViewport(Constants.VIEWPORT_WIDTH, Constants.VIEWPORT_HEIGHT, new OrthographicCamera());
-        stage = new Stage(hud, spriteBatch); 
+        stage = new Stage(new ExtendViewport(GameScreen.stage.getWidth(), GameScreen.stage.getHeight()), spriteBatch); 
         
-//        table = new Table();
-//        table.top();
-//        table.setFillParent(true);
-//        
-//        timer =new Label(String.format("%06d", (int)BURN_SPEED), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-//        timeLabel = new Label("TIME REMAINING: ", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-//        
+        
         candle = new HudElement(new Animation<TextureRegion>(1, GameScreen.atlas.findRegions("candle")));
         candle.setDuration(BURN_SPEED);
         elements.add(candle);
@@ -51,20 +44,30 @@ public class PlayerHud {
         flame = new HudElement(new Animation<TextureRegion>(Constants.FRAME_SPEED*8, GameScreen.atlas.findRegions("candleFlame")));
         elements.add(flame);
         
-//        table.add(timeLabel).expandX().padTop(20);
-//        table.row();
-//        table.add(timer).expandX();
-//        
-
-//        GameScreen.stage.addActor(table);
-        GameScreen.stage.addActor(candle);
-        GameScreen.stage.addActor(flame);
+        
+        table = new Table();
+        table.top();
+        table.setFillParent(true);
+        
+        timer = new Label(String.format("%06d", (int)BURN_SPEED), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        timeLabel = new Label("TIME REMAINING: ", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
+        
+        table.add(timeLabel).expandX().padTop(20);
+        table.row();
+        table.add(timer).expandX();
+        
+        
+        
+        stage.addActor(table);
+        stage.addActor(candle);
+        stage.addActor(flame);
     }
     
     public void resize(int width, int height) {
-       hud.update(width, height);
-       System.out.println("hud viewport: " + hud.getScreenWidth() + "  " + hud.getScreenHeight());
-       System.out.println("stage hud: "  + stage.getWidth() + " " + stage.getHeight());
+       stage.getViewport().update(width, height, true);
+       
+       System.out.println("Hud camera: " + stage.getCamera().viewportWidth + "  " + stage.getCamera().viewportHeight);
+       System.out.println("Hud stages: " + stage.getWidth() + "  " + stage.getHeight());
        
        for(HudElement e : elements) {
            e.resize(width, height);
@@ -84,8 +87,8 @@ public class PlayerHud {
     public void update() {
     	flame.updateFlame(candle);
     	
-//    	burntime -= Gdx.graphics.getDeltaTime();
-//        timer.setText(String.format("%06d", (int)burntime));
+    	burntime -= Gdx.graphics.getDeltaTime();
+        timer.setText(String.format("%06d", (int)burntime));
     }
     
 }

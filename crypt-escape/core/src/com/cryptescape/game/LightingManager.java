@@ -35,8 +35,8 @@ public class LightingManager {
     }
     
     public static void updateLights() {
-        mousePosition.x = (GameScreen.player.xPos - (Constants.VIEWPORT_WIDTH/2)) + (((float)GameScreen.relativeMousePosition.x/Gdx.graphics.getWidth()) * Constants.VIEWPORT_WIDTH);
-        mousePosition.y = (GameScreen.player.yPos + (Constants.VIEWPORT_HEIGHT/2)) - (((float)GameScreen.relativeMousePosition.y/Gdx.graphics.getHeight()) * Constants.VIEWPORT_HEIGHT);
+        mousePosition.x = (GameScreen.player.xPos - (Constants.VIEWPORT_WIDTH/2)) + (((float)InputHandler.relativeMousePosition.x/Gdx.graphics.getWidth()) * Constants.VIEWPORT_WIDTH);
+        mousePosition.y = (GameScreen.player.yPos + (Constants.VIEWPORT_HEIGHT/2)) - (((float)InputHandler.relativeMousePosition.y/Gdx.graphics.getHeight()) * Constants.VIEWPORT_HEIGHT);
         
         playerLight.setPosition(GameScreen.player.xPos, GameScreen.player.yPos);
         playerLight.setDistance(GameScreen.player.getCandleLevel());

@@ -160,7 +160,7 @@ public class Player extends Movables {
     }
     
 	public void update() {
-		if (teleportCooldown < 0 && GameScreen.e_pressed) {
+		if (teleportCooldown < 0 && InputHandler.e_pressed) {
 			for (Door d : currentRoom.getDoors()) {
 				if (d != null && d.isPlayerInRange()) {
 					GameScreen.player.changeRoom(d);

@@ -8,18 +8,19 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 public class HudElement extends Actor {
     private Animation<TextureRegion> animation;
     private TextureRegion currentRegion;
-    private float time = 0;
-    private float width = 100f;
-    private float height = 100f;
+    private float scale = 5f;
+    private float y = 6.5f;
     
-    private float x = 100f;
-    private float y = 650f;
+    private float time = 0;
 	
+    
 	public HudElement(Animation<TextureRegion> e) {
 		animation = e;
 		currentRegion = animation.getKeyFrame(time, true);
-		super.setX(x);
-		super.setY(y);
+		setX(1f);
+		setY(6.5f);
+		setWidth(100f);
+		setHeight(100f);
 	}
 	
     @Override
@@ -30,12 +31,18 @@ public class HudElement extends Actor {
     
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        super.draw(batch, parentAlpha);
-        batch.draw(currentRegion, getX(), getY(), width, height);
+        batch.draw(currentRegion, getX(), getY(), getWidth(), getHeight());
     }
     
     public void resize(int width, int height) {
-        System.out.println(animation + "  " +  this.width + "  " + this.height);
+        setX(getStage().getWidth()/25f);
+        setY(getStage().getHeight() - (getStage().getHeight()/4f));
+        y = getY();
+        setWidth(getStage().getHeight()/scale);
+        setHeight(getStage().getHeight()/scale);
+        
+        System.out.println(getX() + " " + getY() + " " + getHeight() + " " + getWidth());
+        System.out.println("Stage width/height: " +  getStage().getWidth() + "  " + getStage().getHeight());
     }
     
     public Animation getAnimation() {
@@ -54,11 +61,11 @@ public class HudElement extends Actor {
     	//System.out.println(super.getY() + "    keyframe" + candle.getAnimation().getKeyFrameIndex( candle.getTime() ) + "        length" + (float) candle.getAnimation().getKeyFrames().length + "   current"  + currentRegion.getRegionHeight()*scale);
 		
     	if(currentRegion.getRegionHeight() != 0 && candle.getAnimation().getKeyFrameIndex( candle.getTime() ) != 0) {
-    		super.setY(y - ( candle.getAnimation().getKeyFrameIndex( candle.getTime() )  / (( (float) candle.getAnimation().getKeyFrames().length ) / (height*(5/8f))) ) );
+    		super.setY(y - ( candle.getAnimation().getKeyFrameIndex( candle.getTime() )  / (( (float) candle.getAnimation().getKeyFrames().length ) / (getHeight()*(5/8f))) ) );
     		
     	}
     	else
-    		super.setY(y);
+    		super.setY(getY());
     }
     
 
