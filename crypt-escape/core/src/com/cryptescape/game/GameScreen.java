@@ -214,9 +214,6 @@ public class GameScreen implements Screen {
 	
 	
 	
-	
-
-	
 	@Override
 	public void resize(int width, int height) {
 		//resize() will be called anytime you change your screen size(eg: when you screen orientation changes). 
