@@ -26,7 +26,7 @@ public class PlayerHud {
     private ExtendViewport hud;
     private ArrayList<HudElement> elements = new ArrayList<HudElement>();
     private HudElement candle;
-    private HudElement flame;
+    private CandleFlame flame;
    
     private static Label timer;
     private Label timeLabel;
@@ -43,7 +43,7 @@ public class PlayerHud {
         candle.setDuration(BURN_SPEED);
         elements.add(candle);
         
-        flame = new HudElement(new Animation<TextureRegion>(Constants.FRAME_SPEED*8, GameScreen.atlas.findRegions("candleFlame")));
+        flame = new CandleFlame(new Animation<TextureRegion>(Constants.FRAME_SPEED*8, GameScreen.atlas.findRegions("candleFlame")));
         elements.add(flame);
         
         

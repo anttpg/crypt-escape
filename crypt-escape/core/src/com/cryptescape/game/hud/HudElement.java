@@ -7,9 +7,9 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 
 public class HudElement extends Actor {
     private Animation<TextureRegion> animation;
-    private TextureRegion currentRegion;
+    public TextureRegion currentRegion;
+    public float y = 6.5f;
     private float scale = 5f;
-    private float y = 6.5f;
     
     private float time = 0;
 	
@@ -37,9 +37,9 @@ public class HudElement extends Actor {
     public void resize(int width, int height) {
         setX(getStage().getWidth()/25f);
         setY(getStage().getHeight() - (getStage().getHeight()/4f));
-        y = getY();
         setWidth(getStage().getHeight()/scale);
         setHeight(getStage().getHeight()/scale);
+        y = getY();
         
         System.out.println(getX() + " " + getY() + " " + getHeight() + " " + getWidth());
         System.out.println("Stage width/height: " +  getStage().getWidth() + "  " + getStage().getHeight());
@@ -56,19 +56,5 @@ public class HudElement extends Actor {
     public float getTime() {
     	return time;
     }
-    
-    public void updateFlame(HudElement candle) {
-    	//System.out.println(super.getY() + "    keyframe" + candle.getAnimation().getKeyFrameIndex( candle.getTime() ) + "        length" + (float) candle.getAnimation().getKeyFrames().length + "   current"  + currentRegion.getRegionHeight()*scale);
-		
-    	if(currentRegion.getRegionHeight() != 0 && candle.getAnimation().getKeyFrameIndex( candle.getTime() ) != 0) {
-    		super.setY(y - ( candle.getAnimation().getKeyFrameIndex( candle.getTime() )  / (( (float) candle.getAnimation().getKeyFrames().length ) / (getHeight()*(5/8f))) ) );
-    		
-    	}
-    	else
-    		super.setY(getY());
-    }
-    
-
-    	
     
 }
