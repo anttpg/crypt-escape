@@ -1,4 +1,4 @@
-package com.cryptescape.game;
+package com.cryptescape.game.hud;
 
 import java.util.ArrayList;
 
@@ -16,6 +16,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.cryptescape.game.Constants;
+import com.cryptescape.game.GameScreen;
 
 public class PlayerHud {
     private Stage stage;

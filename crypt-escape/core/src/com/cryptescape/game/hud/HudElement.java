@@ -1,4 +1,4 @@
-package com.cryptescape.game;
+package com.cryptescape.game.hud;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;

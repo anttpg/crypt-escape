@@ -1,4 +1,4 @@
-package com.cryptescape.game;
+package com.cryptescape.game.hud;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
