@@ -1,4 +1,4 @@
-package com.cryptescape.game;
+package com.cryptescape.game.sounds;
 
 import java.nio.file.Files;
 import java.nio.file.Path;

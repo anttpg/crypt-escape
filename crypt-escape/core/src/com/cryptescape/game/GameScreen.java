@@ -40,6 +40,8 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.cryptescape.game.sounds.MusicManager;
+import com.cryptescape.game.sounds.SfxManager;
 
 import box2dLight.ConeLight;
 import box2dLight.PointLight;
