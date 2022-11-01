@@ -256,6 +256,13 @@ candleHolder
   orig: 64, 64
   offset: 0, 0
   index: -1
+candlestick
+  rotate: false
+  xy: 690, 753
+  size: 14, 40
+  orig: 14, 40
+  offset: 0, 0
+  index: -1
 hole
   rotate: false
   xy: 276, 663
@@ -608,14 +615,14 @@ playerW
   index: 1
 playerW
   rotate: false
-  xy: 690, 761
+  xy: 690, 719
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 2
 playerW
   rotate: false
-  xy: 690, 727
+  xy: 690, 685
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -734,14 +741,14 @@ westDoor
   index: -1
 westDoorLeft
   rotate: false
-  xy: 690, 599
+  xy: 557, 412
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: 0
 westDoorRight
   rotate: false
-  xy: 692, 567
+  xy: 557, 380
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
@@ -804,21 +811,21 @@ northWall1
   index: -1
 northWall2
   rotate: false
-  xy: 557, 317
+  xy: 557, 285
   size: 30, 29
   orig: 30, 29
   offset: 0, 0
   index: -1
 northWall3
   rotate: false
-  xy: 557, 286
+  xy: 307, 194
   size: 30, 29
   orig: 30, 29
   offset: 0, 0
   index: -1
 northWall4
   rotate: false
-  xy: 717, 882
+  xy: 307, 163
   size: 30, 29
   orig: 30, 29
   offset: 0, 0
@@ -832,49 +839,49 @@ southWall1
   index: -1
 southWall2
   rotate: false
-  xy: 690, 695
+  xy: 690, 653
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
 southWall3
   rotate: false
-  xy: 690, 663
+  xy: 690, 621
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
 southWall4
   rotate: false
-  xy: 690, 631
+  xy: 574, 537
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
 westWall1
   rotate: false
-  xy: 574, 537
+  xy: 557, 348
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
 westWall2
   rotate: false
-  xy: 557, 412
+  xy: 557, 316
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
 westWall3
   rotate: false
-  xy: 557, 380
+  xy: 307, 257
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
 westWall4
   rotate: false
-  xy: 557, 348
+  xy: 307, 225
   size: 30, 30
   orig: 30, 30
   offset: 0, 0

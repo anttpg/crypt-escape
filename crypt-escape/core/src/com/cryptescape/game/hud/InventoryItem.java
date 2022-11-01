@@ -29,11 +29,6 @@ public abstract class InventoryItem extends Actor{
         this.scale = scale;
         this.checkBounds(name);
         
-        //Actor settings
-        setX(x);
-        setY(y);
-        setWidth(Inventory.tileSize * scale);
-        setHeight(Inventory.tileSize * scale);  
         
         //Creating interactable body
         BodyDef bodyDef = new BodyDef();
@@ -44,7 +39,7 @@ public abstract class InventoryItem extends Actor{
 
         Body body = world.createBody(bodyDef);
         CircleShape circle = new CircleShape();
-        circle.setRadius(1f);
+        circle.setRadius(Inventory.tileSize * scale);
 
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = circle;
@@ -60,11 +55,21 @@ public abstract class InventoryItem extends Actor{
         fixture.getBody().applyForceToCenter(xN, yN, true);
     }
     
-    public void resize(int newWidth, int newHeight) {
+    public void resize(float newWidth, float newHeight) {
         setX(getX() - (Inventory.oldWidth - newWidth)/2f);
         setY(getY() - (Inventory.oldHeight - newHeight)/2f);
-        setWidth(Inventory.tileSize * scale);
-        setHeight(Inventory.tileSize * scale);       
+        
+        System.out.println(
+                "Candle: X/Y " + getX() + "  " + getY() + "   WIDTH/HEIGHT " + getWidth() + "  " + getHeight());
+           
+        if(bounds == null) {
+            setWidth(Inventory.tileSize * scale);
+            setHeight(Inventory.tileSize * scale); 
+        }
+        else {  
+            setWidth((Inventory.tileSize * scale) * (bounds[2]-bounds[0])/currentRegion.getRegionHeight());
+            setHeight((Inventory.tileSize * scale) * (bounds[3]-bounds[1])/currentRegion.getRegionHeight());
+        }
     }
     
     public void checkBounds(String name) {
@@ -82,19 +87,13 @@ public abstract class InventoryItem extends Actor{
     @Override
     public void act(float delta){
         time += delta;
+        setX(fixture.getBody().getPosition().x - getWidth()/2f);
+        setY(fixture.getBody().getPosition().y - getHeight()/2f);
     }
     
     @Override
     public void draw(Batch batch, float parentAlpha) {
-        if(bounds != null) {
-            batch.draw(currentRegion.getTexture(), 
-                    getX(), getY(), getWidth(), getHeight(), 
-                    bounds[0], bounds[1], bounds[2], bounds[3]);
-        }
-        
-        else {
-            batch.draw(currentRegion.getTexture(), 
-                    getX(), getY(), getWidth(), getHeight());
-        }
+        batch.draw(currentRegion, getX(), getY(), getWidth(), getHeight());
+
     }
 }

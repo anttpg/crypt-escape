@@ -91,7 +91,7 @@ public class GameScreen implements Screen {
 	
 
 
-	private boolean debugPerspective = false;
+	private boolean debugPerspective = true;
 	private boolean runOnceTempDebugVariable = true;
 	
 	public MusicManager music;
@@ -198,15 +198,13 @@ public class GameScreen implements Screen {
 		
 		
         //Update/Draw the game stage
+		viewport.apply();
         stage.act();
         stage.draw();
 		
         //Update/Draw the Hud
         hud.update(delta, game.batch);
-
         
-        //Draw DebugRender
-        hud.getInventory().getDebugRenderer().render(hud.getInventory().getWorld(), hud.getInventoryStage().getCamera().combined);
         
         music.update();
 		world.step(Constants.FRAME_SPEED, 6, 2);
@@ -222,6 +220,10 @@ public class GameScreen implements Screen {
         camera.viewportHeight = (Constants.CAMERA_WIDTH / width) * height;
         camera.update();
         viewport.update(width, height);
+        
+        System.out.println("camera wid/h" + camera.viewportWidth + " " + camera.viewportHeight);
+        System.out.println("width/height" + width + " " + height);
+        System.out.println("stage wid/ht" + stage.getWidth() + "  " + stage.getHeight());
         
         hud.resize(width, height);
 	}

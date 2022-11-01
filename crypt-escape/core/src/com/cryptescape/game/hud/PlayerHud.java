@@ -40,7 +40,7 @@ public class PlayerHud {
     
     public PlayerHud(SpriteBatch spriteBatch) {
         overlayStage = new Stage(new ExtendViewport(GameScreen.stage.getWidth(), GameScreen.stage.getHeight()), spriteBatch); 
-        inventoryStage = new Stage(new ExtendViewport(GameScreen.stage.getWidth(), GameScreen.stage.getHeight()), spriteBatch); 
+        inventoryStage = new Stage(new ExtendViewport(Constants.VIEWPORT_WIDTH, Constants.VIEWPORT_HEIGHT), spriteBatch); 
         inventory = new Inventory(inventoryStage);
         
         
@@ -102,6 +102,7 @@ public class PlayerHud {
             
             inventoryStage.act(delta);
             inventoryStage.draw();
+            inventory.getDebugRenderer().render(inventory.getWorld(), inventoryStage.getCamera().combined);
         }
         
         else {

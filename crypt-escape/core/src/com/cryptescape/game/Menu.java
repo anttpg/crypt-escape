@@ -61,7 +61,7 @@ public class Menu implements Screen {
 
 	public Menu(final MainCE gam) {
 		game = gam;
-		size = new int[] { 1, 1 }; // testing constants
+		size = new int[] { 6, 4 }; // testing constants
 
 		camera = new OrthographicCamera();
 		camera.position.set(WIDTH / 2, HEIGHT / 2, 0);
