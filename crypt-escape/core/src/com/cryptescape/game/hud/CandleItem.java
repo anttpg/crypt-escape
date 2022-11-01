@@ -8,7 +8,8 @@ import com.cryptescape.game.GameScreen;
 public class CandleItem extends InventoryItem {
     
     public CandleItem(World world, String name, float x, float y) {
-        super(world, name, new TextureRegion(GameScreen.atlas.findRegion(name)), x, y, 2f);        
+        super(world, name, new TextureRegion(GameScreen.atlas.findRegion(name)), x, y, 2f);      
+        super.makeSquareFixture(world, x, y, 1f);
     }
 
 }

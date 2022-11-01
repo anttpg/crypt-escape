@@ -63,8 +63,8 @@ public class PlayerHud {
         table.row();
         table.add(timer).expandX();
         
-        
-        
+
+   
         overlayStage.addActor(table);
         overlayStage.addActor(candle);
         overlayStage.addActor(flame);
@@ -102,7 +102,7 @@ public class PlayerHud {
             
             inventoryStage.act(delta);
             inventoryStage.draw();
-            inventory.getDebugRenderer().render(inventory.getWorld(), inventoryStage.getCamera().combined);
+            inventory.getDebugRenderer().render(Inventory.getWorld(), inventoryStage.getCamera().combined);
         }
         
         else {

@@ -14,42 +14,59 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.physics.box2d.joints.MouseJoint;
+import com.badlogic.gdx.physics.box2d.joints.MouseJointDef;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.cryptescape.game.Constants;
 import com.cryptescape.game.GameScreen;
 
 public class Inventory {
-    private Stage stage;
-    private World world;
+    private static Stage stage;
+    private static World world;
     private Box2DDebugRenderer debugRenderer;
     
     public static float tileSize;
     public static float oldWidth;
     public static float oldHeight;
+    public static MouseJointDef mouseDef;
+    public static MouseJoint mouse;
     
     private Texture overlay = new Texture(Gdx.files.internal("TestOverlay.png"));
     private Fixture boundary;
     private ArrayList<InventoryItem> items = new ArrayList<InventoryItem>();
 
     public Inventory(Stage stage) {
-        world = new World(new Vector2(0, -1), true);
+        world = new World(new Vector2(0, -4), true);
         debugRenderer = new Box2DDebugRenderer();
         tileSize = (float)stage.getHeight()/Constants.Y_TILES;
-        this.stage = stage;
-        
-        items.add(new CandleItem(world, "candlestick", 2f, 2f));
-        stage.addActor(items.get(0));
+        Inventory.stage = stage;
         createBoundary();
+        
+        mouseDef = new MouseJointDef();
+        mouseDef.bodyA = boundary.getBody();
+        mouseDef.collideConnected = true;
+        
+        for(int row = 0; row < 20; row++)
+        	for(int col = 0; col < 20; col++)
+        		items.add(new CandleItem(world, "candlestick", 1f + row/4f, 1f + col/2f));
+        
+        for(InventoryItem i : items)
+        	stage.addActor(i);
     }
     
     public Box2DDebugRenderer getDebugRenderer() {
         return debugRenderer;
     }
     
-    public World getWorld() {
+    public static Stage getStage() {
+    	return stage;
+    }
+    
+    public static World getWorld() {
         return world;
     }
     
@@ -95,4 +112,17 @@ public class Inventory {
 //        batch.end();
 // 
     }
+
+	public static MouseJointDef getMouseDef() {
+		return mouseDef;
+	}
+	
+	public static MouseJoint getMouseJoint() {
+		return mouse;
+	}
+
+
+	public static void setMouseJoint(MouseJoint createJoint) {
+		mouse = createJoint;
+	}
 }

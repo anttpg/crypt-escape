@@ -1,17 +1,46 @@
 package com.cryptescape.game;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.QueryCallback;
+import com.badlogic.gdx.physics.box2d.joints.MouseJoint;
+import com.badlogic.gdx.utils.Array;
+import com.cryptescape.game.hud.Inventory;
 
 public class InputHandler {
     public static int[] wasd = new int[] {0,0,0,0};
     public static float sprint = 1; //changes when sprinting
     public static boolean e_pressed;
     public static boolean tab_pressed;
+//    public static boolean mouseL_pressed;
     
     public static Vector2 relativeMousePosition = new Vector2(0, 0);
+    private static Vector3 temp = new Vector3();
+    private static Vector2 temp2 = new Vector2();
+    
+    private static QueryCallback callback = new QueryCallback() {
+    	@Override
+    	public boolean reportFixture(Fixture fixture) {
+    		
+    		if(!fixture.testPoint(temp.x, temp.y)) //Testing because of QueryAABB error, checks each to see if 
+    			return true;
+    		
+    		System.out.println(fixture.getBody().getPosition() + " " + temp);
+    		System.out.println("fixture" );
+    		
+    		Inventory.getMouseDef().bodyB = fixture.getBody();
+    		Inventory.getMouseDef().target.set(temp.x, temp.y);
+    		Inventory.getMouseDef().maxForce = 500000;
+    		Inventory.setMouseJoint((MouseJoint) Inventory.getWorld().createJoint(Inventory.getMouseDef()));
+    		return false;
+    	}
+    };
 
     public static void createInput() {
 
@@ -64,6 +93,53 @@ public class InputHandler {
                 relativeMousePosition.x = mouseX;
                 relativeMousePosition.y = mouseY;
                 return false;
+            }
+            
+            @Override
+            public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+            	temp.set((screenX/GameScreen.realWidth) * Inventory.getStage().getWidth(), 
+            			Inventory.getStage().getHeight() - (screenY/GameScreen.realHeight) * Inventory.getStage().getHeight(), 0);
+            	
+                Inventory.getWorld().QueryAABB(callback, temp.x, temp.y, temp.x, temp.y); 
+                //Finding fixtures inside of this rect (We make it a point). Its a little innacurate for optimization
+                
+//                System.out.println(screenX + " " + GameScreen.stage.getWidth());
+//                System.out.println("stage inv: " + Inventory.getStage().getHeight() + " " + screenY + "/" + GameScreen.realHeight);
+//                System.out.println("stage inv: " + Inventory.getStage().getWidth() + " " + screenX + "/" + GameScreen.realWidth);
+                System.out.println("temp vector" + temp);
+                
+//              
+//                Array<Fixture> f = new Array<Fixture>();
+//                Inventory.getWorld().getFixtures(f);
+//                for(Fixture fix : f) {
+//                	System.out.println("fixture: " + fix.getBody().getPosition());
+//                }
+//                
+				return false;
+            }
+            
+            @Override
+            public boolean touchDragged(int screenX, int screenY, int pointer) {
+                relativeMousePosition.x = screenX;
+                relativeMousePosition.y = screenY;
+                if(Inventory.getMouseJoint() == null)
+                	return false;
+                
+            	temp.set((screenX/GameScreen.realWidth) * Inventory.getStage().getWidth(), 
+            			Inventory.getStage().getHeight() - (screenY/GameScreen.realHeight) * Inventory.getStage().getHeight(), 0);
+                temp2.set(temp.x, temp.y);
+                Inventory.getMouseJoint().setTarget(temp2);
+                return true;
+            }
+            
+            @Override
+            public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+				if(Inventory.getMouseJoint() == null) 
+					return false;
+				
+				Inventory.getWorld().destroyJoint(Inventory.getMouseJoint());
+				Inventory.setMouseJoint(null);
+				return true;
             }
         });
     }

@@ -80,6 +80,8 @@ public class GameScreen implements Screen {
 	public static Viewport viewport;
 	public static TextureAtlas atlas;
 	public static PlayerHud hud;
+	public static float realWidth;
+	public static float realHeight;
 	
 	private BitmapFont font;
 
@@ -91,7 +93,7 @@ public class GameScreen implements Screen {
 	
 
 
-	private boolean debugPerspective = true;
+	private boolean debugPerspective = false;
 	private boolean runOnceTempDebugVariable = true;
 	
 	public MusicManager music;
@@ -220,12 +222,15 @@ public class GameScreen implements Screen {
         camera.viewportHeight = (Constants.CAMERA_WIDTH / width) * height;
         camera.update();
         viewport.update(width, height);
+        hud.resize(width, height);
+        
+        realWidth = width;
+        realHeight = height;
         
         System.out.println("camera wid/h" + camera.viewportWidth + " " + camera.viewportHeight);
         System.out.println("width/height" + width + " " + height);
         System.out.println("stage wid/ht" + stage.getWidth() + "  " + stage.getHeight());
         
-        hud.resize(width, height);
 	}
 
 	@Override

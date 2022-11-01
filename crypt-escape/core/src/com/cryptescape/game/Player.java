@@ -33,7 +33,7 @@ public class Player extends Movables {
 	private float teleportCooldown = 0f;
 	private float scale;
 	
-	private float batteryLevel = 0f;
+	private float batteryLevel = 3f;
 	
 	public float maxCandleLevel = 4.5f;
 	private float candleLevel = maxCandleLevel;
