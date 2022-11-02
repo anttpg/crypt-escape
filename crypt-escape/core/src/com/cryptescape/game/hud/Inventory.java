@@ -37,7 +37,10 @@ public class Inventory {
     
     private Texture overlay = new Texture(Gdx.files.internal("TestOverlay.png"));
     private Fixture boundary;
-    private ArrayList<InventoryItem> items = new ArrayList<InventoryItem>();
+    
+
+    private ArrayList<InventoryItem> frontItems = new ArrayList<InventoryItem>(); //Drawn on top of back items.
+    private ArrayList<InventoryItem> backItems = new ArrayList<InventoryItem>(); 
 
     public Inventory(Stage stage) {
         world = new World(new Vector2(0, -4), true);
@@ -50,12 +53,17 @@ public class Inventory {
         mouseDef.bodyA = boundary.getBody();
         mouseDef.collideConnected = true;
         
-        for(int row = 0; row < 20; row++)
-        	for(int col = 0; col < 20; col++)
-        		items.add(new CandleItem(world, "candlestick", 1f + row/4f, 1f + col/2f));
         
-        for(InventoryItem i : items)
+        frontItems.add(new CandleItem(world, "candlestick", 1f, 1f));
+        backItems.add(new BagItem(world, "briefcase", stage.getWidth()/2f, 1f));
+        
+        
+        for(InventoryItem i : backItems)
         	stage.addActor(i);
+        for(InventoryItem i : frontItems)
+            stage.addActor(i);
+        
+        
     }
     
     public Box2DDebugRenderer getDebugRenderer() {
@@ -75,16 +83,18 @@ public class Inventory {
     }
     
     public void resize(int width, int height) {
-        System.out.println("Inv stage w/h" + " "+ stage.getWidth() + " " + stage.getHeight());
-        
-        
-        tileSize = (float)stage.getHeight()/Constants.Y_TILES; 
-        for(InventoryItem i : items) {
+
+        for(InventoryItem i : backItems) 
             i.resize(stage.getWidth(), stage.getHeight());
-        }
+        for(InventoryItem i : frontItems) 
+            i.resize(stage.getWidth(), stage.getHeight());
         
-        oldWidth = stage.getWidth();
+        oldWidth = stage.getWidth(); //Updates values after modification
         oldHeight = stage.getHeight();
+        tileSize = (float)stage.getHeight()/Constants.Y_TILES;
+        
+        
+        
         createBoundary(); //Remakes boundary for new size
     }
     
@@ -124,5 +134,9 @@ public class Inventory {
 
 	public static void setMouseJoint(MouseJoint createJoint) {
 		mouse = createJoint;
+	}
+	
+	public static void debugInventory() {
+	    System.out.println("Inv stage w/h" + " " + stage.getWidth() + " " + stage.getHeight());
 	}
 }

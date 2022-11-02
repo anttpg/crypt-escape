@@ -73,7 +73,7 @@ public class PlayerHud {
     public void resize(int width, int height) {
         inventoryStage.getViewport().update(width, height, true);
         inventory.resize(width, height);
-
+        
         overlayStage.getViewport().update(width, height, true);
         for (HudElement e : overlayElements)
             e.resize(width, height);
@@ -102,7 +102,7 @@ public class PlayerHud {
             
             inventoryStage.act(delta);
             inventoryStage.draw();
-            inventory.getDebugRenderer().render(Inventory.getWorld(), inventoryStage.getCamera().combined);
+            //inventory.getDebugRenderer().render(Inventory.getWorld(), inventoryStage.getCamera().combined);
         }
         
         else {

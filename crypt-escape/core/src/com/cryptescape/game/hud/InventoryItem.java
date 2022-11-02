@@ -1,5 +1,8 @@
 package com.cryptescape.game.hud;
 
+import java.util.ArrayList;
+
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -7,8 +10,10 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
+import com.badlogic.gdx.physics.box2d.ChainShape;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.cryptescape.game.Constants;
+import com.cryptescape.game.GameScreen;
 import com.cryptescape.game.rooms.Interactable;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
@@ -19,6 +24,7 @@ import com.badlogic.gdx.physics.box2d.World;
 public abstract class InventoryItem extends Actor{
     private Fixture fixture;
     private TextureRegion currentRegion;
+    private Animation<TextureRegion> animation;
     private String name;
     
     private float scale;
@@ -26,9 +32,19 @@ public abstract class InventoryItem extends Actor{
     
     private float time = 0;
     
+    
     public InventoryItem(World world, String name, TextureRegion region, float x, float y, float scale) {
         this.name = name;
+        this.animation = null;
         this.currentRegion = region;
+        this.scale = scale;
+        this.checkBounds(name);
+    }
+    
+    public InventoryItem(World world, String name, String regions, float x, float y, float scale) {
+        this.name = name;
+        this.animation = new Animation<TextureRegion>(1, GameScreen.atlas.findRegions(name));
+        this.currentRegion = animation.getKeyFrame(0);
         this.scale = scale;
         this.checkBounds(name);
     }
@@ -38,23 +54,6 @@ public abstract class InventoryItem extends Actor{
         fixture.getBody().applyForceToCenter(xN, yN, true);
     }
     
-    public void resize(float newWidth, float newHeight) {
-        setX(getX() - (Inventory.oldWidth - newWidth)/2f);
-        setY(getY() - (Inventory.oldHeight - newHeight)/2f);
-        
-        System.out.println(
-                "Candle: X/Y " + getX() + "  " + getY() + "   WIDTH/HEIGHT " + getWidth() + "  " + getHeight());
-           
-        if(bounds == null) {
-            setWidth(Inventory.tileSize * scale);
-            setHeight(Inventory.tileSize * scale); 
-        }
-        else {  
-            setWidth((Inventory.tileSize * scale) * (bounds[2]-bounds[0])/currentRegion.getRegionHeight());
-            setHeight((Inventory.tileSize * scale) * (bounds[3]-bounds[1])/currentRegion.getRegionHeight());
-        }
-    }
-    
     public void checkBounds(String name) {
         if(Interactable.itemBounds.get(name) != null) {
             int i = 0;
@@ -62,16 +61,32 @@ public abstract class InventoryItem extends Actor{
                 bounds[i] = Float.valueOf(s);
                 i++;
             }
+            
         }
         else
-            bounds = null;
+            bounds = new float[] { 0, 0, currentRegion.getRegionWidth(), currentRegion.getRegionHeight() };
     }
+    
+    public void resize(float newWidth, float newHeight) {
+        //Resises based on stage size, not screen size
+        setX(getX() * (newWidth / Inventory.oldWidth));
+        setY(getY() * (newHeight / Inventory.oldHeight));
+        
+        debugItem();
+       
+        setWidth((Inventory.tileSize * scale) * (bounds[2]-bounds[0])/currentRegion.getRegionHeight());
+        setHeight((Inventory.tileSize * scale) * (bounds[3]-bounds[1])/currentRegion.getRegionHeight());
+    }
+   
     
     @Override
     public void act(float delta){
         time += delta;
         setX(fixture.getBody().getPosition().x - getWidth()/2f);
         setY(fixture.getBody().getPosition().y - getHeight()/2f);
+        
+        if(animation != null) 
+            this.currentRegion = animation.getKeyFrame(time);
     }
     
     @Override
@@ -86,6 +101,8 @@ public abstract class InventoryItem extends Actor{
     public void debugItem() {
         System.out.println(
                 "Item:" + name + " X/Y " + getX() + "  " + getY() + "   WIDTH/HEIGHT " + getWidth() + "  " + getHeight());
+        
+        //System.out.println("boundary: " + bounds[0] + " " + bounds[1] + " " + bounds[2] + " " + bounds[3]);
     }
     
     public void makeCircleFixture(World world, float x, float y) {
@@ -129,9 +146,84 @@ public abstract class InventoryItem extends Actor{
         fixtureDef.shape = box;
         fixtureDef.density = density;
         fixtureDef.friction = 0.4f;
-        fixtureDef.restitution = 0.6f; 
+        fixtureDef.restitution = 0.3f; 
 
         fixture = body.createFixture(fixtureDef);
         box.dispose();
+    }
+    
+    /**
+     * Generates a new polygon fixture with x number of edges. Edges should be a value from 0-1, 
+     * As it will be scaled to the size of the inventory item. This method will ignore traditional
+     * bounds.txt values, as it is assumed you calculate those beforehand when making the edges.
+     */
+    public void makePolygonFixture(World world, float x, float y, float density, Vector2[] vertices) {
+        //Creating interactable body
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyType.DynamicBody;
+        bodyDef.gravityScale = 0;
+        bodyDef.linearDamping = 0.5f;
+        bodyDef.angularDamping = 5.0f;
+        bodyDef.position.set(x, y);
+
+        Body body = world.createBody(bodyDef);
+        PolygonShape poly = new PolygonShape();  //Create a polygon shape 
+        
+        
+        for(Vector2 vertex : vertices) {
+            vertex.x = ((Inventory.tileSize * scale) * vertex.x) - (Inventory.tileSize * scale)/2f; 
+            vertex.y = ((Inventory.tileSize * scale) * vertex.y) - (Inventory.tileSize * scale)/2f; 
+        }
+        
+        
+        poly.set(vertices); //Draws the polygon based on these vertices
+
+
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = poly;
+        fixtureDef.density = density;
+        fixtureDef.friction = 0.4f;
+        fixtureDef.restitution = 0.3f; 
+
+        fixture = body.createFixture(fixtureDef);
+        poly.dispose();
+    }
+    
+    
+    /**
+     * Generates a new edge-based chain fixture. Less resource intensive than Polygon fixtures
+     * Edges should be a value from 0-1, As it will be scaled to the size of the inventory item. 
+     * This method will ignore traditional bounds.txt values, as it is assumed you calculate 
+     * those beforehand when making the edges.
+     */
+    public void makeChainFixture(World world, float x, float y, float density, Vector2[] vertices) {
+        //Creating interactable body
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyType.StaticBody;
+        bodyDef.gravityScale = 0.0f;
+        bodyDef.linearDamping = 0.5f;
+        bodyDef.angularDamping = 5.0f;
+        bodyDef.position.set(x, y);
+
+        Body body = world.createBody(bodyDef);
+        ChainShape chain = new ChainShape();  // Create a polygon shape 
+        
+        for(Vector2 vertex : vertices) {
+            vertex.x = ((Inventory.tileSize * scale) * vertex.x) - (Inventory.tileSize * scale)/2f; 
+            vertex.y = ((Inventory.tileSize * scale) * vertex.y) - (Inventory.tileSize * scale)/2f; 
+        }
+        
+        System.out.println(vertices[0]);
+        chain.createChain(vertices);
+
+
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = chain;
+        fixtureDef.density = density;
+        fixtureDef.friction = 0.4f;
+        fixtureDef.restitution = 0.45f; 
+
+        fixture = body.createFixture(fixtureDef);
+        chain.dispose();
     }
 }

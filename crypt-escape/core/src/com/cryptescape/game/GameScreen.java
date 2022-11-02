@@ -214,6 +214,13 @@ public class GameScreen implements Screen {
 	}
 	
 	
+	public void debugScreenResize(int width, int height) {
+        System.out.println("camera wid/h" + camera.viewportWidth + " " + camera.viewportHeight);
+        System.out.println("width/height" + width + " " + height);
+        System.out.println("stage wid/ht" + stage.getWidth() + "  " + stage.getHeight());
+	}
+	
+	
 	
 	@Override
 	public void resize(int width, int height) {
@@ -225,12 +232,7 @@ public class GameScreen implements Screen {
         hud.resize(width, height);
         
         realWidth = width;
-        realHeight = height;
-        
-        System.out.println("camera wid/h" + camera.viewportWidth + " " + camera.viewportHeight);
-        System.out.println("width/height" + width + " " + height);
-        System.out.println("stage wid/ht" + stage.getWidth() + "  " + stage.getHeight());
-        
+        realHeight = height;        
 	}
 
 	@Override
