@@ -11,9 +11,16 @@ import com.cryptescape.game.Constants;
 import com.cryptescape.game.GameScreen;
 
 public class RoomGeneration {
-	static Room startingRoom;
+	
+	public static Room startingRoom;
 	private static int startX;
 	private static int startY;
+	
+	private static ArrayList<double[]> doorOptions;
+	private static ArrayList<boolean[][]> doorEquivilence;
+	private static double[] roomProbs;
+	private static RandomCollection<Integer> roomDoorNumGenerator;
+	private static String[][] generalTypes;
 	
 	public static void generateTemplates() {
 		// ROOM GENERATION BELOW
@@ -48,6 +55,8 @@ public class RoomGeneration {
 				"cN1", "cE1", "cS1", "cW1",
 				"NE2", "SE2", "SW2", "NW2",
 				"hallNS", "hallEW", "trapNS", "trapEW"}; 
+		
+		
 		
 		
 		// Type names, open means all 4 doors are usable [T,T,T,T]. Blocked is the opposite [F,F,F,F]
@@ -162,7 +171,40 @@ public class RoomGeneration {
 	
 	
 	
-	public static void determineRoomType(int col, int row) {
+	private static void setupDoorProbabilities() {
+		roomProbs = new double[] {10, 20, 35, 25, 10}; //0 doors, 1 door, 2 doors, 3 doors, 4 doors.
+		
+		doorOptions = new ArrayList<double[]>();
+		doorOptions.add(new double[] {100} ); //Only one way
+		doorOptions.add(new double[] {25,25,25,25} );  //Which doors will be blocked
+		doorOptions.add(new double[] {50,25,25} );  //Hall, corners
+		doorOptions.add(new double[] {40,30,30} );  //T junction, hall Ts
+		doorOptions.add(new double[] {100} );  //Only one way
+		
+		doorEquivilence = new ArrayList<boolean[][]>();
+		doorEquivilence.add(new boolean[][] {{false, false, false, false}}); //blockec
+		doorEquivilence.add(new boolean[][] {{true, false, false, false}, {false, true, false, false}, {false, false, true, false}, {false, false, false, true}}); //one door
+		doorEquivilence.add(new boolean[][] {{true, false, true, false}, {false, true, false, true}, {true, true, false, false}, {true, false, false, true}, {false, true, true, false}, {false, false, true, true}}); //two doors
+		doorEquivilence.add(new boolean[][] {{true, true, true, false}, {true, true, false, true}, {true, false, true, true}, {false, true, true, true}}); //three doors open
+		doorEquivilence.add(new boolean[][] {{true, true, true, true}}); //all open
+		
+		
+		roomDoorNumGenerator = new RandomCollection<Integer>();
+		for(int i = 0; i < roomProbs.length; i++) {
+			roomDoorNumGenerator.add(roomProbs[i], i);
+		}
+		
+		generalTypes = new String[][] {
+			{ "blocked" },
+			{ "N1", "E1", "S1", "W1" },
+			{ "NE2", "SE2", "SW2", "NW2", "NS", "EW2" } ,
+			{ "N3", "E3", "S3", "W3" },
+			{ "open" } }; 
+	}
+	
+	
+	
+	public static String determineRoomType(int col, int row) {
 		
 		String[] neighborDoors = new String[] {null, null, null, null};
 
@@ -184,54 +226,42 @@ public class RoomGeneration {
 		
 		
 		
-		double[] roomProbs = new double[] {10, 20, 35, 25, 10}; //0 doors, 1 door, 2 doors, 3 doors, 4 doors.
-		
-		ArrayList<double[]> doorOptions = new ArrayList<double[]>();
-		doorOptions.add(new double[] {100} ); //Only one way
-		doorOptions.add(new double[] {25,25,25,25} );  //Which doors will be blocked
-		doorOptions.add(new double[] {50,25,25} );  //Hall, corners
-		doorOptions.add(new double[] {40,30,30} );  //T junction, hall Ts
-		doorOptions.add(new double[] {100} );  //Only one way
-		
-		ArrayList<String[][]> doorEquivilence = new ArrayList<String[][]>();
-		doorEquivilence.add(new String[][] {{"false", "false", "false", "false"}});
-		doorEquivilence.add(new String[][] {{"true", "false", "false", "false"}, {"false", "true", "false", "false"}, {"false", "false", "true", "false"}, {"false", "false", "false", "true"}});
-		doorEquivilence.add(new String[][] {{"true", "false", "true", "false"}, {"true", "true", "false", "false"}, {"false", "false", "true", "false"}, {"false", "false", "false", "true"}});
-		
-		RandomCollection<Integer> roomDoorNumGenerator = new RandomCollection<Integer>();
-		for(int i = 0; i < roomProbs.length; i++) {
-			roomDoorNumGenerator.add(roomProbs[i], i);
-		}
 		int roomNumDoors = roomDoorNumGenerator.next();
+		RandomCollection<Integer> doorGen = new RandomCollection<Integer>();
+		for(int i = 0; i < doorOptions.size(); i++) {
+			doorGen.add(doorOptions.get(roomNumDoors)[i], i);
+		}
 		
-		
-		String[] best = new String[] {null, null, null, null};
+		String best = "WuckyErrorThisShouldntBePossible";
 		int bestScore = 0;
 		int totalTries = 0; //Just brute force guesses for a bit, otherwise give up and use the best solution.
 		int numCorrect = 0;
 		
-		while(totalTries < 4) {
+		while(totalTries < 3) {
 			numCorrect = 0;
 			
-			RandomCollection<Integer> doorGen = new RandomCollection<Integer>();
-			for(int i = 0; i < doorOptions.size(); i++) {
-				doorGen.add(doorOptions.get(roomNumDoors)[i], i);
-			}
 			//Generate current guess
-			String[] guess = doorEquivilence.get(roomNumDoors)[doorGen.next()];
+			int index = doorGen.next();
+			boolean[] guess = doorEquivilence.get(roomNumDoors)[index];
 
 			
 			for(int i = 0; i < 4; i++) {
-				if(neighborDoors[i] == null || (neighborDoors[i] == guess[i]))
+				if(neighborDoors[i] == null || (Boolean.valueOf(neighborDoors[i]) == guess[i]))
 					numCorrect++;
 			}
 			
-			if(numCorrect == 4)
+			if(numCorrect == 4) {
+				best = generalTypes[roomNumDoors][index];
 				break;
+			}
 			
-			if(numCorrect >= bestScore)
-				best = guess.clone();
+			if(numCorrect >= bestScore) {
+				best = generalTypes[roomNumDoors][index];
+			}
 		}
+		
+		return best;
+		
 		
 		
 	}
@@ -241,6 +271,7 @@ public class RoomGeneration {
 	public static void generateRooms(ArrayList<String[][]> TEMPLATE, String[] key2,
 			RandomCollection<Integer> roomTypeGen, RandomCollection<String> roomItemGen) {
 		//Called once all the templates are generated, create and fill all the rooms 
+		setupDoorProbabilities();
 		
 		String item;
 		String roomType;
