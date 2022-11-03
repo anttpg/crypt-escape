@@ -36,7 +36,7 @@ public class InputHandler {
     		
     		Inventory.getMouseDef().bodyB = fixture.getBody();
     		Inventory.getMouseDef().target.set(temp.x, temp.y);
-    		Inventory.getMouseDef().maxForce = 500000;
+    		Inventory.getMouseDef().maxForce = 50000;
     		Inventory.setMouseJoint((MouseJoint) Inventory.getWorld().createJoint(Inventory.getMouseDef()));
     		return false;
     	}
@@ -90,6 +90,9 @@ public class InputHandler {
 
             @Override
             public boolean mouseMoved(int mouseX, int mouseY) {
+            	temp.set((mouseX/GameScreen.realWidth) * Inventory.getStage().getWidth(), 
+            			Inventory.getStage().getHeight() - (mouseY/GameScreen.realHeight) * Inventory.getStage().getHeight(), 0);
+            	
                 relativeMousePosition.x = mouseX;
                 relativeMousePosition.y = mouseY;
                 return false;
@@ -97,17 +100,18 @@ public class InputHandler {
             
             @Override
             public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+            	if (button != Input.Buttons.LEFT || pointer > 0) return false;
+            	
             	temp.set((screenX/GameScreen.realWidth) * Inventory.getStage().getWidth(), 
             			Inventory.getStage().getHeight() - (screenY/GameScreen.realHeight) * Inventory.getStage().getHeight(), 0);
             	
                 Inventory.getWorld().QueryAABB(callback, temp.x, temp.y, temp.x, temp.y); 
+                System.out.println("temp vector" + temp);
                 //Finding fixtures inside of this rect (We make it a point). Its a little innacurate for optimization
                 
 //                System.out.println(screenX + " " + GameScreen.stage.getWidth());
 //                System.out.println("stage inv: " + Inventory.getStage().getHeight() + " " + screenY + "/" + GameScreen.realHeight);
-//                System.out.println("stage inv: " + Inventory.getStage().getWidth() + " " + screenX + "/" + GameScreen.realWidth);
-                System.out.println("temp vector" + temp);
-                
+//                System.out.println("stage inv: " + Inventory.getStage().getWidth() + " " + screenX + "/" + GameScreen.realWidth);              
 //              
 //                Array<Fixture> f = new Array<Fixture>();
 //                Inventory.getWorld().getFixtures(f);
@@ -134,6 +138,8 @@ public class InputHandler {
             
             @Override
             public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+            	if (button != Input.Buttons.LEFT || pointer > 0) return false;
+            	
 				if(Inventory.getMouseJoint() == null) 
 					return false;
 				

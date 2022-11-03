@@ -23,12 +23,15 @@ import com.badlogic.gdx.physics.box2d.World;
 
 public abstract class InventoryItem extends Actor{
     private Fixture fixture;
+	protected Fixture interactionBody;
     private TextureRegion currentRegion;
     private Animation<TextureRegion> animation;
+
+
     private String name;
-    
     private float scale;
     private float[] bounds = new float[4];
+    private boolean mouseInRange = false;
     
     private float time = 0;
     
@@ -69,15 +72,25 @@ public abstract class InventoryItem extends Actor{
     
     public void resize(float newWidth, float newHeight) {
         //Resises based on stage size, not screen size
-        setX(getX() * (newWidth / Inventory.oldWidth));
-        setY(getY() * (newHeight / Inventory.oldHeight));
-        
+    	getBody().setTransform(
+    			getBody().getPosition().x * (newWidth / Inventory.oldWidth), 
+    			getBody().getPosition().y * (newHeight / Inventory.oldHeight), 
+    			getBody().getAngle());
+    	
         debugItem();
+        Inventory.debugInventory();
        
         setWidth((Inventory.tileSize * scale) * (bounds[2]-bounds[0])/currentRegion.getRegionHeight());
         setHeight((Inventory.tileSize * scale) * (bounds[3]-bounds[1])/currentRegion.getRegionHeight());
     }
    
+    public Body getBody() {
+    	return fixture.getBody();
+    }
+    
+    public float getScale() {
+    	return scale;
+    }
     
     @Override
     public void act(float delta){
@@ -226,4 +239,22 @@ public abstract class InventoryItem extends Actor{
         fixture = body.createFixture(fixtureDef);
         chain.dispose();
     }
+    
+    /**
+     * Creates a new interaction radius at coordinates x, y with the radius r. Then adds it to the current body.
+     */
+	public void createInteractionRadius(float x, float y, float r) {
+		CircleShape circle = new CircleShape(); // Create a polygon shape
+        circle.setRadius(r);
+		
+	    FixtureDef fixtureDef = new FixtureDef();
+	    fixtureDef.shape = circle;
+		fixtureDef.isSensor = true;
+		fixtureDef.density = 0f;
+		fixtureDef.friction = 0f;
+		fixtureDef.restitution = 0f;
+		interactionBody = getBody().createFixture(fixtureDef);
+		circle.dispose();
+	}
+	
 }

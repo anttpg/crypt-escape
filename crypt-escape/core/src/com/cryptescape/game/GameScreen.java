@@ -208,7 +208,7 @@ public class GameScreen implements Screen {
         hud.update(delta, game.batch);
         
         
-        music.update();
+        //music.update();
 		world.step(Constants.FRAME_SPEED, 6, 2);
 
 	}
@@ -230,14 +230,16 @@ public class GameScreen implements Screen {
         camera.update();
         viewport.update(width, height);
         hud.resize(width, height);
-        
+        hud.resize(width, height); //Called twice because of weird bug :/
         realWidth = width;
-        realHeight = height;        
+        realHeight = height;  
+        
+        debugScreenResize(width, height);
 	}
 
 	@Override
 	public void show() {
-		music.playRandomSong();
+		//music.playRandomSong();
 		//log 
 		Gdx.app.log("MainScreen","show");
 	}

@@ -53,9 +53,13 @@ public class Inventory {
         mouseDef.bodyA = boundary.getBody();
         mouseDef.collideConnected = true;
         
+        oldWidth = stage.getWidth(); //Updates values befre stage modification
+        oldHeight = stage.getHeight();
+        tileSize = (float)stage.getHeight()/Constants.Y_TILES;
+        
         
         frontItems.add(new CandleItem(world, "candlestick", 1f, 1f));
-        backItems.add(new BagItem(world, "briefcase", stage.getWidth()/2f, 1f));
+        backItems.add(new BagItem(world, "briefcase", stage.getWidth()/2f, 1.3f));
         
         
         for(InventoryItem i : backItems)
@@ -82,20 +86,23 @@ public class Inventory {
         world.step(1/60f, 6, 2);
     }
     
-    public void resize(int width, int height) {
+    public void resize(int width, int height) { 
+        stage.getViewport().update(width, height, true);
+        System.out.println(tileSize + " " + stage.getWidth()/stage.getHeight());
+        debugInventory();
 
         for(InventoryItem i : backItems) 
             i.resize(stage.getWidth(), stage.getHeight());
         for(InventoryItem i : frontItems) 
             i.resize(stage.getWidth(), stage.getHeight());
         
-        oldWidth = stage.getWidth(); //Updates values after modification
+        oldWidth = stage.getWidth(); //Updates values befre stage modification
         oldHeight = stage.getHeight();
-        tileSize = (float)stage.getHeight()/Constants.Y_TILES;
-        
-        
-        
         createBoundary(); //Remakes boundary for new size
+        
+        if(4f/3 < stage.getWidth()/stage.getHeight()) //checks for weird error that occurs when ratio 4w/3h is broken in height
+        	tileSize = (float)stage.getHeight()/Constants.Y_TILES;
+
     }
     
     public void createBoundary() {
@@ -138,5 +145,9 @@ public class Inventory {
 	
 	public static void debugInventory() {
 	    System.out.println("Inv stage w/h" + " " + stage.getWidth() + " " + stage.getHeight());
+	}
+	
+	public static void debugInventory(String position) {
+	    System.out.println("Inv stage w/h " + position + " " + stage.getWidth() + " " + stage.getHeight());
 	}
 }
