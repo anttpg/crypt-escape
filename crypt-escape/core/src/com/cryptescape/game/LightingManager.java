@@ -48,6 +48,7 @@ public class LightingManager {
         }
         else{
         	 playerFlashlight.setDistance(0f);
+        	 
         }
 	        
         rayHandler.setCombinedMatrix(GameScreen.camera);

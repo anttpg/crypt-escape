@@ -115,7 +115,7 @@ public class GameScreen implements Screen {
 		
 		//Different types of viewports for debugging
 		if(debugPerspective) {
-			float scale = 3;
+			float scale = 25;
 			viewport = new ExtendViewport(Constants.VIEWPORT_WIDTH*scale, Constants.VIEWPORT_HEIGHT*scale, camera);
 			//viewport = new ExtendViewport(Constants.VIEWPORT_WIDTH*15, Constants.VIEWPORT_HEIGHT*15, camera);
 		}
@@ -230,7 +230,7 @@ public class GameScreen implements Screen {
         camera.update();
         viewport.update(width, height);
         hud.resize(width, height);
-        hud.resize(width, height); //Called twice because of weird bug :/
+        hud.resize(width, height); //Called twice because it fixes a weird bug for some reason :/
         realWidth = width;
         realHeight = height;  
         

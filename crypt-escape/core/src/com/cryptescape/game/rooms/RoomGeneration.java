@@ -21,6 +21,9 @@ public class RoomGeneration {
 	private static double[] roomProbs;
 	private static RandomCollection<Integer> roomDoorNumGenerator;
 	private static String[][] generalTypes;
+	private static String[][][] skinTypes;
+	private static double[][][] skinProbability;
+	private static int stoppingPoint = 0;
 	
 	public static void generateTemplates() {
 		// ROOM GENERATION BELOW
@@ -35,19 +38,10 @@ public class RoomGeneration {
 		// use ##.next() to get where in key[i] to use
 		String[][] seed = createEmptyNxN(Constants.Y_TILES, Constants.X_TILES, false, false);
 		
-		// Probability of room type
-		double[] p2 = new double[] {
-				10,10,1,  
-				1,1,1,1,
-				1,1,1,1,
-				1,1,1,1,
-				1,1,1,1,
-				1,1,1,1,
-				5,4,10,10,
-				10,10,1,1}; 
 		
-		String[] key2 = new String[] {
-				"open",  "cb", "blocked", 
+		
+		String[] keyBefore = new String[] {
+				"open",  "openCB", "blocked", 
 				"aN3", "aE3", "aS3", "aW3", 
 				"bN3", "bE3", "bS3", "bW3", 
 				"aN1", "aE1", "aS1", "aW1", 
@@ -56,6 +50,10 @@ public class RoomGeneration {
 				"NE2", "SE2", "SW2", "NW2",
 				"hallNS", "hallEW", "trapNS", "trapEW"}; 
 		
+
+		ArrayList<String> key2 = new ArrayList<String>();
+		for(String s : keyBefore) 
+			key2.add(s);
 		
 		
 		
@@ -63,12 +61,8 @@ public class RoomGeneration {
 		// a stands for a-series (for multiple  skins), and then follows the direction and number of doors blocked
 		// EX: bN3 means the northmost 3 doors of that room are blocked. (the east, west, and north doors [F,F,T,F]), skin2
 		// hallNS is a north -> south hallway. East and west blocked
-		
 		ArrayList<String[][]> pregenTemplate = new ArrayList<String[][]>();
-		RandomCollection<Integer> roomTypeGen = new RandomCollection<Integer>();
-		for(int i = 0; i < key2.length; i++) {
-			roomTypeGen.add(p2[i], i);
-		}
+		
 		
 		//FORMAT: 3x3 bool Array. True means blocked in that section.	
 		pregenTemplate.add(clone2dArray(seed)); //open
@@ -140,7 +134,7 @@ public class RoomGeneration {
         startX = r.nextInt(Constants.NUM_OF_ROOMS_X - 2) + 1;  //Finds the players starting room
         startY = r.nextInt(Constants.NUM_OF_ROOMS_Y - 2) + 1;
         
-		generateRooms(TEMPLATE, key2, roomTypeGen, roomItemGen); //Fills all rooms
+		generateRooms(TEMPLATE, key2, roomItemGen); //Fills all rooms
 		
         GameScreen.player.setStartingRoom(GameScreen.rooms.get(startY).get(startX)); //Sets player starting room
         GameScreen.player.setPos(
@@ -172,7 +166,7 @@ public class RoomGeneration {
 	
 	
 	private static void setupDoorProbabilities() {
-		roomProbs = new double[] {10, 20, 35, 25, 10}; //0 doors, 1 door, 2 doors, 3 doors, 4 doors.
+		roomProbs = new double[] {5, 10, 35, 0, 10}; //0 doors, 1 door, 2 doors, 3 doors, 4 doors.
 		
 		doorOptions = new ArrayList<double[]>();
 		doorOptions.add(new double[] {100} ); //Only one way
@@ -183,9 +177,9 @@ public class RoomGeneration {
 		
 		doorEquivilence = new ArrayList<boolean[][]>();
 		doorEquivilence.add(new boolean[][] {{false, false, false, false}}); //blockec
-		doorEquivilence.add(new boolean[][] {{true, false, false, false}, {false, true, false, false}, {false, false, true, false}, {false, false, false, true}}); //one door
-		doorEquivilence.add(new boolean[][] {{true, false, true, false}, {false, true, false, true}, {true, true, false, false}, {true, false, false, true}, {false, true, true, false}, {false, false, true, true}}); //two doors
-		doorEquivilence.add(new boolean[][] {{true, true, true, false}, {true, true, false, true}, {true, false, true, true}, {false, true, true, true}}); //three doors open
+		doorEquivilence.add(new boolean[][] {{false, false, true, false}, {false, false, false, true}, {true, false, false, false}, {false, true, false, false}}); //one door
+		doorEquivilence.add(new boolean[][] {{true, true, false, false}, {false, true, true, false}, {false, false, true, true}, {true, false, false, true}, {true, false, true, false}, {false, true, false, true} }); //two doors
+		doorEquivilence.add(new boolean[][] {{false, true, true, true}, {true, false, true, true}, {true, true, false, true}, {true, true, true, false}}); //three doors open
 		doorEquivilence.add(new boolean[][] {{true, true, true, true}}); //all open
 		
 		
@@ -196,15 +190,32 @@ public class RoomGeneration {
 		
 		generalTypes = new String[][] {
 			{ "blocked" },
-			{ "N1", "E1", "S1", "W1" },
-			{ "NE2", "SE2", "SW2", "NW2", "NS", "EW2" } ,
 			{ "N3", "E3", "S3", "W3" },
+			{ "NE2", "SE2", "SW2", "NW2", "NS2", "EW2" } ,
+			{ "N1", "E1", "S1", "W1" },
 			{ "open" } }; 
+			
+		skinTypes = new String[][][] {
+			{ {"blocked"} }, 
+			{ {"aN3", "bN3"}, {"aE3", "bE3"}, {"aS3", "bS3"}, {"aW3","bW3"} }, 
+			{ {"NE2"}, {"SE2"}, {"SW2"}, {"NW2"}, {"hallNS", "trapNS"}, {"hallEW", "trapEW"} },
+			{ {"aN1", "bN1", "cN1"}, {"aE1", "bE1", "cE1"}, {"aS1", "bS1", "cS1"}, {"aW1", "bW1", "cW1"} },
+			{ {"open",  "openCB"} } };
+			
+		// Probability of room type
+		skinProbability = new double[][][] {
+			{ {100} }, 
+			{ {40, 60}, {40, 60}, {40, 60}, {40, 60} }, 
+			{ {100}, {100}, {100}, {100}, {85, 15}, {85, 15} },
+			{ {20, 60, 20}, {20, 60, 20}, {20, 60, 20}, {20, 60, 20} },
+			{ {40, 60} } };	
+			
 	}
 	
 	
 	
 	public static String determineRoomType(int col, int row) {
+		stoppingPoint++;
 		
 		String[] neighborDoors = new String[] {null, null, null, null};
 
@@ -228,16 +239,18 @@ public class RoomGeneration {
 		
 		int roomNumDoors = roomDoorNumGenerator.next();
 		RandomCollection<Integer> doorGen = new RandomCollection<Integer>();
-		for(int i = 0; i < doorOptions.size(); i++) {
+		for(int i = 0; i < doorOptions.get(roomNumDoors).length; i++) {
 			doorGen.add(doorOptions.get(roomNumDoors)[i], i);
 		}
 		
 		String best = "WuckyErrorThisShouldntBePossible";
-		int bestScore = 0;
+		float bestScore = 0f;
 		int totalTries = 0; //Just brute force guesses for a bit, otherwise give up and use the best solution.
-		int numCorrect = 0;
+		float numCorrect = 0f;
+		int finalIndex = 0;
 		
-		while(totalTries < 3) {
+		
+		while(totalTries < 2) {
 			numCorrect = 0;
 			
 			//Generate current guess
@@ -246,30 +259,35 @@ public class RoomGeneration {
 
 			
 			for(int i = 0; i < 4; i++) {
-				if(neighborDoors[i] == null || (Boolean.valueOf(neighborDoors[i]) == guess[i]))
-					numCorrect++;
-			}
-			
-			if(numCorrect == 4) {
-				best = generalTypes[roomNumDoors][index];
-				break;
+				if((neighborDoors[i] != null && (Boolean.valueOf(neighborDoors[i]) == guess[i])))
+					numCorrect += 1;
+				
+				if(neighborDoors[i] == null && (guess[i]))
+					numCorrect += 0.75;	
 			}
 			
 			if(numCorrect >= bestScore) {
+				finalIndex = index;
+				bestScore = numCorrect;
 				best = generalTypes[roomNumDoors][index];
 			}
+			totalTries++;
 		}
 		
-		return best;
 		
+		//Now determine the skin for that room
+		RandomCollection<String> roomSkinGenerator = new RandomCollection<String>();
+		for(int skinprob = 0; skinprob < skinProbability[roomNumDoors][finalIndex].length; skinprob++) {
+			roomSkinGenerator.add(skinProbability[roomNumDoors][finalIndex][skinprob], skinTypes[roomNumDoors][finalIndex][skinprob]);
+		}	
 		
-		
+		return roomSkinGenerator.next();
 	}
 	
 	
 	
-	public static void generateRooms(ArrayList<String[][]> TEMPLATE, String[] key2,
-			RandomCollection<Integer> roomTypeGen, RandomCollection<String> roomItemGen) {
+	
+	public static void generateRooms(ArrayList<String[][]> TEMPLATE, ArrayList<String> key2, RandomCollection<String> roomItemGen) {
 		//Called once all the templates are generated, create and fill all the rooms 
 		setupDoorProbabilities();
 		
@@ -282,12 +300,19 @@ public class RoomGeneration {
 			for(int row = 0; row < Constants.NUM_OF_ROOMS_X; row++) {
 				//For each room in an NxN grid, that will make up the playfield...
 				//DETERMINE: Room type, and what its filled with.
-				index = roomTypeGen.next();
-				if(col == startY && row == startX)
-					index = 0;
+				roomType = determineRoomType(col, row);
+				String[][] seed;
 				
-				roomType = key2[index];
-				String[][] seed = clone2dArray(TEMPLATE.get(index)); 
+				if(col == startY && row == startX) {
+					seed = clone2dArray(TEMPLATE.get(0)); 
+				}
+				
+				else {
+					seed = clone2dArray(TEMPLATE.get(key2.indexOf(roomType))); 
+				}
+				
+				
+				
 				
 //				System.out.println(index); //TRYING TO DEBUG
 //				for(String t : key2) System.out.println(t);  
@@ -373,7 +398,7 @@ public class RoomGeneration {
 		String[][] temp = createEmptyNxN(original.length, original[0].length, false, false);
 		for(int col = 0; col < original.length; col++) { //Edges redone to override blocks
 			for(int row = 0; row < original[col].length; row++) {
-				if(row == 0 || row == Constants.X_TILES || col == 0 || col == Constants.Y_TILES) {
+				if(row == 0 || row == Constants.X_TILES-1 || col == 0 || col == Constants.Y_TILES-1) {
 					original[col][row] = temp[col][row];
 					
 				}
