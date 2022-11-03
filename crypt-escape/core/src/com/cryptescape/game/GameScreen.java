@@ -93,7 +93,7 @@ public class GameScreen implements Screen {
 	
 
 
-	private boolean debugPerspective = false;
+	private boolean debugPerspective = true;
 	private boolean runOnceTempDebugVariable = true;
 	
 	public MusicManager music;
@@ -115,7 +115,7 @@ public class GameScreen implements Screen {
 		
 		//Different types of viewports for debugging
 		if(debugPerspective) {
-			float scale = 3;
+			float scale = 55;
 			viewport = new ExtendViewport(Constants.VIEWPORT_WIDTH*scale, Constants.VIEWPORT_HEIGHT*scale, camera);
 			//viewport = new ExtendViewport(Constants.VIEWPORT_WIDTH*15, Constants.VIEWPORT_HEIGHT*15, camera);
 		}
