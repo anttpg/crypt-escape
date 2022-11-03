@@ -196,6 +196,7 @@ public class RoomGeneration {
 		ArrayList<String[][]> doorEquivilence = new ArrayList<String[][]>();
 		doorEquivilence.add(new String[][] {{"false", "false", "false", "false"}});
 		doorEquivilence.add(new String[][] {{"true", "false", "false", "false"}, {"false", "true", "false", "false"}, {"false", "false", "true", "false"}, {"false", "false", "false", "true"}});
+		doorEquivilence.add(new String[][] {{"true", "false", "true", "false"}, {"true", "true", "false", "false"}, {"false", "false", "true", "false"}, {"false", "false", "false", "true"}});
 		
 		RandomCollection<Integer> roomDoorNumGenerator = new RandomCollection<Integer>();
 		for(int i = 0; i < roomProbs.length; i++) {
