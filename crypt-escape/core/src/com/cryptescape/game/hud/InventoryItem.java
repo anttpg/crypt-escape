@@ -274,7 +274,7 @@ public abstract class InventoryItem extends Actor{
 	    fixtureDef.shape = circle;
 		fixtureDef.isSensor = true;
 		fixtureDef.density = 0f;
-		fixtureDef.friction = 0f;
+		fixtureDef.friction = 0f;     
 		fixtureDef.restitution = 0f;
 		interactionBody = getBody().createFixture(fixtureDef);
 		interactionBody.setUserData(new CustomFixtureData(false)); //This represents that this item is a interaction object, and is not movable, nor should be. 

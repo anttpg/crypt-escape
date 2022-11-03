@@ -86,13 +86,17 @@ public class Room {
 				
 				
 				counter = 0;
-				if( current.equals("box") ) { //Of Type Box
+				if( current.equals("box") || current.equals("boxUnlocked") ) { //Of Type Box
 					iItems.add(new BoxObstacle(col, row, current, this));
 				} 
 				
 				if( current.equals("puddle") ) { //Of Type Box
 					iItems.add(new Puddle(col, row, current, this));
 				}
+				
+                if( current.equals("haystack") ) { //Of Type Box
+                    iItems.add(new Haystack(col, row, current, this));
+                }
 				
 				if ( !current.equals("blocked") ) { //If NOT BLOCKED, then add to background
 					float xCorner = getRoomLocation()[1] + (Constants.X_ROOM_METERS * (row/(float)Constants.X_TILES));

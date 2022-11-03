@@ -26,7 +26,7 @@ public class BagItem extends InventoryItem{
         if(startAnimation && mouseInRange) {
         	currentRegion = animation.getKeyFrame(time);
         	if(time > animation.getAnimationDuration() - animation.getFrameDuration())
-        		super.setZIndex(0);
+        		super.toBack();
         }
         
         else if(startAnimation) {
@@ -34,7 +34,7 @@ public class BagItem extends InventoryItem{
         	countdown -= delta;
         	
         	if(countdown < animation.getFrameDuration())
-            	super.setZIndex(2);
+            	super.toFront();
         	
         	if(countdown < 0) {
         		countdown = animation.getAnimationDuration();

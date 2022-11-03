@@ -27,8 +27,8 @@ public class RoomGeneration {
 	
 	public static void generateTemplates() {
 		// ROOM GENERATION BELOW
-		int[] p = new int[] {92, 4, 3, 1}; // Probability of a interactable type
-		String[] key = new String[] {"empty", "box", "puddle", "bat"}; //The cooresponding type
+		int[] p = new int[] {92, 1, 1, 1, 1}; // Probability of a interactable type
+		String[] key = new String[] {"empty", "box", "boxUnlocked", "puddle", "bat"}; //The cooresponding type
 		
 		RandomCollection<String> roomItemGen = new RandomCollection<String>();
 		for(int i = 0; i < p.length; i++) {
@@ -347,10 +347,17 @@ public class RoomGeneration {
 									seed[y][x] = "empty";
 								}
 							}
-						}
-						
+						}			
 					}
 				}
+				
+                if(col == startY && row == startX) {
+                    seed = clone2dArray(TEMPLATE.get(0)); 
+                    seed[7][10] = "boxUnlocked";
+                    seed[9][12] = "haystack";
+                }
+				
+				
 				GameScreen.rooms.get(col).add(new Room(new int[] {col+1, row}, seed.clone(), roomType));
 				
 			}

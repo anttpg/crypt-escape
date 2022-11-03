@@ -93,7 +93,7 @@ public class GameScreen implements Screen {
 	
 
 
-	private boolean debugPerspective = true;
+	private boolean debugPerspective = false;
 	private boolean runOnceTempDebugVariable = true;
 	
 	public MusicManager music;
