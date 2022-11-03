@@ -115,7 +115,7 @@ public class GameScreen implements Screen {
 		
 		//Different types of viewports for debugging
 		if(debugPerspective) {
-			float scale = 25;
+			float scale = 35;
 			viewport = new ExtendViewport(Constants.VIEWPORT_WIDTH*scale, Constants.VIEWPORT_HEIGHT*scale, camera);
 			//viewport = new ExtendViewport(Constants.VIEWPORT_WIDTH*15, Constants.VIEWPORT_HEIGHT*15, camera);
 		}

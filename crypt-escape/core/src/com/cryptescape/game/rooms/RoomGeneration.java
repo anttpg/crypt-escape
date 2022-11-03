@@ -166,13 +166,13 @@ public class RoomGeneration {
 	
 	
 	private static void setupDoorProbabilities() {
-		roomProbs = new double[] {5, 10, 35, 0, 10}; //0 doors, 1 door, 2 doors, 3 doors, 4 doors.
+		roomProbs = new double[] {5, 10, 30, 40, 15}; //0 doors, 1 door, 2 doors, 3 doors, 4 doors.
 		
 		doorOptions = new ArrayList<double[]>();
 		doorOptions.add(new double[] {100} ); //Only one way
 		doorOptions.add(new double[] {25,25,25,25} );  //Which doors will be blocked
-		doorOptions.add(new double[] {50,25,25} );  //Hall, corners
-		doorOptions.add(new double[] {40,30,30} );  //T junction, hall Ts
+		doorOptions.add(new double[] {10,10,10,10,10} );  //Hall, corners
+		doorOptions.add(new double[] {25,25,25,25} );  //T junction, hall Ts
 		doorOptions.add(new double[] {100} );  //Only one way
 		
 		doorEquivilence = new ArrayList<boolean[][]>();
@@ -192,12 +192,12 @@ public class RoomGeneration {
 			{ "blocked" },
 			{ "N3", "E3", "S3", "W3" },
 			{ "NE2", "SE2", "SW2", "NW2", "NS2", "EW2" } ,
-			{ "N1", "E1", "S1", "W1" },
+			{ "N1", "E1", "S1", "W1" }, // 3 doors open
 			{ "open" } }; 
 			
 		skinTypes = new String[][][] {
 			{ {"blocked"} }, 
-			{ {"aN3", "bN3"}, {"aE3", "bE3"}, {"aS3", "bS3"}, {"aW3","bW3"} }, 
+			{ {"aN3", "bN3"}, {"aE3", "bE3"}, {"aS3", "bS3"}, {"aW3","bW3"} }, //1 door open
 			{ {"NE2"}, {"SE2"}, {"SW2"}, {"NW2"}, {"hallNS", "trapNS"}, {"hallEW", "trapEW"} },
 			{ {"aN1", "bN1", "cN1"}, {"aE1", "bE1", "cE1"}, {"aS1", "bS1", "cS1"}, {"aW1", "bW1", "cW1"} },
 			{ {"open",  "openCB"} } };
@@ -206,7 +206,7 @@ public class RoomGeneration {
 		skinProbability = new double[][][] {
 			{ {100} }, 
 			{ {40, 60}, {40, 60}, {40, 60}, {40, 60} }, 
-			{ {100}, {100}, {100}, {100}, {85, 15}, {85, 15} },
+			{ {100}, {100}, {100}, {100}, {75, 25}, {75, 25} },
 			{ {20, 60, 20}, {20, 60, 20}, {20, 60, 20}, {20, 60, 20} },
 			{ {40, 60} } };	
 			
@@ -248,10 +248,12 @@ public class RoomGeneration {
 		int totalTries = 0; //Just brute force guesses for a bit, otherwise give up and use the best solution.
 		float numCorrect = 0f;
 		int finalIndex = 0;
+		int trueConnected = 0;
 		
 		
-		while(totalTries < 2) {
+		while(totalTries < 3) {
 			numCorrect = 0;
+			trueConnected = 0;
 			
 			//Generate current guess
 			int index = doorGen.next();
@@ -259,9 +261,14 @@ public class RoomGeneration {
 
 			
 			for(int i = 0; i < 4; i++) {
-				if((neighborDoors[i] != null && (Boolean.valueOf(neighborDoors[i]) == guess[i])))
+				if((neighborDoors[i] != null && (Boolean.valueOf(neighborDoors[i]) && guess[i]))) {
 					numCorrect += 1;
+					trueConnected++;
+				}
 				
+				if((neighborDoors[i] != null && (Boolean.valueOf(neighborDoors[i]) == guess[i]))) 
+					numCorrect += 0.9f;
+					
 				if(neighborDoors[i] == null && (guess[i]))
 					numCorrect += 0.75;	
 			}
@@ -274,13 +281,16 @@ public class RoomGeneration {
 			totalTries++;
 		}
 		
-		
+//		if(trueConnected == 0 && stoppingPoint < 2)
+//			return determineRoomType(col, row);
+//		
 		//Now determine the skin for that room
 		RandomCollection<String> roomSkinGenerator = new RandomCollection<String>();
 		for(int skinprob = 0; skinprob < skinProbability[roomNumDoors][finalIndex].length; skinprob++) {
 			roomSkinGenerator.add(skinProbability[roomNumDoors][finalIndex][skinprob], skinTypes[roomNumDoors][finalIndex][skinprob]);
 		}	
 		
+		stoppingPoint = 0;
 		return roomSkinGenerator.next();
 	}
 	
