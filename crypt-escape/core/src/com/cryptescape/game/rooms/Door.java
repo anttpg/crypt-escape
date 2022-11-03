@@ -54,14 +54,14 @@ public class Door  extends Interactable {
 			//FOR SHAKING DOOR (NO TRANSPORT)
 			if(animationPhase.equals("blocked")) {
 				if(timer == 0)
-					GameScreen.sounds.playSound("Rattle");
+					GameScreen.sounds.playSound("Rattle", 0.8f);
 			}
 			
 			
 			//FOR OPENING DOOR
 			else if (animationPhase.equals("opening")) {
 				if(timer == 0)
-					GameScreen.sounds.playSound("MinecraftDoor");
+					GameScreen.sounds.playSound("MinecraftDoor", 0.6f);
 				
 				super.setTextureRegion(animation.getKeyFrame(relativeTime));
 				

@@ -56,10 +56,18 @@ public class SfxManager {
 	}
 	
 	/**
-	 * Playing the specified sound
+	 * Plays the specified sound
 	 */
 	public void playSound(String s) {
 		Sound csound = sounds.get(s + ".wav");
 		csound.play();
+	}
+	
+	/**
+	 * Plays the specified sound at volume range v, from  0-1
+	 */
+	public void playSound(String s, float v) {
+		Sound csound = sounds.get(s + ".wav");
+		csound.play(v);
 	}
 }

@@ -13,7 +13,9 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.ChainShape;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.cryptescape.game.Constants;
+import com.cryptescape.game.CustomFixtureData;
 import com.cryptescape.game.GameScreen;
+import com.cryptescape.game.InputHandler;
 import com.cryptescape.game.rooms.Interactable;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
@@ -24,32 +26,37 @@ import com.badlogic.gdx.physics.box2d.World;
 public abstract class InventoryItem extends Actor{
     private Fixture fixture;
 	protected Fixture interactionBody;
-    private TextureRegion currentRegion;
-    private Animation<TextureRegion> animation;
+    protected TextureRegion currentRegion;
+    protected Animation<TextureRegion> animation;
 
 
     private String name;
     private float scale;
     private float[] bounds = new float[4];
-    private boolean mouseInRange = false;
     
-    private float time = 0;
+    protected float time = 0;
+    protected float countdown = 0;
+    protected boolean mouseInRange = false;
+    protected boolean startAnimation = false;
     
     
-    public InventoryItem(World world, String name, TextureRegion region, float x, float y, float scale) {
+    public InventoryItem(World world, String name, TextureRegion region, float x, float y, float scale, int zindex) {
         this.name = name;
         this.animation = null;
         this.currentRegion = region;
         this.scale = scale;
         this.checkBounds(name);
+        super.setZIndex(zindex);
     }
     
-    public InventoryItem(World world, String name, String regions, float x, float y, float scale) {
+    public InventoryItem(World world, String name, String regions, float x, float y, float scale, int zindex) {
         this.name = name;
-        this.animation = new Animation<TextureRegion>(1, GameScreen.atlas.findRegions(name));
+        this.animation = new Animation<TextureRegion>(0.05f, GameScreen.atlas.findRegions(name));
+        this.countdown = animation.getAnimationDuration();
         this.currentRegion = animation.getKeyFrame(0);
         this.scale = scale;
         this.checkBounds(name);
+//        super.setZIndex(zindex);
     }
     
     
@@ -83,23 +90,17 @@ public abstract class InventoryItem extends Actor{
         setWidth((Inventory.tileSize * scale) * (bounds[2]-bounds[0])/currentRegion.getRegionHeight());
         setHeight((Inventory.tileSize * scale) * (bounds[3]-bounds[1])/currentRegion.getRegionHeight());
     }
-   
-    public Body getBody() {
-    	return fixture.getBody();
-    }
+
     
-    public float getScale() {
-    	return scale;
-    }
-    
-    @Override
-    public void act(float delta){
+    public void defaultAct(float delta){
         time += delta;
         setX(fixture.getBody().getPosition().x - getWidth()/2f);
         setY(fixture.getBody().getPosition().y - getHeight()/2f);
         
-        if(animation != null) 
-            this.currentRegion = animation.getKeyFrame(time);
+        if(mouseInRange && !startAnimation) {
+        	startAnimation = true;
+        	time = 0;
+        }
     }
     
     @Override
@@ -116,6 +117,28 @@ public abstract class InventoryItem extends Actor{
                 "Item:" + name + " X/Y " + getX() + "  " + getY() + "   WIDTH/HEIGHT " + getWidth() + "  " + getHeight());
         
         //System.out.println("boundary: " + bounds[0] + " " + bounds[1] + " " + bounds[2] + " " + bounds[3]);
+    }
+    
+    
+    public Body getBody() {
+    	return fixture.getBody();
+    }
+    
+    public float getScale() {
+    	return scale;
+    }
+    
+    public void createUserData(boolean ans) {
+    	getBody().setUserData(new CustomFixtureData(ans));
+    }
+    
+    public void setIsMovable(boolean ans) {
+    	((CustomFixtureData)(getBody().getUserData())).setMovable(ans);
+    }
+    
+    public void setInRange() {
+    	if(interactionBody != null)
+    		mouseInRange = interactionBody.testPoint(InputHandler.relativeMouseInventory.x, InputHandler.relativeMouseInventory.y);
     }
     
     public void makeCircleFixture(World world, float x, float y) {
@@ -254,6 +277,7 @@ public abstract class InventoryItem extends Actor{
 		fixtureDef.friction = 0f;
 		fixtureDef.restitution = 0f;
 		interactionBody = getBody().createFixture(fixtureDef);
+		interactionBody.setUserData(new CustomFixtureData(false)); //This represents that this item is a interaction object, and is not movable, nor should be. 
 		circle.dispose();
 	}
 	

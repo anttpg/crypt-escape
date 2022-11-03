@@ -18,24 +18,36 @@ public class InputHandler {
     public static float sprint = 1; //changes when sprinting
     public static boolean e_pressed;
     public static boolean tab_pressed;
-//    public static boolean mouseL_pressed;
+    
     
     public static Vector2 relativeMousePosition = new Vector2(0, 0);
-    private static Vector3 temp = new Vector3();
+    public static Vector3 relativeMouseInventory = new Vector3();
     private static Vector2 temp2 = new Vector2();
+    
     
     private static QueryCallback callback = new QueryCallback() {
     	@Override
     	public boolean reportFixture(Fixture fixture) {
-    		
-    		if(!fixture.testPoint(temp.x, temp.y)) //Testing because of QueryAABB error, checks each to see if 
+    		//Testing because of QueryAABB error, checks each to see if actually inside the point. Also checks user data to make sure it is movable
+    		if(!fixture.testPoint(relativeMouseInventory.x, relativeMouseInventory.y))
     			return true;
     		
-    		System.out.println(fixture.getBody().getPosition() + " " + temp);
-    		System.out.println("fixture" );
+    		try { //Checks if
+	    		if(fixture.getUserData() != null && !((CustomFixtureData)fixture.getUserData()).getMovable() ) {
+	    			return true;
+	    		}
+    		}
+	    	catch(ClassCastException e) {
+	    		e.printStackTrace();
+	    		System.err.println("Cannot cast user data to boolean, type is not CustomFixtureData. Change user data definition.");
+	    		return true;
+	    	}
+    		
+    		System.out.println(fixture.getBody().getPosition() + " " + relativeMouseInventory);
+    		System.out.println("fixture " + fixture.getUserData());
     		
     		Inventory.getMouseDef().bodyB = fixture.getBody();
-    		Inventory.getMouseDef().target.set(temp.x, temp.y);
+    		Inventory.getMouseDef().target.set(relativeMouseInventory.x, relativeMouseInventory.y);
     		Inventory.getMouseDef().maxForce = 50000;
     		Inventory.setMouseJoint((MouseJoint) Inventory.getWorld().createJoint(Inventory.getMouseDef()));
     		return false;
@@ -45,19 +57,19 @@ public class InputHandler {
     public static void createInput() {
 
         // INPUT HANDLING
-        // All calculated per tick, and stored as 0 or 1
-
+        // All input is calculated per tick. WASD stored as a 0 or 1 for easy movement calculations
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
             public boolean keyDown(int keycode) {
-                if (keycode == Input.Keys.W)
+                if (keycode == Input.Keys.W || keycode == Input.Keys.UP)
                     wasd[0] = 1;
-                if (keycode == Input.Keys.A)
+                if (keycode == Input.Keys.A || keycode == Input.Keys.LEFT)
                     wasd[1] = 1;
-                if (keycode == Input.Keys.S)
+                if (keycode == Input.Keys.S || keycode == Input.Keys.DOWN)
                     wasd[2] = 1;
-                if (keycode == Input.Keys.D)
+                if (keycode == Input.Keys.D || keycode == Input.Keys.RIGHT)
                     wasd[3] = 1;
+                
                 if (keycode == Input.Keys.SHIFT_LEFT)
                     sprint = 1.6f; // Except here since its a multiplier
 
@@ -71,14 +83,15 @@ public class InputHandler {
 
             @Override
             public boolean keyUp(int keycode) {
-                if (keycode == Input.Keys.W)
+                if (keycode == Input.Keys.W || keycode == Input.Keys.UP)
                     wasd[0] = 0;
-                if (keycode == Input.Keys.A)
+                if (keycode == Input.Keys.A || keycode == Input.Keys.LEFT)
                     wasd[1] = 0;
-                if (keycode == Input.Keys.S)
+                if (keycode == Input.Keys.S || keycode == Input.Keys.DOWN)
                     wasd[2] = 0;
-                if (keycode == Input.Keys.D)
+                if (keycode == Input.Keys.D || keycode == Input.Keys.RIGHT)
                     wasd[3] = 0;
+                
                 if (keycode == Input.Keys.SHIFT_LEFT)
                     sprint = 1;
 
@@ -90,7 +103,7 @@ public class InputHandler {
 
             @Override
             public boolean mouseMoved(int mouseX, int mouseY) {
-            	temp.set((mouseX/GameScreen.realWidth) * Inventory.getStage().getWidth(), 
+            	relativeMouseInventory.set((mouseX/GameScreen.realWidth) * Inventory.getStage().getWidth(), 
             			Inventory.getStage().getHeight() - (mouseY/GameScreen.realHeight) * Inventory.getStage().getHeight(), 0);
             	
                 relativeMousePosition.x = mouseX;
@@ -102,12 +115,12 @@ public class InputHandler {
             public boolean touchDown(int screenX, int screenY, int pointer, int button) {
             	if (button != Input.Buttons.LEFT || pointer > 0) return false;
             	
-            	temp.set((screenX/GameScreen.realWidth) * Inventory.getStage().getWidth(), 
+            	relativeMouseInventory.set((screenX/GameScreen.realWidth) * Inventory.getStage().getWidth(), 
             			Inventory.getStage().getHeight() - (screenY/GameScreen.realHeight) * Inventory.getStage().getHeight(), 0);
             	
-                Inventory.getWorld().QueryAABB(callback, temp.x, temp.y, temp.x, temp.y); 
-                System.out.println("temp vector" + temp);
-                //Finding fixtures inside of this rect (We make it a point). Its a little innacurate for optimization
+                Inventory.getWorld().QueryAABB(callback, relativeMouseInventory.x, relativeMouseInventory.y, relativeMouseInventory.x, relativeMouseInventory.y); 	
+                System.out.println("temp vector" + relativeMouseInventory);
+                //Finding fixtures inside of this rect (We make it a point, cheating a lil). Its a little innacurate for optimization
                 
 //                System.out.println(screenX + " " + GameScreen.stage.getWidth());
 //                System.out.println("stage inv: " + Inventory.getStage().getHeight() + " " + screenY + "/" + GameScreen.realHeight);
@@ -129,9 +142,9 @@ public class InputHandler {
                 if(Inventory.getMouseJoint() == null)
                 	return false;
                 
-            	temp.set((screenX/GameScreen.realWidth) * Inventory.getStage().getWidth(), 
+            	relativeMouseInventory.set((screenX/GameScreen.realWidth) * Inventory.getStage().getWidth(), 
             			Inventory.getStage().getHeight() - (screenY/GameScreen.realHeight) * Inventory.getStage().getHeight(), 0);
-                temp2.set(temp.x, temp.y);
+                temp2.set(relativeMouseInventory.x, relativeMouseInventory.y);
                 Inventory.getMouseJoint().setTarget(temp2);
                 return true;
             }

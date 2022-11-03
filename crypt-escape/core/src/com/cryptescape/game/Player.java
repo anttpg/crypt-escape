@@ -33,9 +33,9 @@ public class Player extends Movables {
 	private float teleportCooldown = 0f;
 	private float scale;
 	
-	private float batteryLevel = 3f;
+	private float batteryLevel = 10f;
 	
-	public float maxCandleLevel = 4.5f;
+	public float maxCandleLevel = 3.5f;
 	private float candleLevel = maxCandleLevel;
 	public float burnPerTick = Constants.FRAME_SPEED/(15f*maxCandleLevel); //15 is exactly 5 minutes to get to 0.
 	private float offset;

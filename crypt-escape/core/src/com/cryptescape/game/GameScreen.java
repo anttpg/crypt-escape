@@ -208,7 +208,7 @@ public class GameScreen implements Screen {
         hud.update(delta, game.batch);
         
         
-        //music.update();
+        music.update();
 		world.step(Constants.FRAME_SPEED, 6, 2);
 
 	}
@@ -239,7 +239,7 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void show() {
-		//music.playRandomSong();
+		music.playRandomSong();
 		//log 
 		Gdx.app.log("MainScreen","show");
 	}

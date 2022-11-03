@@ -19,9 +19,12 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.physics.box2d.joints.MouseJoint;
 import com.badlogic.gdx.physics.box2d.joints.MouseJointDef;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.cryptescape.game.Constants;
+import com.cryptescape.game.CustomFixtureData;
 import com.cryptescape.game.GameScreen;
 
 public class Inventory {
@@ -38,9 +41,8 @@ public class Inventory {
     private Texture overlay = new Texture(Gdx.files.internal("TestOverlay.png"));
     private Fixture boundary;
     
-
-    private ArrayList<InventoryItem> frontItems = new ArrayList<InventoryItem>(); //Drawn on top of back items.
-    private ArrayList<InventoryItem> backItems = new ArrayList<InventoryItem>(); 
+    
+    private Group itemGroup = new Group();
 
     public Inventory(Stage stage) {
         world = new World(new Vector2(0, -4), true);
@@ -58,14 +60,18 @@ public class Inventory {
         tileSize = (float)stage.getHeight()/Constants.Y_TILES;
         
         
-        frontItems.add(new CandleItem(world, "candlestick", 1f, 1f));
-        backItems.add(new BagItem(world, "briefcase", stage.getWidth()/2f, 1.3f));
+//        frontItems.add(new CandleItem(world, "candlestick", 1f, 1f, 0));
+//        backItems.add(new BagItem(world, "briefcase", stage.getWidth()/2f, 1.3f, 1));
         
+        itemGroup.addActor(new CandleItem(world, "candlestick", 1f, 1f, 1));
+        itemGroup.addActor(new BagItem(world, "briefcase", stage.getWidth()/2f, 1.3f, 2));
+        	
+        stage.addActor(itemGroup);
         
-        for(InventoryItem i : backItems)
-        	stage.addActor(i);
-        for(InventoryItem i : frontItems)
-            stage.addActor(i);
+//        for(InventoryItem i : frontItems)
+//            stage.addActor(i);
+        
+       	
         
         
     }
@@ -91,10 +97,8 @@ public class Inventory {
         System.out.println(tileSize + " " + stage.getWidth()/stage.getHeight());
         debugInventory();
 
-        for(InventoryItem i : backItems) 
-            i.resize(stage.getWidth(), stage.getHeight());
-        for(InventoryItem i : frontItems) 
-            i.resize(stage.getWidth(), stage.getHeight());
+        for(Actor i : itemGroup.getChildren()) 
+        	((InventoryItem)i).resize(stage.getWidth(), stage.getHeight());
         
         oldWidth = stage.getWidth(); //Updates values befre stage modification
         oldHeight = stage.getHeight();
@@ -119,15 +123,15 @@ public class Inventory {
         EdgeShape edge = new EdgeShape(); 
         edge.set(0, 0, stage.getWidth(), 0);
         boundary = body.createFixture(edge, 0.0f);
+        boundary.setUserData(new CustomFixtureData(false)); //This represents that this item is a interaction object, and is not movable.
         edge.dispose(); 
     }
     
     public void render(SpriteBatch batch) {
-//        batch.setColor(1, 1, 1, 1f);
-//        batch.begin();
-//        batch.draw(overlay, 0, 0, 100f, 100f);
-//        batch.end();
-// 
+        batch.setColor(1, 1, 1, 1f);
+        batch.begin();
+        batch.draw(overlay, 0, 0, 100f, 100f);
+        batch.end(); 
     }
 
 	public static MouseJointDef getMouseDef() {
