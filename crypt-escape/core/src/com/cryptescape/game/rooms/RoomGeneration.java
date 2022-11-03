@@ -166,12 +166,12 @@ public class RoomGeneration {
 	
 	
 	private static void setupDoorProbabilities() {
-		roomProbs = new double[] {5, 10, 30, 40, 15}; //0 doors, 1 door, 2 doors, 3 doors, 4 doors.
+		roomProbs = new double[] {10, 12, 30, 43, 28}; //0 doors, 1 door, 2 doors, 3 doors, 4 doors.
 		
 		doorOptions = new ArrayList<double[]>();
 		doorOptions.add(new double[] {100} ); //Only one way
 		doorOptions.add(new double[] {25,25,25,25} );  //Which doors will be blocked
-		doorOptions.add(new double[] {10,10,10,10,10} );  //Hall, corners
+		doorOptions.add(new double[] {10,10,10,10,10,10} );  //Hall, corners
 		doorOptions.add(new double[] {25,25,25,25} );  //T junction, hall Ts
 		doorOptions.add(new double[] {100} );  //Only one way
 		
@@ -281,9 +281,11 @@ public class RoomGeneration {
 			totalTries++;
 		}
 		
-//		if(trueConnected == 0 && stoppingPoint < 2)
-//			return determineRoomType(col, row);
-//		
+		//If nowhere connected, try once recursivly.
+		if(trueConnected == 0 && stoppingPoint < 2)
+			return determineRoomType(col, row);
+		
+		
 		//Now determine the skin for that room
 		RandomCollection<String> roomSkinGenerator = new RandomCollection<String>();
 		for(int skinprob = 0; skinprob < skinProbability[roomNumDoors][finalIndex].length; skinprob++) {
