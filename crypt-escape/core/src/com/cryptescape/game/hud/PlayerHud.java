@@ -96,8 +96,8 @@ public class PlayerHud {
     public void update(float delta, SpriteBatch batch) {
         if(InputHandler.tab_pressed) {
             batch.setProjectionMatrix(inventoryStage.getCamera().combined);
-            inventory.update();
-            inventory.render(batch);
+            inventory.update(); 
+            inventory.render(batch); //Render overlay dark first
             
             inventoryStage.act(delta);
             inventoryStage.draw();

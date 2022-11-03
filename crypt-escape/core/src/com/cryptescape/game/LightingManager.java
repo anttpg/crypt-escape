@@ -41,10 +41,15 @@ public class LightingManager {
         playerLight.setPosition(GameScreen.player.xPos, GameScreen.player.yPos);
         playerLight.setDistance(GameScreen.player.getCandleLevel());
         
-        playerFlashlight.setDistance(GameScreen.player.getBatteryLevel());
-        playerFlashlight.setPosition(GameScreen.player.xPos, GameScreen.player.yPos);
-        playerFlashlight.setDirection(getAngle(GameScreen.player.xPos, GameScreen.player.yPos, mousePosition));
-        
+        if(!InputHandler.tab_pressed) {
+	        playerFlashlight.setDistance(GameScreen.player.getBatteryLevel());
+	        playerFlashlight.setPosition(GameScreen.player.xPos, GameScreen.player.yPos);
+	        playerFlashlight.setDirection(getAngle(GameScreen.player.xPos, GameScreen.player.yPos, mousePosition));
+        }
+        else{
+        	 playerFlashlight.setDistance(0f);
+        }
+	        
         rayHandler.setCombinedMatrix(GameScreen.camera);
         rayHandler.updateAndRender();
     }

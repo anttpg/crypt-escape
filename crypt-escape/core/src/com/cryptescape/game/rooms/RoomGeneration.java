@@ -11,7 +11,9 @@ import com.cryptescape.game.Constants;
 import com.cryptescape.game.GameScreen;
 
 public class RoomGeneration {
-	
+	static Room startingRoom;
+	private static int startX;
+	private static int startY;
 	
 	public static void generateTemplates() {
 		// ROOM GENERATION BELOW
@@ -46,6 +48,7 @@ public class RoomGeneration {
 				"cN1", "cE1", "cS1", "cW1",
 				"NE2", "SE2", "SW2", "NW2",
 				"hallNS", "hallEW", "trapNS", "trapEW"}; 
+		
 		
 		// Type names, open means all 4 doors are usable [T,T,T,T]. Blocked is the opposite [F,F,F,F]
 		// a stands for a-series (for multiple  skins), and then follows the direction and number of doors blocked
@@ -120,16 +123,31 @@ public class RoomGeneration {
 		
 		for(int i = 0; i < pregenTemplate.size(); i++)
 			pregenTemplate.set(i, formatWalls(pregenTemplate.get(i)));
-		
 		final ArrayList<String[][]> TEMPLATE = new ArrayList<String[][]>(Collections.unmodifiableList(pregenTemplate)); //makes it unmodable
-		generateRooms(TEMPLATE, key2, roomTypeGen, roomItemGen);
 		
+		
+		
+        Random r = new Random();
+        startX = r.nextInt(Constants.NUM_OF_ROOMS_X - 2) + 1;  //Finds the players starting room
+        startY = r.nextInt(Constants.NUM_OF_ROOMS_Y - 2) + 1;
+        
+		generateRooms(TEMPLATE, key2, roomTypeGen, roomItemGen); //Fills all rooms
+		
+        GameScreen.player.setStartingRoom(GameScreen.rooms.get(startY).get(startX)); //Sets player starting room
+        GameScreen.player.setPos(
+        		GameScreen.rooms.get(startY).get(startX).getRoomLocation()[1] + Constants.CAMERA_WIDTH / 3, 
+        		GameScreen.rooms.get(startY).get(startX).getRoomLocation()[0] + Constants.CAMERA_HEIGHT / 2);
+		
+        
+        
 		for(int col = 0; col < GameScreen.rooms.size(); col++) {
 			for(int row = 0; row < GameScreen.rooms.get(col).size(); row++) {
-				GameScreen.rooms.get(col).get(row).determinePartners();
+				GameScreen.rooms.get(col).get(row).determinePartners(); //Finds out which rooms are connected
 			}
 		}
 	}
+	
+	
 	
 	
 	public static void debugTemplates(ArrayList<String[][]> pregenTemplate) {
@@ -141,6 +159,82 @@ public class RoomGeneration {
 			printSeedArray(pregenTemplate.get(i), Integer.toString(i) + ": ");
 		}
 	}
+	
+	
+	
+	public static void determineRoomType(int col, int row) {
+		
+		String[] neighborDoors = new String[] {null, null, null, null};
+
+		if(col == 0)
+			neighborDoors[0] = "false";
+		else if(GameScreen.rooms.get(col-1).get(row).getDoors().get(2) != null)
+			neighborDoors[0] = "true";
+			
+		if(row == 0)
+			neighborDoors[3] = "false";
+		else if(GameScreen.rooms.get(col).get(row-1).getDoors().get(1) != null)
+			neighborDoors[3] = "true";
+		
+		if(row == Constants.NUM_OF_ROOMS_X - 1)
+			neighborDoors[1] = "false";
+		
+		if(col == Constants.NUM_OF_ROOMS_Y - 1)
+			neighborDoors[2] = "false";
+		
+		
+		
+		double[] roomProbs = new double[] {10, 20, 35, 25, 10}; //0 doors, 1 door, 2 doors, 3 doors, 4 doors.
+		
+		ArrayList<double[]> doorOptions = new ArrayList<double[]>();
+		doorOptions.add(new double[] {100} ); //Only one way
+		doorOptions.add(new double[] {25,25,25,25} );  //Which doors will be blocked
+		doorOptions.add(new double[] {50,25,25} );  //Hall, corners
+		doorOptions.add(new double[] {40,30,30} );  //T junction, hall Ts
+		doorOptions.add(new double[] {100} );  //Only one way
+		
+		ArrayList<String[][]> doorEquivilence = new ArrayList<String[][]>();
+		doorEquivilence.add(new String[][] {{"false", "false", "false", "false"}});
+		doorEquivilence.add(new String[][] {{"true", "false", "false", "false"}, {"false", "true", "false", "false"}, {"false", "false", "true", "false"}, {"false", "false", "false", "true"}});
+		
+		RandomCollection<Integer> roomDoorNumGenerator = new RandomCollection<Integer>();
+		for(int i = 0; i < roomProbs.length; i++) {
+			roomDoorNumGenerator.add(roomProbs[i], i);
+		}
+		int roomNumDoors = roomDoorNumGenerator.next();
+		
+		
+		String[] best = new String[] {null, null, null, null};
+		int bestScore = 0;
+		int totalTries = 0; //Just brute force guesses for a bit, otherwise give up and use the best solution.
+		int numCorrect = 0;
+		
+		while(totalTries < 4) {
+			numCorrect = 0;
+			
+			RandomCollection<Integer> doorGen = new RandomCollection<Integer>();
+			for(int i = 0; i < doorOptions.size(); i++) {
+				doorGen.add(doorOptions.get(roomNumDoors)[i], i);
+			}
+			//Generate current guess
+			String[] guess = doorEquivilence.get(roomNumDoors)[doorGen.next()];
+
+			
+			for(int i = 0; i < 4; i++) {
+				if(neighborDoors[i] == null || (neighborDoors[i] == guess[i]))
+					numCorrect++;
+			}
+			
+			if(numCorrect == 4)
+				break;
+			
+			if(numCorrect >= bestScore)
+				best = guess.clone();
+		}
+		
+		
+	}
+	
 	
 	
 	public static void generateRooms(ArrayList<String[][]> TEMPLATE, String[] key2,
@@ -157,6 +251,9 @@ public class RoomGeneration {
 				//For each room in an NxN grid, that will make up the playfield...
 				//DETERMINE: Room type, and what its filled with.
 				index = roomTypeGen.next();
+				if(col == startY && row == startX)
+					index = 0;
+				
 				roomType = key2[index];
 				String[][] seed = clone2dArray(TEMPLATE.get(index)); 
 				
@@ -493,19 +590,4 @@ public class RoomGeneration {
 		return Arrays.stream(original).map(String[]::clone).toArray(String[][]::new);
 	}
 	
-	public static void findRoom() {
-        boolean roomFound = false;
-        while (!roomFound) {
-            Random r = new Random();
-            int x = r.nextInt(Constants.NUM_OF_ROOMS_X - 2) + 1;
-            int y = r.nextInt(Constants.NUM_OF_ROOMS_Y - 2) + 1;
-
-            if (!GameScreen.rooms.get(y).get(x).getRoomType().equals("blocked")) {
-                GameScreen.player.setStartingRoom(GameScreen.rooms.get(y).get(x));
-                GameScreen.player.setPos(GameScreen.rooms.get(y).get(x).getRoomLocation()[1] + Constants.CAMERA_WIDTH / 3,
-                        GameScreen.rooms.get(y).get(x).getRoomLocation()[0] + Constants.CAMERA_HEIGHT / 2);
-                roomFound = true;
-            }
-        }
-    }
 }

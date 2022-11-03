@@ -128,10 +128,11 @@ public class Inventory {
     }
     
     public void render(SpriteBatch batch) {
-        batch.setColor(1, 1, 1, 1f);
+        batch.setColor(1, 1, 1, 0.65f);
         batch.begin();
-        batch.draw(overlay, 0, 0, 100f, 100f);
+        batch.draw(overlay, 0, 0, stage.getWidth(), stage.getHeight());
         batch.end(); 
+        batch.setColor(1, 1, 1, 1);
     }
 
 	public static MouseJointDef getMouseDef() {

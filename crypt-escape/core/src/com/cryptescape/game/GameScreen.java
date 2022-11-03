@@ -93,7 +93,7 @@ public class GameScreen implements Screen {
 	
 
 
-	private boolean debugPerspective = false;
+	private boolean debugPerspective = true;
 	private boolean runOnceTempDebugVariable = true;
 	
 	public MusicManager music;
@@ -115,7 +115,8 @@ public class GameScreen implements Screen {
 		
 		//Different types of viewports for debugging
 		if(debugPerspective) {
-			viewport = new ExtendViewport(Constants.VIEWPORT_WIDTH*3, Constants.VIEWPORT_HEIGHT*3, camera);
+			float scale = 3;
+			viewport = new ExtendViewport(Constants.VIEWPORT_WIDTH*scale, Constants.VIEWPORT_HEIGHT*scale, camera);
 			//viewport = new ExtendViewport(Constants.VIEWPORT_WIDTH*15, Constants.VIEWPORT_HEIGHT*15, camera);
 		}
 		else
@@ -147,8 +148,7 @@ public class GameScreen implements Screen {
 		//stage.addActor(enemy);
 		
 		
-		RoomGeneration.generateTemplates(); //Generate Rooms
-		RoomGeneration.findRoom(); //Finds the player starting room
+		RoomGeneration.generateTemplates(); //Generate Rooms, and sets player starting room.
 		
 		InputHandler.createInput(); //Setup input
 		
