@@ -4,3 +4,9 @@ box3:0,30,104,104
 box4:0,0,104,70
 box5:17,14,122,122
 box6:30,5,100,100
+boxUnlocked1:7,0,100,115
+boxUnlocked2:5,5,80,100
+boxUnlocked3:0,30,104,104
+boxUnlocked4:0,0,104,70
+boxUnlocked5:17,14,122,122
+boxUnlocked6:30,5,100,100

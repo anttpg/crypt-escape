@@ -30,6 +30,7 @@ public class Interactable extends Actor{
 	protected Animation<TextureRegion> animation;
 	public static HashMap<String, String> itemBounds;
 	protected Body interactionBody;
+    protected float timer = 0;
 	
 	public Interactable(int c, int r, String current, Room p) {
 		parent = p;
@@ -122,7 +123,6 @@ public class Interactable extends Actor{
 		fixtureDef.restitution = 0f;
 		fixture = interactionBody.createFixture(fixtureDef);
 		box.dispose();
-
 	}
 
 	public boolean isPlayerInRange() {
