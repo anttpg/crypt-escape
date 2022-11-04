@@ -73,8 +73,8 @@ public class GameScreen implements Screen {
 	// REMEMBER BOX2D WORKS IN METERS NOT PIXELS
 	public MainCE game;
 	public static Stage stage = new Stage(new ScreenViewport());
-	public static Group mainGroup = new Group();
 	public static World world = new World(new Vector2(0, 0), true);
+	public static Group mainGroup = new Group();
 	public static Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
 	public static List<List<Room>> rooms = new ArrayList<List<Room>>(); //Holds all the rooms
 	
@@ -147,7 +147,7 @@ public class GameScreen implements Screen {
 		//enemy = new Enemy(4f, 4f, 0.95f, 0.95f, 100f);
 		//mainGroup.addActor(enemy);
 		
-		stage.addActor(mainGroup);
+        stage.addActor(mainGroup);
         
 		RoomGeneration.generateTemplates(); //Generate Rooms, and sets player starting room.
 		
@@ -174,16 +174,29 @@ public class GameScreen implements Screen {
 		//game.batch.disableBlending(); //save resources when not needed
 		//game.batch.enableBlending();
 		
-		//IMPORTANT <<< DO ALL RENDERING IN THE ORDER OF WHICH YOU WANT IT TO APPEAR. THERE IS NO Z MODIFIER YET
+		//IMPORTANT <<< DO ALL RENDERING IN THE ORDER OF WHICH YOU WANT IT TO APPEAR. 
 		// Ie: Enemy on top of Player on top of Room.
+		player.setAcceleration((InputHandler.wasd[3]-InputHandler.wasd[1]), (InputHandler.wasd[0]-InputHandler.wasd[2]), InputHandler.sprint); //handles player movement
+		player.update();
 		
 		player.getRoom().draw(game.batch); //draw the room that the player is currently in
 		
+		//This is just for sprite ordering 
+		for(Interactable i : player.getRoom().getItems()) {
+			if(i.getZIndex() < player.getZIndex())
+				i.draw(game.batch);
+		}
 		
-		player.setAcceleration((InputHandler.wasd[3]-InputHandler.wasd[1]), (InputHandler.wasd[0]-InputHandler.wasd[2]), InputHandler.sprint); //handles player movement
-		player.update();
 		player.draw(game.batch);
 		
+		for(Interactable i : player.getRoom().getItems()) {
+			System.out.println(i.getZIndex() + " " + player.getZIndex());
+			if(i.getZIndex() > player.getZIndex())
+				i.draw(game.batch);
+		}
+		
+		
+			
 //		enemy.implementAction(); //decides what the enemy will do
 //		enemy.draw(game.batch);
 		

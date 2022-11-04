@@ -12,10 +12,11 @@ import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.cryptescape.game.Constants;
 import com.cryptescape.game.GameScreen;
 
-public class Interactable {
+public class Interactable extends Actor{
 	private Fixture fixture;
 	private Room parent;
 	private String bounds;
@@ -23,8 +24,6 @@ public class Interactable {
 	private boolean playerInRange = false;
 	private int col;
 	private int row;
-	private float xCorner;
-	private float yCorner;
 	
 	public static HashMap<String, String> itemBounds;
 	protected Body interactionBody;
@@ -34,11 +33,14 @@ public class Interactable {
 		row = r;
 		col = Math.abs(Constants.Y_TILES-c)-1;
 		setItemLocation();
+		
+		super.setZIndex(1);
+		GameScreen.mainGroup.addActor(this);
 	}
 	
 	private void setItemLocation() {
-		xCorner = parent.getRoomLocation()[1] + (Constants.X_ROOM_METERS * (row/(float)Constants.X_TILES));
-		yCorner = parent.getRoomLocation()[0] + (Constants.Y_ROOM_METERS * (col/(float)Constants.Y_TILES));		
+		setX(parent.getRoomLocation()[1] + (Constants.X_ROOM_METERS * (row/(float)Constants.X_TILES)));
+		setY(parent.getRoomLocation()[0] + (Constants.Y_ROOM_METERS * (col/(float)Constants.Y_TILES)));		
 	}
 	
 	public Vector2 getItemLocation() {
@@ -141,7 +143,7 @@ public class Interactable {
 	}
 	
 	public void draw(SpriteBatch batch) {
-		batch.draw(texture, xCorner, yCorner, Constants.TILESIZE, Constants.TILESIZE);
+		batch.draw(texture, getX(), getY(), Constants.TILESIZE, Constants.TILESIZE);
 	}
 	
 	public Body getInteractionBody() {

@@ -126,10 +126,6 @@ public class Room {
 		
 		batch.enableBlending();
 		
-		for(Interactable i : iItems) {
-			i.draw(batch);
-		}
-		
 		for(Door d : doors) {
 			if(d != null) d.draw(batch);
 		}
@@ -205,6 +201,10 @@ public class Room {
 
 	public float[] getRoomLocation() {
 		return roomCorner;
+	}
+
+	public ArrayList<Interactable> getItems() {
+		return iItems;
 	}
 	
 }

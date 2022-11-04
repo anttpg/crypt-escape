@@ -88,7 +88,9 @@ public abstract class InventoryItem extends Actor{
         setHeight((Inventory.tileSize * scale) * (bounds[3]-bounds[1])/currentRegion.getRegionHeight());
     }
 
-    
+    /**
+     * Called by each instance of an inventoryItem, within their subclass (ie; candleItem)
+     */
     public void defaultAct(float delta){
         time += delta;
         setX(fixture.getBody().getPosition().x - getWidth()/2f);

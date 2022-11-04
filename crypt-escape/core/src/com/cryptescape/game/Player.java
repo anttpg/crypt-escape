@@ -28,7 +28,6 @@ import box2dLight.RayHandler;
 public class Player extends Movables {
 	private static AnimationHandler playerAnimation;
 	private TextureAtlas textureAtlas; 
-	private TextureRegion frame;
 	private float elapsedTime = 1f;
 	private float teleportCooldown = 0f;
 	private float scale;
@@ -71,6 +70,8 @@ public class Player extends Movables {
 		playerAnimation.add("error", new Animation<TextureRegion>(Constants.FRAME_SPEED, GameScreen.atlas.findRegions("error")));
 		playerAnimation.setCurrent("playerS");
 //		playerAnimation.setPlayModes(Animation.PlayMode.LOOP);
+		
+		super.setZIndex(2);
 
 	}
 	
