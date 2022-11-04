@@ -154,6 +154,7 @@ public class GameScreen implements Screen {
 		InputHandler.createInput(); //Setup input
 		
 		LightingManager.createLights(); //Creates Lighting
+		player.toFront();
 	
 	}
 
@@ -181,7 +182,7 @@ public class GameScreen implements Screen {
 		
 		player.getRoom().draw(game.batch); //draw the room that the player is currently in
 		
-		//This is just for sprite ordering 
+		//This is just for sprite ordering (by Z index)
 		for(Interactable i : player.getRoom().getItems()) {
 			if(i.getZIndex() < player.getZIndex())
 				i.draw(game.batch);
@@ -190,7 +191,6 @@ public class GameScreen implements Screen {
 		player.draw(game.batch);
 		
 		for(Interactable i : player.getRoom().getItems()) {
-			System.out.println(i.getZIndex() + " " + player.getZIndex());
 			if(i.getZIndex() > player.getZIndex())
 				i.draw(game.batch);
 		}

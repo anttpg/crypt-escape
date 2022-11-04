@@ -3,6 +3,7 @@ package com.cryptescape.game.rooms;
 import java.util.HashMap;
 
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -25,6 +26,7 @@ public class Interactable extends Actor{
 	private int col;
 	private int row;
 	
+	protected Animation<TextureRegion> animation;
 	public static HashMap<String, String> itemBounds;
 	protected Body interactionBody;
 	

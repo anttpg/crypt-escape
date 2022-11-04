@@ -68,6 +68,7 @@ public class Inventory {
         itemGroup.addActor(new CandleItem(world, "candlestick", 1f, 1f, 1));
         itemGroup.addActor(new BatteryItem(world, "battery", 1.3f, 1f, 1));
         itemGroup.addActor(new DrinkItem(world, "water", 1.3f, 1f, 1));
+        itemGroup.addActor(new CannedFoodItem(world, "beans", 1.7f, 1f, 1));
         itemGroup.addActor(new SpraypaintItem(world, "spraypaint", 1.5f, 1f, 1));
         itemGroup.addActor(new BagItem(world, "briefcase", stage.getWidth()/2f, 1.3f, 2));
         	

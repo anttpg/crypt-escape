@@ -10,7 +10,7 @@ import com.cryptescape.game.Constants;
 import com.cryptescape.game.GameScreen;
 
 public class Door  extends Interactable {
-	private Animation<TextureRegion> animation;
+	
 	private Door partner = null;
 	
 	private boolean TEMPVARIABLEhasAnimation = false;
