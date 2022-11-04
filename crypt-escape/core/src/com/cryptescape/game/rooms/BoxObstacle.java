@@ -2,6 +2,7 @@ package com.cryptescape.game.rooms;
 
 import java.util.Random;
 
+import com.cryptescape.game.Constants;
 import com.cryptescape.game.GameScreen;
 
 public class BoxObstacle extends Interactable  {
@@ -21,6 +22,10 @@ public class BoxObstacle extends Interactable  {
 		}
 		
 		super.createStaticBox();
+		super.createInteractionRadius(Constants.TILESIZE*1f, Constants.TILESIZE*1f);
 	}
 	
+	public void interact() {
+		
+	}
 }
