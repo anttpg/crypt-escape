@@ -419,7 +419,6 @@ public class RoomGeneration {
 			for(int row = 0; row < original[col].length; row++) {
 				if(row == 0 || row == Constants.X_TILES-1 || col == 0 || col == Constants.Y_TILES-1) {
 					original[col][row] = temp[col][row];
-					
 				}
 			}
 		}
