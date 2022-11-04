@@ -101,7 +101,7 @@ public class PlayerHud {
             
             inventoryStage.act(delta);
             inventoryStage.draw();
-            inventory.getDebugRenderer().render(Inventory.getWorld(), inventoryStage.getCamera().combined);
+            //inventory.getDebugRenderer().render(Inventory.getWorld(), inventoryStage.getCamera().combined);
         }
         
         else {

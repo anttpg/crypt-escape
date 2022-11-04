@@ -27,7 +27,7 @@ public class RoomGeneration {
 	
 	public static void generateTemplates() {
 		// ROOM GENERATION BELOW
-		int[] p = new int[] {92, 1, 1, 1, 1}; // Probability of a interactable type
+		int[] p = new int[] {92, 3, 3, 2, 1}; // Probability of a interactable type
 		String[] key = new String[] {"empty", "box", "boxUnlocked", "puddle", "bat"}; //The cooresponding type
 		
 		RandomCollection<String> roomItemGen = new RandomCollection<String>();
@@ -352,7 +352,7 @@ public class RoomGeneration {
 				}
 				
                 if(col == startY && row == startX) {
-                    seed = clone2dArray(TEMPLATE.get(0)); 
+                    //seed = clone2dArray(TEMPLATE.get(0)); 
                     seed[7][10] = "boxUnlocked";
                     seed[9][12] = "haystack";
                 }

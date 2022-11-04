@@ -11,7 +11,7 @@ public class Puddle extends Interactable {
 //		super.createStaticEdge(0);
 		
 		Random rand = new Random();
-		int l = rand.nextInt(3)+1;
+		int l = rand.nextInt(2)+1;
 		if(GameScreen.atlas.findRegion("puddle" + l) != null) {
 			super.setTextureRegion(GameScreen.atlas.findRegion("puddle" + l));
 		}	
