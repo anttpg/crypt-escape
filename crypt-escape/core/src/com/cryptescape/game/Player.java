@@ -142,10 +142,6 @@ public class Player extends Movables {
 		}
 		teleportCooldown -= Gdx.graphics.getDeltaTime();
 		
-		System.out.println("Xvel " + xVel + " Yvel" + yVel);
-		System.out.println(playerAnimation.getCurrent().getAnimationDuration());
-		System.out.println(Math.abs(xVel)/5f);
-		
 		if (elapsedTime > 0.3 && !runningAnimation) {
 			offset = rand.nextFloat()*0.2f;
 			elapsedTime = 0;
