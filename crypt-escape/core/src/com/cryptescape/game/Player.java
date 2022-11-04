@@ -26,7 +26,7 @@ import box2dLight.RayHandler;
 
 
 public class Player extends Movables {
-	private AnimationHandler playerAnimation;
+	private static AnimationHandler playerAnimation;
 	private TextureAtlas textureAtlas; 
 	private TextureRegion frame;
 	private float elapsedTime = 1f;
@@ -41,6 +41,8 @@ public class Player extends Movables {
 	private float offset;
 	
 	private Random rand = new Random();
+	private static boolean runningAnimation;
+	private static float runningAnimationCounter;
 
 	/**
 	* Defines a Player object. Player extends Movables. 
@@ -75,49 +77,6 @@ public class Player extends Movables {
 		
 	@Override
 	public void draw(SpriteBatch batch) {
-		body.applyForceToCenter(forceVector, true);
-		this.updateTick();
-
-		if (elapsedTime > 0.15) {
-			offset = rand.nextFloat()*0.2f;
-			elapsedTime = 0;
-
-			if(Math.abs(xVel) > 0.0001 || Math.abs(yVel) > 0.0001) { //A weird function made to control animation speed
-				playerAnimation.setAnimationDuration(Math.abs(-15.217f*Math.abs(this.xVel) + 0.6522f));
-			}
-			else {
-				playerAnimation.setAnimationDuration(10000);
-			}
-		
-			if ((xVel >= (1/scale)) && ((yVel <= (1/scale)) && (yVel >= -(1/scale))) ) { // East
-				playerAnimation.setCurrent("playerE");
-				
-			} else if ((xVel <= -(1/scale)) && ((yVel <= (1/scale)) && (yVel >= -(1/scale))) ) { // West
-				playerAnimation.setCurrent("playerW");
-				
-			} else if (((xVel <= (1/scale)) && (xVel >= -(1/scale)) ) && (yVel >= (1/scale))) { // North
-				playerAnimation.setCurrent("playerN");
-				
-			} else if (((xVel <= (1/scale)) && (xVel >= -(1/scale)) ) && (yVel <= -(1/scale))) { // South
-				playerAnimation.setCurrent("playerS");
-				
-			} else if ((xVel > 0) && (yVel > 0)) { // Northeast
-				playerAnimation.setCurrent("playerNE");
-				
-			} else if ((xVel > 0) && (yVel < 0)) { // Southeast
-				playerAnimation.setCurrent("playerSE");
-				
-			} else if ((xVel < 0) && (yVel > 0)) { // Northwest
-				playerAnimation.setCurrent("playerNW");
-				
-			} else if ((xVel < 0) && (yVel < 0)) { // Southwest
-				playerAnimation.setCurrent("playerSW");
-				
-			} else if ((xVel == 0) && (yVel == 0)) { // Standing still 
-				playerAnimation.setCurrent("playerS");
-			}
-		}		
-		
 		elapsedTime += Gdx.graphics.getDeltaTime();
 		frame = playerAnimation.getFrame();
 		batch.draw(frame, xPos - (Constants.TILESIZE/1.8f), yPos - (Constants.TILESIZE/3.8f), Constants.TILESIZE*1.1f, Constants.TILESIZE*1.1f);
@@ -129,6 +88,15 @@ public class Player extends Movables {
         super.act(delta);
         this.setRotation(body.getAngle() *  MathUtils.radiansToDegrees);
         this.setPosition(body.getPosition().x-this.getWidth()/2,body.getPosition().y-this.getHeight()/2);
+		body.applyForceToCenter(forceVector, true);
+		this.updateTick();
+        this.update();
+        
+        if(runningAnimation) {
+        	runningAnimationCounter -= delta;
+        	if(runningAnimationCounter < 0)
+        		runningAnimation = false;
+        }
     }
     
     public void debugPlayer() {
@@ -172,6 +140,55 @@ public class Player extends Movables {
 			}
 		}
 		teleportCooldown -= Gdx.graphics.getDeltaTime();
+		
+		
+
+		if (elapsedTime > 0.15 && !runningAnimation) {
+			offset = rand.nextFloat()*0.2f;
+			elapsedTime = 0;
+
+			if(Math.abs(xVel) > 0.0001 || Math.abs(yVel) > 0.0001) { //A weird function made to control animation speed
+				playerAnimation.setAnimationDuration(Math.abs(-15.217f*Math.abs(this.xVel) + 0.6522f));
+			}
+			else {
+				playerAnimation.setAnimationDuration(10000);
+			}
+			if ((xVel >= (1/scale)) && ((yVel <= (1/scale)) && (yVel >= -(1/scale))) ) { // East
+				playerAnimation.setCurrent("playerE");
+				
+			} else if ((xVel <= -(1/scale)) && ((yVel <= (1/scale)) && (yVel >= -(1/scale))) ) { // West
+				playerAnimation.setCurrent("playerW");
+				
+			} else if (((xVel <= (1/scale)) && (xVel >= -(1/scale)) ) && (yVel >= (1/scale))) { // North
+				playerAnimation.setCurrent("playerN");
+				
+			} else if (((xVel <= (1/scale)) && (xVel >= -(1/scale)) ) && (yVel <= -(1/scale))) { // South
+				playerAnimation.setCurrent("playerS");
+				
+			} else if ((xVel > 0) && (yVel > 0)) { // Northeast
+				playerAnimation.setCurrent("playerNE");
+				
+			} else if ((xVel > 0) && (yVel < 0)) { // Southeast
+				playerAnimation.setCurrent("playerSE");
+				
+			} else if ((xVel < 0) && (yVel > 0)) { // Northwest
+				playerAnimation.setCurrent("playerNW");
+				
+			} else if ((xVel < 0) && (yVel < 0)) { // Southwest
+				playerAnimation.setCurrent("playerSW");
+				
+			} else if ((xVel == 0) && (yVel == 0)) { // Standing still 
+				playerAnimation.setCurrent("playerS");
+			}
+		}	
+
+		
+	}
+	
+	public static void initiateAnimation(String current) {
+		playerAnimation.setCurrent(current);
+		runningAnimation = true;
+		runningAnimationCounter = playerAnimation.getCurrent().getAnimationDuration();
 	}
 
     public float getCandleLevel() {

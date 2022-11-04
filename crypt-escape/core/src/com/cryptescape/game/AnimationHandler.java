@@ -64,4 +64,8 @@ public class AnimationHandler {
                 ", frame=" + animations.get(current).getKeyFrameIndex(timer) +
                 '}';
     }
+
+	public Animation<TextureRegion> getCurrent() {
+		return animations.get(current);
+	}
 }

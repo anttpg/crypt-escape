@@ -56,7 +56,7 @@ public abstract class InventoryItem extends Actor{
         this.currentRegion = animation.getKeyFrame(0);
         this.scale = scale;
         this.checkBounds(name);
-//        super.setZIndex(zindex);
+        super.setZIndex(zindex);
     }
     
     
@@ -83,9 +83,6 @@ public abstract class InventoryItem extends Actor{
     			getBody().getPosition().x * (newWidth / Inventory.oldWidth), 
     			getBody().getPosition().y * (newHeight / Inventory.oldHeight), 
     			getBody().getAngle());
-    	
-        debugItem();
-        Inventory.debugInventory();
        
         setWidth((Inventory.tileSize * scale) * (bounds[2]-bounds[0])/currentRegion.getRegionHeight());
         setHeight((Inventory.tileSize * scale) * (bounds[3]-bounds[1])/currentRegion.getRegionHeight());

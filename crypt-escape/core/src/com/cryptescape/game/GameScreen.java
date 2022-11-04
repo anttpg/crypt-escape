@@ -61,6 +61,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 
 //import com.badlogic.gdx.*;
@@ -72,6 +73,7 @@ public class GameScreen implements Screen {
 	// REMEMBER BOX2D WORKS IN METERS NOT PIXELS
 	public MainCE game;
 	public static Stage stage = new Stage(new ScreenViewport());
+	public static Group mainGroup = new Group();
 	public static World world = new World(new Vector2(0, 0), true);
 	public static Box2DDebugRenderer debugRenderer = new Box2DDebugRenderer();
 	public static List<List<Room>> rooms = new ArrayList<List<Room>>(); //Holds all the rooms
@@ -85,15 +87,13 @@ public class GameScreen implements Screen {
 	
 	private BitmapFont font;
 
-
 	public static Enemy enemy;	
 	public static Player player;
 	
 	private Fixture BASE_FLOOR;
 	
 
-
-	private boolean debugPerspective = true;
+	private boolean debugPerspective = false;
 	private boolean runOnceTempDebugVariable = true;
 	
 	public MusicManager music;
@@ -139,15 +139,16 @@ public class GameScreen implements Screen {
 		
 		//DYNAMIC ACTOR GENERATION
 		player = new Player(12f, 10f, 100f, null); 
-		stage.addActor(player);
+		mainGroup.addActor(player);
 		
         hud = new PlayerHud(game.batch);
     	
         
 		//enemy = new Enemy(4f, 4f, 0.95f, 0.95f, 100f);
-		//stage.addActor(enemy);
+		//mainGroup.addActor(enemy);
 		
-		
+		stage.addActor(mainGroup);
+        
 		RoomGeneration.generateTemplates(); //Generate Rooms, and sets player starting room.
 		
 		InputHandler.createInput(); //Setup input
