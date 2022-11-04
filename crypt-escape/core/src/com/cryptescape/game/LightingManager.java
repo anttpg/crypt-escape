@@ -24,27 +24,27 @@ public class LightingManager {
         
         
         //rays, color, how far out to project 
-        playerLight = new PointLight(rayHandler, 100, null, 2.5f, GameScreen.player.xPos, GameScreen.player.yPos);
+        playerLight = new PointLight(rayHandler, 100, null, 2.5f, GameScreen.player.getX(), GameScreen.player.getY());
         playerLight.setSoftnessLength(2f);
         playerLight.setXray(true);
         
         
-        playerFlashlight = new ConeLight(rayHandler, 300, Color.WHITE, 7f, GameScreen.player.xPos, GameScreen.player.yPos, 0, 20f);
+        playerFlashlight = new ConeLight(rayHandler, 300, Color.WHITE, 7f, GameScreen.player.getX(), GameScreen.player.getY(), 0, 20f);
         playerFlashlight.setSoftnessLength(2f);
         playerFlashlight.setXray(false);
     }
     
     public static void updateLights() {
-        mousePosition.x = (GameScreen.player.xPos - (Constants.VIEWPORT_WIDTH/2)) + (((float)InputHandler.relativeMousePosition.x/Gdx.graphics.getWidth()) * Constants.VIEWPORT_WIDTH);
-        mousePosition.y = (GameScreen.player.yPos + (Constants.VIEWPORT_HEIGHT/2)) - (((float)InputHandler.relativeMousePosition.y/Gdx.graphics.getHeight()) * Constants.VIEWPORT_HEIGHT);
+        mousePosition.x = (GameScreen.player.getX() - (Constants.VIEWPORT_WIDTH/2)) + (((float)InputHandler.relativeMousePosition.x/Gdx.graphics.getWidth()) * Constants.VIEWPORT_WIDTH);
+        mousePosition.y = (GameScreen.player.getY() + (Constants.VIEWPORT_HEIGHT/2)) - (((float)InputHandler.relativeMousePosition.y/Gdx.graphics.getHeight()) * Constants.VIEWPORT_HEIGHT);
         
-        playerLight.setPosition(GameScreen.player.xPos, GameScreen.player.yPos);
+        playerLight.setPosition(GameScreen.player.getX(), GameScreen.player.getY());
         playerLight.setDistance(GameScreen.player.getCandleLevel());
         
         if(!InputHandler.tab_pressed) {
 	        playerFlashlight.setDistance(GameScreen.player.getBatteryLevel());
-	        playerFlashlight.setPosition(GameScreen.player.xPos, GameScreen.player.yPos);
-	        playerFlashlight.setDirection(getAngle(GameScreen.player.xPos, GameScreen.player.yPos, mousePosition));
+	        playerFlashlight.setPosition(GameScreen.player.getX(), GameScreen.player.getY());
+	        playerFlashlight.setDirection(getAngle(GameScreen.player.getX(), GameScreen.player.getY(), mousePosition));
         }
         else{
         	 playerFlashlight.setDistance(0f);

@@ -20,12 +20,8 @@ import com.cryptescape.game.rooms.Room;
 public abstract class Movables extends Actor{
 
 	// VARIABLES
-	public float xPos; // x
-	public float yPos; // y
-	public float xVel; // xY
-	public float yVel; // yV
-	public float xAcc; // xA
-	public float yAcc; // yA
+	protected float xVel;
+	protected float yVel;
 	public final float maxVel; // pixels/tick
 	public float speed = 1; //changes when sprinting
 	
@@ -42,10 +38,11 @@ public abstract class Movables extends Actor{
 	 * boundsSize is XY the collision box will be divided by to get where on the object to register action from
 	 */
 	public Movables(float x, float y, float maxV, Room startRoom, float[] boundsSize) {
-		xPos = x;
-		yPos = y;
-		maxVel = maxV;
+		setX(x);
+		setY(y);
+		this.maxVel = maxV;
 		currentRoom = startRoom;
+		
 		
         //physics body definitions
         BodyDef bodyDef = new BodyDef();
@@ -55,14 +52,13 @@ public abstract class Movables extends Actor{
         bodyDef.fixedRotation = true;
         this.body = GameScreen.world.createBody(bodyDef);
         
-
         PolygonShape shape = new PolygonShape();
         shape.setAsBox(Constants.TILESIZE/boundsSize[0], Constants.TILESIZE/boundsSize[1]);
         FixtureDef fixtureDef = new FixtureDef();
         
         //Physics rules
         fixtureDef.shape = shape;
-        fixtureDef.density = 20f;
+        fixtureDef.density = 23f;
         fixtureDef.friction = 0.5f;
         fixtureDef.restitution= 0.05f;
         fixture = body.createFixture(fixtureDef);
@@ -70,8 +66,6 @@ public abstract class Movables extends Actor{
         // Shape is the only disposable of the lot, so get rid of it
         shape.dispose();
         this.setOrigin(Constants.TILESIZE/2,Constants.TILESIZE/2);
-		xVel = this.body.getLinearVelocity().x;
-		yVel = this.body.getLinearVelocity().y;
 	}
 		
 	abstract void draw(SpriteBatch batch);
@@ -83,29 +77,16 @@ public abstract class Movables extends Actor{
 		body.setTransform(x, y, body.getAngle());
 	}
 	
-	public void setVelocity(float xV, float yV, float s) {
-		xVel = xV*s;
-		yVel = yV*s;
-		speed = s;
-	}
-	
 	//S is for sprinting, a speed multiplier 
 	public void setAcceleration(float x, float y, float s) {
-		xAcc = x*s;
-		yAcc = y*s;
-		speed = s;
-		forceVector.set(xAcc, yAcc); 
+		forceVector.set(x*s, y*s); 
 	}
 		
-
 	public void updateTick() {
-		xVel = this.body.getLinearVelocity().x;
-		yVel = this.body.getLinearVelocity().y;
-
-		xPos = this.body.getPosition().x;
-		yPos = this.body.getPosition().y;
-		super.setX(xPos);
-		super.setY(yPos);
+		super.setX(this.body.getPosition().x);
+		super.setY(this.body.getPosition().y);
+		xVel = body.getLinearVelocity().x;
+		yVel = body.getLinearVelocity().y;
 	}
 	
 	public Body getBody() {

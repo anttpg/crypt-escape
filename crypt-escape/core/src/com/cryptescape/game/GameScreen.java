@@ -138,7 +138,7 @@ public class GameScreen implements Screen {
 	
 		
 		//DYNAMIC ACTOR GENERATION
-		player = new Player(12f, 10f, 100f, null); 
+		player = new Player(12f, 10f, 2f, null); 
 		mainGroup.addActor(player);
 		
         hud = new PlayerHud(game.batch);
@@ -164,7 +164,7 @@ public class GameScreen implements Screen {
 		
 
 		game.batch.setProjectionMatrix(camera.combined);
-		camera.position.set(player.xPos, player.yPos, 0); //So camera follows player
+		camera.position.set(player.getX(), player.getY(), 0); //So camera follows player
 		camera.update();
 		
 		

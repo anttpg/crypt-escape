@@ -54,6 +54,10 @@ public class AnimationHandler {
         timer += Gdx.graphics.getDeltaTime();
         return animations.get(current).getKeyFrame(timer, looping);
     }
+    
+    public void addTime(float time) {
+    	timer += time;
+    }
  
     @Override
     public String toString() {

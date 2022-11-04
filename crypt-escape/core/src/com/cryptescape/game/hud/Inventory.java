@@ -12,8 +12,10 @@ import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
+import com.badlogic.gdx.physics.box2d.ChainShape;
 import com.badlogic.gdx.physics.box2d.EdgeShape;
 import com.badlogic.gdx.physics.box2d.Fixture;
+import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.Joint;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
@@ -45,7 +47,7 @@ public class Inventory {
     private Group itemGroup = new Group();
 
     public Inventory(Stage stage) {
-        world = new World(new Vector2(0, -4), true);
+        world = new World(new Vector2(0, 0), true);
         debugRenderer = new Box2DDebugRenderer();
         tileSize = (float)stage.getHeight()/Constants.Y_TILES;
         Inventory.stage = stage;
@@ -113,21 +115,26 @@ public class Inventory {
     }
     
     public void createBoundary() {
-        if(boundary != null) {
-            boundary.getBody().destroyFixture(boundary);
-        }
-        
-        //Creates the boundary
-        BodyDef boundaryDef = new BodyDef(); 
-        boundaryDef.type = BodyType.KinematicBody;
+    	Vector2[] vertices = new Vector2[] {new Vector2(0,0), new Vector2(0,stage.getHeight()), new Vector2(stage.getWidth(),stage.getHeight()), new Vector2(stage.getWidth(),0), new Vector2(0,0)};
+	        
+    	//Creating interactable body
+        BodyDef boundaryDef = new BodyDef();
+        boundaryDef.type = BodyType.StaticBody;
         boundaryDef.position.set(0, 0); // Set its position
         Body body = world.createBody(boundaryDef);
+        ChainShape chain = new ChainShape();  // Create a polygon shape 
         
-        EdgeShape edge = new EdgeShape(); 
-        edge.set(0, 0, stage.getWidth(), 0);
-        boundary = body.createFixture(edge, 0.0f);
+        chain.createChain(vertices);
+
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = chain;
+        fixtureDef.density = 0.0f;
+        fixtureDef.friction = 0.4f;
+        fixtureDef.restitution = 0.45f; 
+
+        boundary = body.createFixture(fixtureDef);
         boundary.setUserData(new CustomFixtureData(false)); //This represents that this item is a interaction object, and is not movable.
-        edge.dispose(); 
+        chain.dispose();
     }
     
     public void render(SpriteBatch batch) {

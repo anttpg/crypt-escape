@@ -79,7 +79,7 @@ public class Player extends Movables {
 	public void draw(SpriteBatch batch) {
 		elapsedTime += Gdx.graphics.getDeltaTime();
 		frame = playerAnimation.getFrame();
-		batch.draw(frame, xPos - (Constants.TILESIZE/1.8f), yPos - (Constants.TILESIZE/3.8f), Constants.TILESIZE*1.1f, Constants.TILESIZE*1.1f);
+		batch.draw(frame, getX() - (Constants.TILESIZE/1.8f), getY() - (Constants.TILESIZE/3.8f), Constants.TILESIZE*1.1f, Constants.TILESIZE*1.1f);
 	}
 	
 	
@@ -89,7 +89,6 @@ public class Player extends Movables {
         this.setRotation(body.getAngle() *  MathUtils.radiansToDegrees);
         this.setPosition(body.getPosition().x-this.getWidth()/2,body.getPosition().y-this.getHeight()/2);
 		body.applyForceToCenter(forceVector, true);
-		this.updateTick();
         this.update();
         
         if(runningAnimation) {
@@ -103,7 +102,7 @@ public class Player extends Movables {
     	System.out.println(playerAnimation.toString());
     	System.out.println("Player X: " + this.getX() + " PlayerY: " + this.getY());
 		System.out.println("Player xV: " + xVel + " Player yV: " + yVel);
-		System.out.println("Player xA: " + xAcc + " Player yA: " + yAcc);
+		//System.out.println("Player xA: " + xAcc + " Player yA: " + yAcc);
 		System.out.println(Math.abs(-15.217f*Math.abs(this.xVel) + 0.6522f));
     }
     
@@ -130,6 +129,8 @@ public class Player extends Movables {
     }
     
 	public void update() {
+		this.updateTick();
+		
 		if (teleportCooldown < 0 && InputHandler.e_pressed) {
 			for (Door d : currentRoom.getDoors()) {
 				if (d != null && d.isPlayerInRange()) {
@@ -141,18 +142,26 @@ public class Player extends Movables {
 		}
 		teleportCooldown -= Gdx.graphics.getDeltaTime();
 		
+		System.out.println("Xvel " + xVel + " Yvel" + yVel);
+		System.out.println(playerAnimation.getCurrent().getAnimationDuration());
+		System.out.println(Math.abs(xVel)/5f);
 		
-
-		if (elapsedTime > 0.15 && !runningAnimation) {
+		if (elapsedTime > 0.3 && !runningAnimation) {
 			offset = rand.nextFloat()*0.2f;
 			elapsedTime = 0;
-
-			if(Math.abs(xVel) > 0.0001 || Math.abs(yVel) > 0.0001) { //A weird function made to control animation speed
-				playerAnimation.setAnimationDuration(Math.abs(-15.217f*Math.abs(this.xVel) + 0.6522f));
+			
+			if(Math.abs(xVel) > 0.001) { //A weird function made to control animation speed
+				playerAnimation.setAnimationDuration(0.2f); //Sets frame duration
+				playerAnimation.addTime(Math.abs(xVel/5f) - 0.13f);
+			}
+			else if(Math.abs(yVel) > 0.001 && Math.abs(yVel) > Math.abs(xVel)) {
+				playerAnimation.setAnimationDuration(0.2f); //Sets frame duration
+				playerAnimation.addTime(Math.abs(yVel/5f) - 0.13f);
 			}
 			else {
 				playerAnimation.setAnimationDuration(10000);
 			}
+			
 			if ((xVel >= (1/scale)) && ((yVel <= (1/scale)) && (yVel >= -(1/scale))) ) { // East
 				playerAnimation.setCurrent("playerE");
 				

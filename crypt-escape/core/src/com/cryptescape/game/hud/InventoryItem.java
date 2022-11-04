@@ -164,7 +164,7 @@ public abstract class InventoryItem extends Actor{
         //Creating interactable body
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyType.DynamicBody;
-        bodyDef.linearDamping = 0.5f;
+        bodyDef.linearDamping = 3.5f;
         bodyDef.angularDamping = 5.0f;
         bodyDef.position.set(x, y);
 

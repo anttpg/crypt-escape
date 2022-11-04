@@ -138,8 +138,8 @@ public class RoomGeneration {
 		
         GameScreen.player.setStartingRoom(GameScreen.rooms.get(startY).get(startX)); //Sets player starting room
         GameScreen.player.setPos(
-        		GameScreen.rooms.get(startY).get(startX).getRoomLocation()[1] + Constants.CAMERA_WIDTH / 3, 
-        		GameScreen.rooms.get(startY).get(startX).getRoomLocation()[0] + Constants.CAMERA_HEIGHT / 2);
+        		GameScreen.rooms.get(startY).get(startX).getRoomLocation()[1] + Constants.CAMERA_WIDTH / 2.99f, 
+        		GameScreen.rooms.get(startY).get(startX).getRoomLocation()[0] + Constants.CAMERA_HEIGHT / 1.96f);
 		
         
         
