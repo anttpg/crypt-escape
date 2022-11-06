@@ -110,8 +110,8 @@ public class PlayerHud {
             batch.setProjectionMatrix(overlayStage.getCamera().combined);
             flame.updateFlame(candle);
             burntime -= Gdx.graphics.getDeltaTime();
-            timer.setText(String.format("%06d", (int)burntime));
-            
+            //timer.setText(String.format("%06d", (int)burntime));
+            timer.setText(Gdx.graphics.getFramesPerSecond());
             overlayStage.act(delta);
             overlayStage.draw();
         }

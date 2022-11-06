@@ -46,9 +46,12 @@ public abstract class InventoryItem extends Actor{
         this.scale = scale;
         this.checkBounds(name);
         super.setZIndex(zindex);
-        
+               
         setWidth((Inventory.tileSize * scale) * (bounds[2]-bounds[0])/currentRegion.getRegionHeight());
         setHeight((Inventory.tileSize * scale) * (bounds[3]-bounds[1])/currentRegion.getRegionHeight());
+        
+        setX(x - getWidth()/2f);
+        setY(y - getHeight()/2f);
     }
     
     public InventoryItem(World world, String name, String regions, float x, float y, float scale, int zindex, float FRAMESPEED) {

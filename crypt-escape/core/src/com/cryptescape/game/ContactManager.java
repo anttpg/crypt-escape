@@ -51,9 +51,7 @@ public class ContactManager {
                         box.setPlayerInRange(false);
                     }
                 }
-				
-				
-				
+		
 			}
 
 			@Override

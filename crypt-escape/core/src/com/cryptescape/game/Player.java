@@ -31,6 +31,7 @@ public class Player extends Movables {
 	private static AnimationHandler playerAnimation;
 	private TextureAtlas textureAtlas; 
 	private float elapsedTime = 1f;
+	private static float fadeTimer = 0;
 	private float teleportCooldown = 0f;
 	private float scale;
 	
@@ -52,8 +53,8 @@ public class Player extends Movables {
 	* math/tolerances within the function. All values must be given with respect 
 	* to meters, not pixels. 
 	*/
-	public Player(float x, float y, float t, Room s) {
-		super(x, y, 2.1f, s, new float[] {8f,16f});
+	public Player(float x, float y, float t, Room s, float maxVelocity) {
+		super(x, y, maxVelocity, s, new float[] {8f,16f});
 		scale = t;
 		
         //effects
@@ -124,6 +125,7 @@ public class Player extends Movables {
     public boolean changeRoom(Door d) {
     	if(d.getPartner() != null) {
     		d.startAnimation();
+    		GameScreen.fade = true;
     		return true;
     	}
     	
@@ -155,6 +157,7 @@ public class Player extends Movables {
 		if (elapsedTime > 0.3 && !runningAnimation) {
 			offset = rand.nextFloat()*0.2f;
 			elapsedTime = 0;
+			System.out.println(super.getBody().getLinearVelocity());
 			
 			if(Math.abs(xVel) > 0.001) { //A weird function made to control animation speed
 				playerAnimation.setAnimationDuration(0.2f); //Sets frame duration
@@ -195,10 +198,8 @@ public class Player extends Movables {
 			} else if ((xVel == 0) && (yVel == 0)) { // Standing still 
 				playerAnimation.setCurrent("playerS");
 			}
-		}	
-
-		
-	}
+		}	 	
+	}          
 	
 	public static void initiateAnimation(String current) {
 		playerAnimation.setCurrent(current);

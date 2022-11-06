@@ -84,10 +84,7 @@ public class Inventory {
         
 //        for(InventoryItem i : frontItems)
 //            stage.addActor(i);
-        
-       	
-        
-        
+ 
     }
     
     public Box2DDebugRenderer getDebugRenderer() {

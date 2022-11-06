@@ -98,10 +98,10 @@ public class GameScreen implements Screen {
 	
 	public MusicManager music;
 	public static SfxManager sounds;
-	
-
-	
+    public static boolean fade;
+    
 	float playerCounter = 0;
+    private int frameNum = 0;
 	
 	
 	
@@ -111,11 +111,12 @@ public class GameScreen implements Screen {
 		ContactManager.createCollisionListener();
 		camera = new OrthographicCamera(Constants.CAMERA_WIDTH, Constants.CAMERA_HEIGHT);
 		camera.position.set(Constants.CAMERA_WIDTH/2, Constants.CAMERA_HEIGHT/2, 0);
-		
+		float maxPV = 2.1f;
 		
 		//Different types of viewports for debugging
 		if(debugPerspective) {
 			float scale = 1;
+			maxPV = 10f;
 			viewport = new ExtendViewport(Constants.VIEWPORT_WIDTH*scale, Constants.VIEWPORT_HEIGHT*scale, camera);
 			//viewport = new ExtendViewport(Constants.VIEWPORT_WIDTH*15, Constants.VIEWPORT_HEIGHT*15, camera);
 		}
@@ -138,7 +139,7 @@ public class GameScreen implements Screen {
 	
 		
 		//DYNAMIC ACTOR GENERATION
-		player = new Player(12f, 10f, 2f, null); 
+		player = new Player(12f, 10f, 2f, null, maxPV); 
 		mainGroup.addActor(player);
 		
         hud = new PlayerHud(game.batch);
@@ -163,7 +164,6 @@ public class GameScreen implements Screen {
 	public void render(float delta) {
 		ScreenUtils.clear(0.0f, 0.0f, 0.0f, 1);
 		
-
 		game.batch.setProjectionMatrix(camera.combined);
 		camera.position.set(player.getX(), player.getY(), 0); //So camera follows player
 		camera.update();
@@ -177,7 +177,8 @@ public class GameScreen implements Screen {
 		
 		//IMPORTANT <<< DO ALL RENDERING IN THE ORDER OF WHICH YOU WANT IT TO APPEAR. 
 		// Ie: Enemy on top of Player on top of Room.
-		player.setAcceleration((InputHandler.wasd[3]-InputHandler.wasd[1]), (InputHandler.wasd[0]-InputHandler.wasd[2]), InputHandler.sprint); //handles player movement
+		player.setAcceleration((InputHandler.wasd[3]-InputHandler.wasd[1]), (InputHandler.wasd[0]-InputHandler.wasd[2]), 
+		        (Constants.FRAME_SPEED/delta) * InputHandler.sprint); //handles player movement
 		player.update();
 		
 		player.getRoom().draw(game.batch); //draw the room that the player is currently in
@@ -194,8 +195,7 @@ public class GameScreen implements Screen {
 			if(i.getZIndex() > player.getZIndex())
 				i.draw(game.batch);
 		}
-		
-		
+
 			
 //		enemy.implementAction(); //decides what the enemy will do
 //		enemy.draw(game.batch);
@@ -212,7 +212,6 @@ public class GameScreen implements Screen {
 		    LightingManager.updateLights();
 		}
 		
-		
         //Update/Draw the game stage
 		viewport.apply();
         stage.act();
@@ -221,10 +220,13 @@ public class GameScreen implements Screen {
         //Update/Draw the Hud
         hud.update(delta, game.batch);
         
+        if(fade) //Apply fade out effect last
+            TransitionScreen.render(game.batch, stage);
+        
         
         music.update();
 		world.step(Constants.FRAME_SPEED, 6, 2);
-
+		frameNum++;
 	}
 	
 	
@@ -233,7 +235,6 @@ public class GameScreen implements Screen {
         System.out.println("width/height" + width + " " + height);
         System.out.println("stage wid/ht" + stage.getWidth() + "  " + stage.getHeight());
 	}
-	
 	
 	
 	@Override

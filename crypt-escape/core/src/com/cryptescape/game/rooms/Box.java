@@ -12,19 +12,26 @@ import com.cryptescape.game.InputHandler;
 import com.cryptescape.game.hud.Inventory;
 
 public class Box extends Interactable  {
+    private static double[] probabilites = new double[] {5, 3, 2, 2, 1}; // Probability of a interactable type
+    private static String[] results = new String[] {"candle", "battery", "water", "beans", "spraypaint"}; //The cooresponding type
+    private static RandomCollection<String> itemGeneration = new RandomCollection<String>(probabilites, results);
+    
     private String animationPhase = "idle";
-    private String storedItem = "candlestick";
+    private String storedItem;
     private boolean isUnlocked = false;
     private int l;
     private static final float ANIMATION_SPEED = Constants.FRAME_SPEED * 10;
     
 	public Box(int col, int row, String name, Room p) {
 		super(col, row, name, p);
+		
 		if(getName().equals("boxUnlocked"))
 		    isUnlocked = true;
 		
+		storedItem = itemGeneration.next();
+		
 		Random r = new Random();
-		l = r.nextInt(1)+1;
+		l = r.nextInt(6)+1; //Specifies number of possible box types (currently 6)
 		setName(getName() + l);
 		
 		if(GameScreen.atlas.findRegion(getName()) != null) {

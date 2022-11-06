@@ -77,6 +77,9 @@ public class InputHandler {
                     e_pressed = true;
                 if (keycode == Input.Keys.TAB)
                     tab_pressed = !tab_pressed;
+                if (keycode == Input.Keys.ESCAPE)
+                    tab_pressed = false;
+                
             	if(tab_pressed)
             		wasd = new int[] {0, 0, 0, 0};
             	

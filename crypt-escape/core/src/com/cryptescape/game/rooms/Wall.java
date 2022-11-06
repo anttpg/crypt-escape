@@ -1,9 +1,8 @@
-package com.cryptescape.game;
+package com.cryptescape.game.rooms;
 
 import java.util.Random;
 
-import com.cryptescape.game.rooms.Interactable;
-import com.cryptescape.game.rooms.Room;
+import com.cryptescape.game.GameScreen;
 
 public class Wall extends Interactable {
 	

@@ -892,14 +892,14 @@ playerSW
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
-  index: 2
+  index: 0
 playerSW
   rotate: false
   xy: 486, 493
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
-  index: 0
+  index: 2
 playerSW
   rotate: false
   xy: 486, 459
@@ -1122,6 +1122,13 @@ box6
   xy: 292, 624
   size: 105, 105
   orig: 105, 105
+  offset: 0, 0
+  index: -1
+boxOpening6
+  rotate: false
+  xy: 2, 317
+  size: 115, 112
+  orig: 115, 112
   offset: 0, 0
   index: -1
 boxUnlocked6

@@ -81,12 +81,13 @@ public abstract class Movables extends Actor{
 	
 	//S is for sprinting, a speed multiplier 
 	public void setAcceleration(float x, float y, float s) {
-		forceVector.set(x*s, y*s); 
+	    forceVector.set(x*s, y*s);
+//		forceVector.set(
+//		        (Gdx.graphics.getDeltaTime()/Constants.FRAME_SPEED) * (x*s), 
+//		        (Gdx.graphics.getDeltaTime()/Constants.FRAME_SPEED) * (y*s)); 
 	}
 		
 	public void updateTick() {
-		super.setX(this.body.getPosition().x);
-		super.setY(this.body.getPosition().y);
 		xVel = body.getLinearVelocity().x;
 		yVel = body.getLinearVelocity().y;
 	}

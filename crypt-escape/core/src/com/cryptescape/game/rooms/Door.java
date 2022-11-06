@@ -63,7 +63,7 @@ public class Door  extends Interactable {
 				
 				super.setTextureRegion(animation.getKeyFrame(timer));
 				
-				if (counter > animation.getAnimationDuration() + 0.2f) {
+				if (timer > animation.getAnimationDuration() + 0.2f) {
 					timer = 0;
 					animationPhase = "walkIn";
 				}
@@ -71,7 +71,7 @@ public class Door  extends Interactable {
 
 			else if (animationPhase.equals("walkIn")) {
 
-				if (counter > animation.getAnimationDuration() + 0.4f) {
+				if (timer > animation.getAnimationDuration() + 0.4f) {
 					Vector2 exitPos = new Vector2(getExitPosition());
 					GameScreen.player.currentRoom = getPartnerRoom();
 					GameScreen.player.setPos(exitPos.x, exitPos.y);
@@ -85,7 +85,7 @@ public class Door  extends Interactable {
 				animation.setPlayMode(PlayMode.REVERSED); // reverse animation
 				partner.setTextRegion(animation.getKeyFrame(timer));
 
-				if (counter > animation.getAnimationDuration()*2 + 0.6f) {
+				if (timer > animation.getAnimationDuration()*2 + 0.6f) {
 					animationPhase = "finished";
 					animation.setPlayMode(PlayMode.NORMAL);
 				}
