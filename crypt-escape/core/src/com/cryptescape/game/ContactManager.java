@@ -4,7 +4,9 @@ import com.badlogic.gdx.physics.box2d.Contact;
 import com.badlogic.gdx.physics.box2d.ContactImpulse;
 import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
+import com.cryptescape.game.rooms.Box;
 import com.cryptescape.game.rooms.Door;
+import com.cryptescape.game.rooms.Interactable;
 
 public class ContactManager {
 
@@ -13,27 +15,45 @@ public class ContactManager {
 
 			@Override
 			public void beginContact(Contact contact) {
-				for (Door d : GameScreen.player.getRoom().getDoors()) {
-					if(d != null) {
+				for (Door door : GameScreen.player.getRoom().getDoors()) {
+					if(door != null) {
 						if (contact.getFixtureA().getBody() == GameScreen.player.getBody()
-								&& contact.getFixtureB().getBody() == d.getInteractionBody()) {
-							d.setPlayerInRange(true);
+								&& contact.getFixtureB().getBody() == door.getInteractionBody()) {
+							door.setPlayerInRange(true);
 						}
 					}
 				}
+			
+				for (Box box : GameScreen.player.getRoom().getBoxes()) {
+				    if (contact.getFixtureA().getBody() == GameScreen.player.getBody()
+				            && contact.getFixtureB().getBody() == box.getInteractionBody()) {
+				        box.setPlayerInRange(true);
+				    }
+				}
 			}
+			
 
 			@Override
 			public void endContact(Contact contact) {
-				for (Door d : GameScreen.player.getRoom().getDoors()) {
-					if(d != null) {
+				for (Door door : GameScreen.player.getRoom().getDoors()) {
+					if(door != null) {
 						if (contact.getFixtureA().getBody() == GameScreen.player.getBody()
-								&& contact.getFixtureB().getBody() == d.getInteractionBody()) {
-							d.setPlayerInRange(false);
+								&& contact.getFixtureB().getBody() == door.getInteractionBody()) {
+							door.setPlayerInRange(false);
 						
 						}
 					}
 				}
+				
+				for (Box box : GameScreen.player.getRoom().getBoxes()) {
+                    if (contact.getFixtureA().getBody() == GameScreen.player.getBody()
+                            && contact.getFixtureB().getBody() == box.getInteractionBody()) {
+                        box.setPlayerInRange(false);
+                    }
+                }
+				
+				
+				
 			}
 
 			@Override

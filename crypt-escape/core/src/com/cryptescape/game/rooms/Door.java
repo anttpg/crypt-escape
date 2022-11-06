@@ -35,8 +35,7 @@ public class Door  extends Interactable {
 			super.setTextureRegion(animation.getKeyFrame(0f));
 			TEMPVARIABLEhasAnimation = true ;
 		}
-			
-		
+
 		super.createStaticEdge(c);
 		super.createInteractionRadius(Constants.TILESIZE*1.2f, Constants.TILESIZE*1.2f);
 	}

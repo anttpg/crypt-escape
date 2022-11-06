@@ -30,7 +30,6 @@ public abstract class InventoryItem extends Actor{
     protected Animation<TextureRegion> animation;
 
 
-    private String name;
     private float scale;
     private float[] bounds = new float[4];
     
@@ -41,22 +40,28 @@ public abstract class InventoryItem extends Actor{
     
     
     public InventoryItem(World world, String name, TextureRegion region, float x, float y, float scale, int zindex) {
-        this.name = name;
+        setName(name);
         this.animation = null;
         this.currentRegion = region;
         this.scale = scale;
         this.checkBounds(name);
         super.setZIndex(zindex);
+        
+        setWidth((Inventory.tileSize * scale) * (bounds[2]-bounds[0])/currentRegion.getRegionHeight());
+        setHeight((Inventory.tileSize * scale) * (bounds[3]-bounds[1])/currentRegion.getRegionHeight());
     }
     
-    public InventoryItem(World world, String name, String regions, float x, float y, float scale, int zindex) {
-        this.name = name;
-        this.animation = new Animation<TextureRegion>(0.05f, GameScreen.atlas.findRegions(name));
+    public InventoryItem(World world, String name, String regions, float x, float y, float scale, int zindex, float FRAMESPEED) {
+        setName(name);
+        this.animation = new Animation<TextureRegion>(FRAMESPEED, GameScreen.atlas.findRegions(name));
         this.countdown = animation.getAnimationDuration();
         this.currentRegion = animation.getKeyFrame(0);
         this.scale = scale;
         this.checkBounds(name);
         super.setZIndex(zindex);
+        
+        setWidth((Inventory.tileSize * scale) * (bounds[2]-bounds[0])/currentRegion.getRegionHeight());
+        setHeight((Inventory.tileSize * scale) * (bounds[3]-bounds[1])/currentRegion.getRegionHeight());
     }
     
     
@@ -113,7 +118,7 @@ public abstract class InventoryItem extends Actor{
     
     public void debugItem() {
         System.out.println(
-                "Item:" + name + " X/Y " + getX() + "  " + getY() + "   WIDTH/HEIGHT " + getWidth() + "  " + getHeight());
+                "Item:" + getName() + " X/Y " + getX() + "  " + getY() + "   WIDTH/HEIGHT " + getWidth() + "  " + getHeight());
         
         //System.out.println("boundary: " + bounds[0] + " " + bounds[1] + " " + bounds[2] + " " + bounds[3]);
     }
@@ -280,4 +285,27 @@ public abstract class InventoryItem extends Actor{
 		circle.dispose();
 	}
 	
+	public void createInteractionSquare(float x, float y, float hx, float hy) {
+	    PolygonShape box = new PolygonShape(); // Create a polygon shape
+        box.setAsBox(hx, hy);
+        
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = box;
+        fixtureDef.isSensor = true;
+        fixtureDef.density = 0f;
+        fixtureDef.friction = 0f;     
+        fixtureDef.restitution = 0f;
+        interactionBody = getBody().createFixture(fixtureDef);
+        interactionBody.setUserData(new CustomFixtureData(false)); //This represents that this item is a interaction object, and is not movable, nor should be. 
+        box.dispose();
+    }
+	
+	public void setInteractable(boolean isTouchable) {
+	    fixture.getBody().setActive(isTouchable);
+
+	}
+
+    public Fixture getInteractionBody() {
+        return interactionBody;
+    }	
 }

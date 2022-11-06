@@ -10,10 +10,10 @@ public class Haystack extends Interactable {
 	private final float ANIMATION_SPEED = Constants.FRAME_SPEED * 8;
 	private float timer = 0;
 	
-    public Haystack(int c, int r, String current, Room p) {
-        super(c, r, current, p);
+    public Haystack(int c, int r, String name, Room p) {
+        super(c, r, name, p);
 
-        animation = new Animation<TextureRegion>(ANIMATION_SPEED, GameScreen.atlas.findRegions(current));
+        animation = new Animation<TextureRegion>(ANIMATION_SPEED, GameScreen.atlas.findRegions(getName()));
         super.setZIndex(3);
     }
     

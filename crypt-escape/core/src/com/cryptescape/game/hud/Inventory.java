@@ -28,6 +28,7 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.cryptescape.game.Constants;
 import com.cryptescape.game.CustomFixtureData;
 import com.cryptescape.game.GameScreen;
+import com.cryptescape.game.rooms.Box;
 
 public class Inventory {
     private static Stage stage;
@@ -40,11 +41,15 @@ public class Inventory {
     public static MouseJointDef mouseDef;
     public static MouseJoint mouse;
     
+    private static ArrayList<InventoryItem> disposal = new ArrayList<InventoryItem>();
+    private static BagItem bag;
+    
+    private static boolean toDispose = false;
     private Texture overlay = new Texture(Gdx.files.internal("TestOverlay.png"));
     private Fixture boundary;
     
     
-    private Group itemGroup = new Group();
+    private static Group itemGroup = new Group();
 
     public Inventory(Stage stage) {
         world = new World(new Vector2(0, 0), true);
@@ -65,12 +70,15 @@ public class Inventory {
 //        frontItems.add(new CandleItem(world, "candlestick", 1f, 1f, 0));
 //        backItems.add(new BagItem(world, "briefcase", stage.getWidth()/2f, 1.3f, 1));
         
-        itemGroup.addActor(new CandleItem(world, "candlestick", 1f, 1f, 1));
-        itemGroup.addActor(new BatteryItem(world, "battery", 1.3f, 1f, 1));
-        itemGroup.addActor(new DrinkItem(world, "water", 1.3f, 1f, 1));
-        itemGroup.addActor(new CannedFoodItem(world, "beans", 1.7f, 1f, 1));
-        itemGroup.addActor(new SpraypaintItem(world, "spraypaint", 1.5f, 1f, 1));
-        itemGroup.addActor(new BagItem(world, "briefcase", stage.getWidth()/2f, 1.3f, 2));
+        //ALWAYS LEAVE BREIFCASE FIRST
+        bag = new BagItem(world, "briefcase", stage.getWidth()/2f, 1.3f, 2);
+        itemGroup.addActor(bag);
+        itemGroup.addActor(new CandleItem(world, "candlestick", 1f, 1f, 3));
+        itemGroup.addActor(new BatteryItem(world, "battery", 1.3f, 1f, 3));
+        itemGroup.addActor(new DrinkItem(world, "water", 1.3f, 1f, 3));
+        itemGroup.addActor(new CannedFoodItem(world, "beans", 1.7f, 1f, 3));
+        itemGroup.addActor(new SpraypaintItem(world, "spraypaint", 1.5f, 1f, 3));
+
         	
         stage.addActor(itemGroup);
         
@@ -95,7 +103,8 @@ public class Inventory {
     }
     
     public void update() {
-        world.step(1/60f, 6, 2);
+        toDispose = true;
+        world.step(1/60f, 6, 2);    
     }
     
     public void resize(int width, int height) { 
@@ -116,6 +125,9 @@ public class Inventory {
     }
     
     public void createBoundary() {
+        if(boundary != null)
+            world.destroyBody(boundary.getBody());
+        
     	Vector2[] vertices = new Vector2[] {new Vector2(0,0), new Vector2(0,stage.getHeight()), new Vector2(stage.getWidth(),stage.getHeight()), new Vector2(stage.getWidth(),0), new Vector2(0,0)};
 	        
     	//Creating interactable body
@@ -153,8 +165,62 @@ public class Inventory {
 	public static MouseJoint getMouseJoint() {
 		return mouse;
 	}
+	
+	public static void openBox(Box box) {
+	    itemGroup.addActorAt(1, new BoxItem(world, box, 
+	            stage.getWidth()/2f, stage.getHeight() - stage.getHeight()/5f, 1));
+	}
 
-
+	public static void addItem(String itemName, InventoryItem i) {
+	    float x = i.getX() + i.getWidth()/2f;
+	    float y = i.getY() + i.getHeight()/2f;
+	    
+	    if(itemName.equals("candlestick"))
+	        itemGroup.addActorAt(3, new CandleItem(world, "candlestick", x, y, 2));
+	    else if(itemName.equals("battery"))
+	        itemGroup.addActorAt(3, new BatteryItem(world, "battery", x, y, 2));
+	    else if(itemName.equals("water"))
+	        itemGroup.addActorAt(3, new DrinkItem(world, "water", x, y, 2));
+	    else if(itemName.equals("beans"))
+	        itemGroup.addActorAt(3, new CannedFoodItem(world, "beans", x, y, 2));
+	    else if(itemName.equals("spraypaint"))
+	        itemGroup.addActorAt(3, new SpraypaintItem(world, "spraypaint", x, y, 2));
+	}
+	
+	
+	/**
+	 * called everytime the inventory is closed
+	 */
+	public static void queueForDisposal(InventoryItem i) {
+	    if(disposal.indexOf(i) == -1)
+	        disposal.add(i);
+	}
+	
+	public static void disposeUnusedItems() {
+	    if(toDispose) {
+	        ArrayList<Actor> safe = bag.checkIfOverlap();
+    	    
+//	        System.out.println(itemGroup.toString() + " " + itemGroup.getChildren());
+//	        System.out.println(safe.toString());
+//	        System.out.println(disposal);
+    	    for(Actor a : itemGroup.getChildren()) 
+    	        if(safe.indexOf(a) == -1 && disposal.indexOf((InventoryItem)a) == -1) 
+    	            disposal.add((InventoryItem)a); //Cant dispose of it yet, will skip items
+    	            
+    	    safe.clear();
+    	    
+    	    if(!disposal.isEmpty()) {
+                for(InventoryItem i : disposal) { 
+                    itemGroup.removeActor(i);    
+                    world.destroyBody(i.getBody());
+                }
+            disposal.clear();   
+    	    }
+    	    
+    	    toDispose = false;
+	    }
+	}
+	
 	public static void setMouseJoint(MouseJoint createJoint) {
 		mouse = createJoint;
 	}
@@ -166,4 +232,9 @@ public class Inventory {
 	public static void debugInventory(String position) {
 	    System.out.println("Inv stage w/h " + position + " " + stage.getWidth() + " " + stage.getHeight());
 	}
+    
+    public static Group getItemGroup() {
+        return itemGroup;
+    }
+ 	
 }

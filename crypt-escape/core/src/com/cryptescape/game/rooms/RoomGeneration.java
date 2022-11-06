@@ -352,7 +352,7 @@ public class RoomGeneration {
 				}
 				
                 if(col == startY && row == startX) {
-                    //seed = clone2dArray(TEMPLATE.get(0)); 
+                    seed = clone2dArray(TEMPLATE.get(0)); 
                     seed[7][10] = "boxUnlocked";
                     seed[9][12] = "haystack";
                 }

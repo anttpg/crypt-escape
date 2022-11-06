@@ -19,7 +19,9 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.cryptescape.game.rooms.Box;
 import com.cryptescape.game.rooms.Door;
+import com.cryptescape.game.rooms.Interactable;
 import com.cryptescape.game.rooms.Room;
 
 import box2dLight.RayHandler;
@@ -132,14 +134,21 @@ public class Player extends Movables {
 	public void update() {
 		this.updateTick();
 		
-		if (teleportCooldown < 0 && InputHandler.e_pressed) {
-			for (Door d : currentRoom.getDoors()) {
-				if (d != null && d.isPlayerInRange()) {
-					GameScreen.player.changeRoom(d);
-					
-					teleportCooldown = 3f;
-				}
-			}
+		if (InputHandler.e_pressed && !InputHandler.tab_pressed) {
+		    if(teleportCooldown < 0) {
+    			for (Door door : currentRoom.getDoors()) {
+    				if (door != null && door.isPlayerInRange()) {
+    					GameScreen.player.changeRoom(door);
+    					teleportCooldown = 3f;
+    				}
+    			}
+		    }
+		    
+		    for (Box box : currentRoom.getBoxes()) 
+                if (box.isPlayerInRange()) 
+                    box.setAnimationPhase("opening");
+
+        
 		}
 		teleportCooldown -= Gdx.graphics.getDeltaTime();
 		

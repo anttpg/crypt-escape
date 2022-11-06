@@ -6,8 +6,8 @@ import com.cryptescape.game.GameScreen;
 
 public class Puddle extends Interactable {
 
-	public Puddle(int c, int r, String current, Room p) {
-		super(c, r, current, p);
+	public Puddle(int c, int r, String name, Room p) {
+		super(c, r, name, p);
 //		super.createStaticEdge(0);
 		
 		Random rand = new Random();

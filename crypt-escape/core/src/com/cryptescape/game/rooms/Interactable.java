@@ -22,7 +22,6 @@ public class Interactable extends Actor{
 	private Room parent;
 	private String bounds;
 	private TextureRegion texture;
-	private String name;
 	private boolean playerInRange = false;
 	private int col;
 	private int row;
@@ -36,8 +35,8 @@ public class Interactable extends Actor{
 		parent = p;
 		row = r;
 		col = Math.abs(Constants.Y_TILES-c)-1;
-		name = current;
 		setItemLocation();
+		setName(current);
 		
 		super.setZIndex(1);
 		GameScreen.mainGroup.addActor(this);

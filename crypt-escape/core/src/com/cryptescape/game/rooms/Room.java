@@ -35,7 +35,7 @@ public class Room {
 	private ArrayList<Interactable> iItems = new ArrayList<Interactable>();
 	private ArrayList<float[]> background = new ArrayList<float[]>();
 	private ArrayList<Door> doors = new ArrayList<Door>(Arrays.asList(null, null, null, null)); //Seperate from items
-	
+	private ArrayList<Box> boxes = new ArrayList<Box>();
 	
 	/**
 	* Defines a Room object, where L is the relative [Y,X] position of the room on the map (IE: [2,1] for 2 rows down, 1 col over).
@@ -86,8 +86,9 @@ public class Room {
 				
 				
 				counter = 0;
-				if( current.equals("box") || current.equals("boxUnlocked") ) { //Of Type Box
-					iItems.add(new BoxObstacle(col, row, current, this));
+				if( current.equals("box") || current.equals("boxUnlocked")  || current.equals("boxOpening") ) { //Of Type Box
+					iItems.add(new Box(col, row, current, this));
+					boxes.add((Box) iItems.get(iItems.size()-1));
 				} 
 				
 				if( current.equals("puddle") ) { //Of Type Box
@@ -185,6 +186,10 @@ public class Room {
 			doors.get(1).setPartner(GameScreen.rooms.get(relativeLocation[0]-1).get(relativeLocation[1]+1).getDoors().get(3));
 		}
 		
+	}
+	
+	public ArrayList<Box> getBoxes() {
+	    return boxes;
 	}
 
 	public ArrayList<Door> getDoors() {
