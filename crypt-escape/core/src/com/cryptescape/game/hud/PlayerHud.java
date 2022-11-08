@@ -86,7 +86,7 @@ public class PlayerHud {
     public Stage getInventoryStage() {
         return inventoryStage;
     }
-
+    
     public void dispose() {
         overlayStage.dispose();
         inventoryStage.dispose();

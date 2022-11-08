@@ -50,7 +50,7 @@ public abstract class Movables extends Actor{
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.position.set(x, y);
-        bodyDef.linearDamping = 5.0f;
+        bodyDef.linearDamping = 1.0f;
         bodyDef.fixedRotation = true;
         this.body = GameScreen.world.createBody(bodyDef);
         
@@ -82,9 +82,6 @@ public abstract class Movables extends Actor{
 	//S is for sprinting, a speed multiplier 
 	public void setAcceleration(float x, float y, float s) {
 	    forceVector.set(x*s, y*s);
-//		forceVector.set(
-//		        (Gdx.graphics.getDeltaTime()/Constants.FRAME_SPEED) * (x*s), 
-//		        (Gdx.graphics.getDeltaTime()/Constants.FRAME_SPEED) * (y*s)); 
 	}
 		
 	public void updateTick() {

@@ -102,6 +102,7 @@ public class GameScreen implements Screen {
     
 	float playerCounter = 0;
     private int frameNum = 0;
+    private float accumulator;
 	
 	
 	
@@ -177,8 +178,7 @@ public class GameScreen implements Screen {
 		
 		//IMPORTANT <<< DO ALL RENDERING IN THE ORDER OF WHICH YOU WANT IT TO APPEAR. 
 		// Ie: Enemy on top of Player on top of Room.
-		player.setAcceleration((InputHandler.wasd[3]-InputHandler.wasd[1]), (InputHandler.wasd[0]-InputHandler.wasd[2]), 
-		        (Constants.FRAME_SPEED/delta) * InputHandler.sprint); //handles player movement
+		player.setAcceleration((InputHandler.wasd[3]-InputHandler.wasd[1]), (InputHandler.wasd[0]-InputHandler.wasd[2]), InputHandler.sprint); //handles player movement
 		player.update();
 		
 		player.getRoom().draw(game.batch); //draw the room that the player is currently in
@@ -225,7 +225,15 @@ public class GameScreen implements Screen {
         
         
         music.update();
-		world.step(Constants.FRAME_SPEED, 6, 2);
+        
+        accumulator = delta;
+        while (accumulator >= Constants.FRAME_SPEED) { //Do physics step until up to date
+            accumulator -= Constants.FRAME_SPEED;
+            world.step(Constants.FRAME_SPEED, 6, 2);
+        }
+		
+		
+		
 		frameNum++;
 	}
 	
