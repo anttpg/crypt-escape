@@ -43,8 +43,8 @@ public class Player extends Movables {
 	private float offset;
 	
 	private Random rand = new Random();
-	private static boolean runningAnimation;
-	private static float runningAnimationCounter;
+	private static boolean overrideAnimation;
+	private static float overrideAnimationCounter;
 
 	/**
 	* Defines a Player object. Player extends Movables. 
@@ -72,7 +72,6 @@ public class Player extends Movables {
 		playerAnimation.add("playerSW", new Animation<TextureRegion>(Constants.FRAME_SPEED, GameScreen.atlas.findRegions("playerSW")));
 		playerAnimation.add("error", new Animation<TextureRegion>(Constants.FRAME_SPEED, GameScreen.atlas.findRegions("error")));
 		playerAnimation.setCurrent("playerS");
-//		playerAnimation.setPlayModes(Animation.PlayMode.LOOP);
 		
 		super.setZIndex(2);
 
@@ -81,7 +80,7 @@ public class Player extends Movables {
 		
 	@Override
 	public void draw(SpriteBatch batch) {
-		elapsedTime += Gdx.graphics.getDeltaTime();
+        elapsedTime += Gdx.graphics.getDeltaTime();
 		frame = playerAnimation.getFrame();
 		batch.draw(frame, getX() - (Constants.TILESIZE/1.8f), getY() - (Constants.TILESIZE/3.8f), Constants.TILESIZE*1.1f, Constants.TILESIZE*1.1f);
 	}
@@ -89,17 +88,9 @@ public class Player extends Movables {
 	
     @Override
     public void act(float delta) {
-        super.act(delta);
-        this.setRotation(body.getAngle() *  MathUtils.radiansToDegrees);
-        this.setPosition(body.getPosition().x-this.getWidth()/2,body.getPosition().y-this.getHeight()/2);
-		body.applyForceToCenter(forceVector, true);
+        this.defaultAct();
         this.update();
-        
-        if(runningAnimation) {
-        	runningAnimationCounter -= delta;
-        	if(runningAnimationCounter < 0)
-        		runningAnimation = false;
-        }
+        body.applyForceToCenter(forceVector, true);
     }
     
     public void debugPlayer() {
@@ -134,8 +125,12 @@ public class Player extends Movables {
     }
     
 	public void update() {
-		this.updateTick();
-		
+        if(overrideAnimation) {
+            overrideAnimationCounter -= Constants.FRAME_SPEED;
+            if(overrideAnimationCounter < 0)
+                overrideAnimation = false;
+        }
+	
 		if (InputHandler.e_pressed && !InputHandler.tab_pressed) {
 		    if(teleportCooldown < 0) {
     			for (Door door : currentRoom.getDoors()) {
@@ -145,27 +140,26 @@ public class Player extends Movables {
     				}
     			}
 		    }
-		    
+	
 		    for (Box box : currentRoom.getBoxes()) 
                 if (box.isPlayerInRange()) 
                     box.setAnimationPhase("opening");
-
-        
+ 
 		}
 		teleportCooldown -= Gdx.graphics.getDeltaTime();
 		
-		if (elapsedTime > 0.3 && !runningAnimation) {
+		if (elapsedTime > 0.3 && !overrideAnimation) {
 			offset = rand.nextFloat()*0.2f;
 			elapsedTime = 0;
-			System.out.println(super.getBody().getLinearVelocity());
+			//System.out.println(super.getBody().getLinearVelocity());
 			
 			if(Math.abs(xVel) > 0.001) { //A weird function made to control animation speed
-				playerAnimation.setAnimationDuration(0.2f); //Sets frame duration
-				playerAnimation.addTime(Math.abs(xVel/5f) - 0.13f);
+				playerAnimation.setAnimationDuration(0.4f); //Sets frame duration
+				playerAnimation.addTime((Math.abs(xVel/5f) - 0.13f)*2f);
 			}
 			else if(Math.abs(yVel) > 0.001 && Math.abs(yVel) > Math.abs(xVel)) {
-				playerAnimation.setAnimationDuration(0.2f); //Sets frame duration
-				playerAnimation.addTime(Math.abs(yVel/5f) - 0.13f);
+				playerAnimation.setAnimationDuration(0.4f); //Sets frame duration
+				playerAnimation.addTime((Math.abs(yVel/5f) - 0.13f)*2f);
 			}
 			else {
 				playerAnimation.setAnimationDuration(10000);
@@ -201,10 +195,13 @@ public class Player extends Movables {
 		}	 	
 	}          
 	
-	public static void initiateAnimation(String current) {
+	/**
+	 * forces the current animation given to run its course.
+	 */
+	public static void forceAnimationPlay(String current) {
 		playerAnimation.setCurrent(current);
-		runningAnimation = true;
-		runningAnimationCounter = playerAnimation.getCurrent().getAnimationDuration();
+		overrideAnimation = true;
+		overrideAnimationCounter = playerAnimation.getCurrent().getAnimationDuration();
 	}
 
     public float getCandleLevel() {

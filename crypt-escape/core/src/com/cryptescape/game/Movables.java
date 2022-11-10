@@ -3,6 +3,7 @@ package com.cryptescape.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -50,7 +51,7 @@ public abstract class Movables extends Actor{
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         bodyDef.position.set(x, y);
-        bodyDef.linearDamping = 1.0f;
+        bodyDef.linearDamping = 5.0f;
         bodyDef.fixedRotation = true;
         this.body = GameScreen.world.createBody(bodyDef);
         
@@ -60,7 +61,7 @@ public abstract class Movables extends Actor{
         
         //Physics rules
         fixtureDef.shape = shape;
-        fixtureDef.density = 23f;
+        fixtureDef.density = 2.3f;
         fixtureDef.friction = 0.5f;
         fixtureDef.restitution= 0.05f;
         fixture = body.createFixture(fixtureDef);
@@ -84,7 +85,12 @@ public abstract class Movables extends Actor{
 	    forceVector.set(x*s, y*s);
 	}
 		
-	public void updateTick() {
+	public void defaultAct() {
+        this.setRotation(body.getAngle() *  MathUtils.radiansToDegrees);
+        this.setPosition(
+                body.getPosition().x-this.getWidth()/2, 
+                body.getPosition().y-this.getHeight()/2);
+        
 		xVel = body.getLinearVelocity().x;
 		yVel = body.getLinearVelocity().y;
 	}

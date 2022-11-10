@@ -101,7 +101,7 @@ public class GameScreen implements Screen {
     public static boolean fade;
     
 	float playerCounter = 0;
-    private int frameNum = 0;
+    private float[] oldP = new float[] { 0,0 };
     private float accumulator;
 	
 	
@@ -170,17 +170,13 @@ public class GameScreen implements Screen {
 		camera.update();
 		
 		
-		game.batch.begin();
-		
-		
-		//game.batch.disableBlending(); //save resources when not needed
-		//game.batch.enableBlending();
 		
 		//IMPORTANT <<< DO ALL RENDERING IN THE ORDER OF WHICH YOU WANT IT TO APPEAR. 
 		// Ie: Enemy on top of Player on top of Room.
 		player.setAcceleration((InputHandler.wasd[3]-InputHandler.wasd[1]), (InputHandler.wasd[0]-InputHandler.wasd[2]), InputHandler.sprint); //handles player movement
 		player.update();
 		
+		game.batch.begin();
 		player.getRoom().draw(game.batch); //draw the room that the player is currently in
 		
 		//This is just for sprite ordering (by Z index)
@@ -188,53 +184,58 @@ public class GameScreen implements Screen {
 			if(i.getZIndex() < player.getZIndex())
 				i.draw(game.batch);
 		}
-		
+		//Render player
 		player.draw(game.batch);
 		
+		//Else render interactable on top of the player
 		for(Interactable i : player.getRoom().getItems()) {
 			if(i.getZIndex() > player.getZIndex())
 				i.draw(game.batch);
 		}
-
-			
+		
 //		enemy.implementAction(); //decides what the enemy will do
 //		enemy.draw(game.batch);
-		
 		game.batch.end();
 		
 		
-		
-		if(debugPerspective) {
+        try {
+            Thread.sleep(15);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        
+        
+		if(debugPerspective) 
 			debugRenderer.render(world, camera.combined);
-		}
-
-		else {  //Else render lights
+		else  //Else render lighting 
 		    LightingManager.updateLights();
-		}
 		
+		
+  
+        accumulator += delta;
+        while (accumulator+0.01f >= Constants.FRAME_SPEED) { //Do physics step until up to date
+            accumulator -= Constants.FRAME_SPEED;
+            stage.act();
+            world.step(Constants.FRAME_SPEED, 6, 2);
+            TransitionScreen.update();
+        }
+        
         //Update/Draw the game stage
-		viewport.apply();
-        stage.act();
+        viewport.apply();
         stage.draw();
-		
+       
+        System.out.println("PLAYER: " + (player.getX()-oldP[0]) + ", " + (player.getY()-oldP[1]));
+        oldP[0] = player.getX();
+        oldP[1] = player.getY();
+        
         //Update/Draw the Hud
         hud.update(delta, game.batch);
+        music.update();
+        
         
         if(fade) //Apply fade out effect last
             TransitionScreen.render(game.batch, stage);
         
-        
-        music.update();
-        
-        accumulator = delta;
-        while (accumulator >= Constants.FRAME_SPEED) { //Do physics step until up to date
-            accumulator -= Constants.FRAME_SPEED;
-            world.step(Constants.FRAME_SPEED, 6, 2);
-        }
-		
-		
-		
-		frameNum++;
 	}
 	
 	

@@ -118,7 +118,7 @@ public class Enemy extends Movables {
 
 	@Override
 	public void draw(SpriteBatch batch) {
-		this.updateTick();
+		this.defaultAct();
 		// Gdx.graphics.getDeltaTime();
 		if (elapsedTime > 0.3) {
 			elapsedTime = 0;

@@ -19,13 +19,15 @@ public class TransitionScreen {
     
 
     public static void render(SpriteBatch batch, Stage stage) {
-        
         batch.setColor(1, 1, 1, alpha);
         batch.begin();
         batch.draw(overlay, 0, 0, stage.getWidth(), stage.getHeight());
         batch.end(); 
         batch.setColor(1, 1, 1, 1);
-
+    }
+    
+    
+    public static void update() {
         if (alpha >= 1) {
             fadeDirection = false;
         } 
@@ -43,4 +45,5 @@ public class TransitionScreen {
             }   
         }
     }
+    
 }
