@@ -9,7 +9,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.cryptescape.game.Constants;
 import com.cryptescape.game.GameScreen;
 
-public class Door  extends Interactable {
+public class Door extends Interactable {
 	
 	private Door partner = null;
 	

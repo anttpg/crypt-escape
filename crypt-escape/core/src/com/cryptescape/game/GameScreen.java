@@ -177,21 +177,8 @@ public class GameScreen implements Screen {
 		player.update();
 		
 		game.batch.begin();
-		player.getRoom().draw(game.batch); //draw the room that the player is currently in
+		player.getRoom().draw(game.batch); //draw the room that the player is currently in. This will also draw the player.
 		
-		//This is just for sprite ordering (by Z index)
-		for(Interactable i : player.getRoom().getItems()) {
-			if(i.getZIndex() < player.getZIndex())
-				i.draw(game.batch);
-		}
-		//Render player
-		player.draw(game.batch);
-		
-		//Else render interactable on top of the player
-		for(Interactable i : player.getRoom().getItems()) {
-			if(i.getZIndex() > player.getZIndex())
-				i.draw(game.batch);
-		}
 		
 //		enemy.implementAction(); //decides what the enemy will do
 //		enemy.draw(game.batch);
@@ -222,7 +209,7 @@ public class GameScreen implements Screen {
         
         //Update/Draw the game stage
         viewport.apply();
-        stage.draw();
+        stage.draw(); //Dont draw the stage to save on resources, sine that would draw EVERY sprite, instead room takes care of it.
 //       
 //        System.out.println("PLAYER: " + (player.getX()-oldP[0]) + ", " + (player.getY()-oldP[1]));
 //        oldP[0] = player.getX();
@@ -230,7 +217,7 @@ public class GameScreen implements Screen {
 //        
         //Update/Draw the Hud
         hud.update(delta, game.batch);
-        music.update();
+       //  music.update();
         
         
         if(fade) //Apply fade out effect last
@@ -263,7 +250,7 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void show() {
-		music.playRandomSong();
+		//music.playRandomSong();
 		//log 
 		Gdx.app.log("MainScreen","show");
 	}

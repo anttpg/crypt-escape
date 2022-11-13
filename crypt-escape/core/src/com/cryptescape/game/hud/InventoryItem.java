@@ -23,28 +23,29 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
-public abstract class InventoryItem extends Actor{
+public class InventoryItem extends Actor{
     private Fixture fixture;
 	protected Fixture interactionBody;
     protected TextureRegion currentRegion;
-    protected Animation<TextureRegion> animation;
+    protected Animation<TextureRegion> animation = null;
 
 
     private float scale;
     private float[] bounds = new float[4];
-    
-    protected float time = 0;
+
+	protected float time = 0;
     protected float countdown = 0;
     protected boolean mouseInRange = false;
     protected boolean startAnimation = false;
     
-    
+    /**
+     * Normal inventory item constructor
+     */
     public InventoryItem(World world, String name, TextureRegion region, float x, float y, float scale, int zindex) {
         setName(name);
-        this.animation = null;
         this.currentRegion = region;
         this.scale = scale;
-        this.checkBounds(name);
+        this.checkBounds(getName());
         super.setZIndex(zindex);
                
         setWidth((Inventory.tileSize * scale) * (bounds[2]-bounds[0])/currentRegion.getRegionHeight());
@@ -54,6 +55,9 @@ public abstract class InventoryItem extends Actor{
         setY(y - getHeight()/2f);
     }
     
+    /**
+     * Constructor for inventory items that have an animation attached (IE: a box that will open)
+     */
     public InventoryItem(World world, String name, String regions, float x, float y, float scale, int zindex, float FRAMESPEED) {
         setName(name);
         this.animation = new Animation<TextureRegion>(FRAMESPEED, GameScreen.atlas.findRegions(name));
@@ -67,11 +71,32 @@ public abstract class InventoryItem extends Actor{
         setHeight((Inventory.tileSize * scale) * (bounds[3]-bounds[1])/currentRegion.getRegionHeight());
     }
     
+    /**
+     * Copy constructor, useful for saving inventory items for later use. Be aware this will not add the item to the stage,
+     * therefor this will not be drawn by defaut. You are simply saving it for later.
+     */
+    public InventoryItem(InventoryItem item) {
+        setName(item.getName());
+        this.currentRegion = item.getRegion();
+        this.scale = item.getScale();
+        this.checkBounds(getName());
+        super.setZIndex(item.getZIndex());
+               
+        setWidth(item.getWidth());
+        setHeight(item.getHeight());
+        
+        setX(item.getX());
+        setY(item.getX());
+    }
+    
     
     public void applyForce(float xN, float yN, float s) {
         fixture.getBody().applyForceToCenter(xN, yN, true);
     }
     
+    /**
+     * Checks for bounds of the item in the bounds.txt file, should be obsolete.
+     */
     public void checkBounds(String name) {
         if(Interactable.itemBounds.get(name) != null) {
             int i = 0;
@@ -133,6 +158,14 @@ public abstract class InventoryItem extends Actor{
     
     public float getScale() {
     	return scale;
+    }
+    
+    public float[] getBounds() {
+		return bounds;
+	}
+    
+    public TextureRegion getRegion() {
+    	return currentRegion;
     }
     
     public void createUserData(boolean ans) {

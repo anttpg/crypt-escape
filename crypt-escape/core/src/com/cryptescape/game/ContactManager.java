@@ -6,6 +6,7 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.cryptescape.game.rooms.Box;
 import com.cryptescape.game.rooms.Door;
+import com.cryptescape.game.rooms.Freeform;
 import com.cryptescape.game.rooms.Interactable;
 
 public class ContactManager {
@@ -15,6 +16,7 @@ public class ContactManager {
 
 			@Override
 			public void beginContact(Contact contact) {
+				//Contact for doors
 				for (Door door : GameScreen.player.getRoom().getDoors()) {
 					if(door != null) {
 						if (contact.getFixtureA().getBody() == GameScreen.player.getBody()
@@ -23,11 +25,20 @@ public class ContactManager {
 						}
 					}
 				}
-			
+				
+				//Contact for boxes in room
 				for (Box box : GameScreen.player.getRoom().getBoxes()) {
 				    if (contact.getFixtureA().getBody() == GameScreen.player.getBody()
 				            && contact.getFixtureB().getBody() == box.getInteractionBody()) {
 				        box.setPlayerInRange(true);
+				    }
+				}
+				
+				//Contact for items in room
+				for (Freeform item : GameScreen.player.getRoom().droppedItems()) {
+				    if (contact.getFixtureA().getBody() == GameScreen.player.getBody()
+				            && contact.getFixtureB().getBody() == item.getInteractionBody()) {
+				        item.setPlayerInRange(true);
 				    }
 				}
 			}
@@ -35,6 +46,7 @@ public class ContactManager {
 
 			@Override
 			public void endContact(Contact contact) {
+				//Contact for doors
 				for (Door door : GameScreen.player.getRoom().getDoors()) {
 					if(door != null) {
 						if (contact.getFixtureA().getBody() == GameScreen.player.getBody()
@@ -45,12 +57,21 @@ public class ContactManager {
 					}
 				}
 				
+				//Contact for boxes in room.
 				for (Box box : GameScreen.player.getRoom().getBoxes()) {
                     if (contact.getFixtureA().getBody() == GameScreen.player.getBody()
                             && contact.getFixtureB().getBody() == box.getInteractionBody()) {
                         box.setPlayerInRange(false);
                     }
                 }
+				
+				//Contact for items in room.
+				for (Freeform item : GameScreen.player.getRoom().droppedItems()) {
+				    if (contact.getFixtureA().getBody() == GameScreen.player.getBody()
+				            && contact.getFixtureB().getBody() == item.getInteractionBody()) {
+				        item.setPlayerInRange(false);
+				    }
+				}
 		
 			}
 

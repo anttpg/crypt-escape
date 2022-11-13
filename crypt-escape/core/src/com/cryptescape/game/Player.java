@@ -80,7 +80,7 @@ public class Player extends Movables {
 		
 	@Override
 	public void draw(SpriteBatch batch) {
-	    debugPlayer();
+	    //debugPlayer();
         elapsedTime += Gdx.graphics.getDeltaTime();
 		frame = playerAnimation.getFrame();
 		batch.draw(frame, getX() - (Constants.TILESIZE/1.8f), getY() - (Constants.TILESIZE/3.8f), Constants.TILESIZE*1.1f, Constants.TILESIZE*1.1f);

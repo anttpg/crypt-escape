@@ -73,11 +73,12 @@ public class Inventory {
         //ALWAYS LEAVE BREIFCASE FIRST
         bag = new BagItem(world, "briefcase", stage.getWidth()/2f, 1.3f, 2);
         itemGroup.addActor(bag);
-        itemGroup.addActor(new CandleItem(world, "candlestick", 1f, 1f, 3));
-        itemGroup.addActor(new BatteryItem(world, "battery", 1.3f, 1f, 3));
-        itemGroup.addActor(new DrinkItem(world, "water", 1.3f, 1f, 3));
-        itemGroup.addActor(new CannedFoodItem(world, "beans", 1.7f, 1f, 3));
-        itemGroup.addActor(new SpraypaintItem(world, "spraypaint", 1.5f, 1f, 3));
+        
+        itemGroup.addActor(new CandleItem(world, "candlestick", 5f, 1.2f, 3));
+        itemGroup.addActor(new BatteryItem(world, "battery", 5.3f, 1.2f, 3));
+        itemGroup.addActor(new DrinkItem(world, "water", 5.9f, 1.2f, 3));
+        itemGroup.addActor(new CannedFoodItem(world, "beans", 5.7f, 1.2f, 3));
+        itemGroup.addActor(new SpraypaintItem(world, "spraypaint", 5.5f, 1.2f, 3));
 
         	
         stage.addActor(itemGroup);
@@ -186,20 +187,20 @@ public class Inventory {
 	
 	
 	/**
-	 * called everytime the inventory is closed
+	 * Queues an item for disposal, called before each dispose.
 	 */
 	public static void queueForDisposal(InventoryItem i) {
 	    if(disposal.indexOf(i) == -1)
 	        disposal.add(i);
 	}
 	
+	/**
+	 * Removes the unused items, and drops them on the floor. Called on inventory close.
+	 */
 	public static void disposeUnusedItems() {
 	    if(toDispose) {
 	        ArrayList<Actor> safe = bag.checkIfOverlap();
     	    
-//	        System.out.println(itemGroup.toString() + " " + itemGroup.getChildren());
-//	        System.out.println(safe.toString());
-//	        System.out.println(disposal);
     	    for(Actor a : itemGroup.getChildren()) 
     	        if(safe.indexOf(a) == -1 && disposal.indexOf((InventoryItem)a) == -1) 
     	            disposal.add((InventoryItem)a); //Cant dispose of it yet, will skip items
@@ -208,6 +209,7 @@ public class Inventory {
     	    
     	    if(!disposal.isEmpty()) {
                 for(InventoryItem i : disposal) { 
+                	GameScreen.player.getRoom().addDroppedItem(i);
                     itemGroup.removeActor(i);    
                     world.destroyBody(i.getBody());
                 }
