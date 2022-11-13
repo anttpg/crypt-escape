@@ -35,7 +35,7 @@ public class Player extends Movables {
 	private float teleportCooldown = 0f;
 	private float scale;
 	
-	private float batteryLevel = 0f;
+	private float batteryLevel = 7f;
 
 	public float maxCandleLevel = 3.5f;
 	private float candleLevel = maxCandleLevel;
@@ -80,6 +80,7 @@ public class Player extends Movables {
 		
 	@Override
 	public void draw(SpriteBatch batch) {
+	    debugPlayer();
         elapsedTime += Gdx.graphics.getDeltaTime();
 		frame = playerAnimation.getFrame();
 		batch.draw(frame, getX() - (Constants.TILESIZE/1.8f), getY() - (Constants.TILESIZE/3.8f), Constants.TILESIZE*1.1f, Constants.TILESIZE*1.1f);
@@ -97,8 +98,8 @@ public class Player extends Movables {
     	System.out.println(playerAnimation.toString());
     	System.out.println("Player X: " + this.getX() + " PlayerY: " + this.getY());
 		System.out.println("Player xV: " + xVel + " Player yV: " + yVel);
-		//System.out.println("Player xA: " + xAcc + " Player yA: " + yAcc);
 		System.out.println(Math.abs(-15.217f*Math.abs(this.xVel) + 0.6522f));
+		System.out.println();
     }
     
     public Room getRoom() {

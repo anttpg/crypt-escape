@@ -116,7 +116,7 @@ public class Interactable extends Actor{
 		
 	    FixtureDef fixtureDef = new FixtureDef();
 	    fixtureDef.shape = box;
-		fixtureDef.isSensor = true;
+		fixtureDef.isSensor = true; //Makes sensor?
 		fixtureDef.density = 0f;
 		fixtureDef.friction = 0f;
 		fixtureDef.restitution = 0f;

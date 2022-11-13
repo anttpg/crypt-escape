@@ -93,7 +93,7 @@ public class GameScreen implements Screen {
 	private Fixture BASE_FLOOR;
 	
 
-	private boolean debugPerspective = true;
+	private boolean debugPerspective = false;
 	private boolean runOnceTempDebugVariable = true;
 	
 	public MusicManager music;
@@ -198,16 +198,16 @@ public class GameScreen implements Screen {
 		game.batch.end();
 		
 		
-        try {
-            Thread.sleep(15);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            Thread.sleep(15);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
         
-        
-		if(debugPerspective) 
-			debugRenderer.render(world, camera.combined);
-		else  //Else render lighting 
+		debugRenderer.render(world, camera.combined);
+		//if(debugPerspective) 
+			
+		//else  //Else render lighting 
 		    LightingManager.updateLights();
 		
 		
@@ -223,11 +223,11 @@ public class GameScreen implements Screen {
         //Update/Draw the game stage
         viewport.apply();
         stage.draw();
-       
-        System.out.println("PLAYER: " + (player.getX()-oldP[0]) + ", " + (player.getY()-oldP[1]));
-        oldP[0] = player.getX();
-        oldP[1] = player.getY();
-        
+//       
+//        System.out.println("PLAYER: " + (player.getX()-oldP[0]) + ", " + (player.getY()-oldP[1]));
+//        oldP[0] = player.getX();
+//        oldP[1] = player.getY();
+//        
         //Update/Draw the Hud
         hud.update(delta, game.batch);
         music.update();

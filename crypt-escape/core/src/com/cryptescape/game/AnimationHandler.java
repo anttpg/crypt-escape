@@ -65,7 +65,7 @@ public class AnimationHandler {
                 "timer=" + timer +
                 ", looping=" + looping +
                 ", current='" + current + '\'' +
-                ", frame=" + animations.get(current).getKeyFrameIndex(timer) +
+                ", current frame=" + animations.get(current).getKeyFrameIndex(timer) +
                 '}';
     }
 
