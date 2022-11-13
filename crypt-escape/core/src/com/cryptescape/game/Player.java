@@ -21,6 +21,8 @@ import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.cryptescape.game.rooms.Box;
 import com.cryptescape.game.rooms.Door;
+import com.cryptescape.game.rooms.DroppedItem;
+import com.cryptescape.game.rooms.Freeform;
 import com.cryptescape.game.rooms.Interactable;
 import com.cryptescape.game.rooms.Room;
 
@@ -125,6 +127,9 @@ public class Player extends Movables {
     	return false;
     }
     
+    /**
+     * This deals with all interactions the player will be making, as well as setting the current animation
+     */
 	public void update() {
         if(overrideAnimation) {
             overrideAnimationCounter -= Constants.FRAME_SPEED;
@@ -142,9 +147,15 @@ public class Player extends Movables {
     			}
 		    }
 	
+		    
 		    for (Box box : currentRoom.getBoxes()) 
                 if (box.isPlayerInRange()) 
                     box.setAnimationPhase("opening");
+		    
+		    
+		    for (DroppedItem item : currentRoom.getDroppedItems()) 
+                if (item.isPlayerInRange()) 
+                    item.pickup();
  
 		}
 		teleportCooldown -= Gdx.graphics.getDeltaTime();

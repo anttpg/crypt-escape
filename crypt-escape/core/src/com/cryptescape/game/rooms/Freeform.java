@@ -18,7 +18,7 @@ import com.cryptescape.game.Constants;
 import com.cryptescape.game.GameScreen;
 
 public class Freeform extends Actor{
-	private Fixture fixture;
+	private Fixture interactionFixture;
 	private Room parent;
 	private TextureRegion texture;
 	private boolean playerInRange = false;
@@ -56,31 +56,31 @@ public class Freeform extends Actor{
 	}
 	
 	
-	public void createStaticEdge(int c) {         
-		BodyDef bodyDef = new BodyDef();                   
-		bodyDef.position.set(getItemLocation()); //Set its position 
-		Body bd = GameScreen.world.createBody(bodyDef);                      
-		
-		EdgeShape edge = new EdgeShape(); //Walls/Doors dont need to be a full box
-		
-		// SETTING THE POINTS AS OFFSET DISTANCE FROM CENTER
-		edge.set(Constants.edgeSizes[c][0], Constants.edgeSizes[c][1], Constants.edgeSizes[c][2], Constants.edgeSizes[c][3]);
-		fixture = bd.createFixture(edge, 0.0f);
-		//DEBUG VERSION --> debugItem(bd.createFixture(edge, 0.0f), col, row);
-		edge.dispose();	
-	}
-	
-	
-	public void createStaticBox() {
-		BodyDef bodyDef = new BodyDef(); 
-	
-		bodyDef.position.set(getItemLocation()); // Set its position
-		Body bd = GameScreen.world.createBody(bodyDef);
-		PolygonShape box = new PolygonShape(); // Create a polygon shape
-		box.setAsBox(Constants.TILESIZE / 2f, Constants.TILESIZE / 2f);
-		fixture = bd.createFixture(box, 0.0f);
-		box.dispose();
-	}
+//	public void createStaticEdge(int c) {         
+//		BodyDef bodyDef = new BodyDef();                   
+//		bodyDef.position.set(getItemLocation()); //Set its position 
+//		Body bd = GameScreen.world.createBody(bodyDef);                      
+//		
+//		EdgeShape edge = new EdgeShape(); //Walls/Doors dont need to be a full box
+//		
+//		// SETTING THE POINTS AS OFFSET DISTANCE FROM CENTER
+//		edge.set(Constants.edgeSizes[c][0], Constants.edgeSizes[c][1], Constants.edgeSizes[c][2], Constants.edgeSizes[c][3]);
+//		interactionFixture = bd.createFixture(edge, 0.0f);
+//		//DEBUG VERSION --> debugItem(bd.createFixture(edge, 0.0f), col, row);
+//		edge.dispose();	
+//	}
+//	
+//	
+//	public void createStaticBox() {
+//		BodyDef bodyDef = new BodyDef(); 
+//	
+//		bodyDef.position.set(getItemLocation()); // Set its position
+//		Body bd = GameScreen.world.createBody(bodyDef);
+//		PolygonShape box = new PolygonShape(); // Create a polygon shape
+//		box.setAsBox(Constants.TILESIZE / 2f, Constants.TILESIZE / 2f);
+//		interactionFixture = bd.createFixture(box, 0.0f);
+//		box.dispose();
+//	}
 	
 	
 	/**
@@ -89,7 +89,7 @@ public class Freeform extends Actor{
 	 * hx: the half-width of the rect.
 	 * hy: the half-height of the rect.   
 	 */
-	public void createInteractionRadius(float hx, float hy) {
+	public void createInteractionRectangle(float hx, float hy) {
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.position.set(getItemLocation()); // Set its position
 		interactionBody = GameScreen.world.createBody(bodyDef);
@@ -103,7 +103,7 @@ public class Freeform extends Actor{
 		fixtureDef.density = 0f;
 		fixtureDef.friction = 0f;
 		fixtureDef.restitution = 0f;
-		fixture = interactionBody.createFixture(fixtureDef);
+		interactionFixture = interactionBody.createFixture(fixtureDef);
 		box.dispose();
 	}
 
@@ -116,7 +116,7 @@ public class Freeform extends Actor{
 	}
 	
 	public Fixture getFixture() {
-		return fixture;
+		return interactionFixture;
 	}
 	
 	public TextureRegion getRegion() {
@@ -133,5 +133,10 @@ public class Freeform extends Actor{
 	
 	public Room getParentRoom() {
 		return parent;
+	}
+
+
+	public void destroyFixtures() {
+		interactionBody.destroyFixture(interactionFixture);
 	}
 }

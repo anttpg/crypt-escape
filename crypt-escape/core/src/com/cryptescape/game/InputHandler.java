@@ -24,8 +24,10 @@ public class InputHandler {
     public static Vector3 relativeMouseInventory = new Vector3();
     private static Vector2 temp2 = new Vector2();
     
-    
-    private static QueryCallback callback = new QueryCallback() {
+    /**
+     * Query callback for dragging items in the inventory
+     */
+    private static QueryCallback invCallback = new QueryCallback() {
     	@Override
     	public boolean reportFixture(Fixture fixture) {
     		//Testing because of QueryAABB error, checks each to see if actually inside the point. Also checks user data to make sure it is movable
@@ -45,6 +47,7 @@ public class InputHandler {
     		
     		System.out.println(fixture.getBody().getPosition() + " " + relativeMouseInventory);
     		System.out.println("fixture " + fixture.getUserData());
+    		System.out.println();
     		
     		Inventory.getMouseDef().bodyB = fixture.getBody();
     		Inventory.getMouseDef().target.set(relativeMouseInventory.x, relativeMouseInventory.y);
@@ -124,7 +127,7 @@ public class InputHandler {
             	relativeMouseInventory.set((screenX/GameScreen.realWidth) * Inventory.getStage().getWidth(), 
             			Inventory.getStage().getHeight() - (screenY/GameScreen.realHeight) * Inventory.getStage().getHeight(), 0);
             	
-                Inventory.getWorld().QueryAABB(callback, relativeMouseInventory.x, relativeMouseInventory.y, relativeMouseInventory.x, relativeMouseInventory.y); 	
+                Inventory.getWorld().QueryAABB(invCallback, relativeMouseInventory.x, relativeMouseInventory.y, relativeMouseInventory.x, relativeMouseInventory.y); 	
                 System.out.println("temp vector" + relativeMouseInventory);
                 //Finding fixtures inside of this rect (We make it a point, cheating a lil). Its a little innacurate for optimization
                 

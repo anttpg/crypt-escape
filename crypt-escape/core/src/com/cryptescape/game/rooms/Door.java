@@ -123,7 +123,6 @@ public class Door extends Interactable {
 	 * specifies coords on an XY plane of where player should teleport to to exit from the related door
 	 */
 	public Vector2 getExitPosition() {
-		
 		float[] offset;
 		if(partner.type.equals("northDoor"))
 			offset = new float[] {0, -Constants.TILESIZE};

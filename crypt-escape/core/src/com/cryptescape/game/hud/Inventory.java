@@ -41,7 +41,8 @@ public class Inventory {
     public static MouseJointDef mouseDef;
     public static MouseJoint mouse;
     
-    private static ArrayList<InventoryItem> disposal = new ArrayList<InventoryItem>();
+    private static ArrayList<InventoryItem> dispose = new ArrayList<InventoryItem>();
+    private static ArrayList<InventoryItem> remove = new ArrayList<InventoryItem>();
     private static BagItem bag;
     
     private static boolean toDispose = false;
@@ -80,12 +81,7 @@ public class Inventory {
         itemGroup.addActor(new CannedFoodItem(world, "beans", 5.7f, 1.2f, 3));
         itemGroup.addActor(new SpraypaintItem(world, "spraypaint", 5.5f, 1.2f, 3));
 
-        	
         stage.addActor(itemGroup);
-        
-//        for(InventoryItem i : frontItems)
-//            stage.addActor(i);
- 
     }
     
     public Box2DDebugRenderer getDebugRenderer() {
@@ -168,10 +164,13 @@ public class Inventory {
 	    itemGroup.addActorAt(1, new BoxItem(world, box, 
 	            stage.getWidth()/2f, stage.getHeight() - stage.getHeight()/5f, 1));
 	}
-
-	public static void addItem(String itemName, InventoryItem i) {
-	    float x = i.getX() + i.getWidth()/2f;
-	    float y = i.getY() + i.getHeight()/2f;
+	
+	/**
+	 * Adds a new item to a box 
+	 */
+	public static void addItemFromBox(String itemName, InventoryItem boxParent) {
+	    float x = boxParent.getX() + boxParent.getWidth()/2f;
+	    float y = boxParent.getY() + boxParent.getHeight()/2f;
 	    
 	    if(itemName.equals("candlestick"))
 	        itemGroup.addActorAt(3, new CandleItem(world, "candlestick", x, y, 2));
@@ -185,13 +184,20 @@ public class Inventory {
 	        itemGroup.addActorAt(3, new SpraypaintItem(world, "spraypaint", x, y, 2));
 	}
 	
+	/**
+	 * Used when you have an item already created, and just need to reinsert it into the inventory
+	 */
+	public static void addItem(InventoryItem item) {
+	    itemGroup.addActor(item);
+	}
+	
 	
 	/**
 	 * Queues an item for disposal, called before each dispose.
 	 */
 	public static void queueForDisposal(InventoryItem i) {
-	    if(disposal.indexOf(i) == -1)
-	        disposal.add(i);
+	    if(remove.indexOf(i) == -1)
+	        remove.add(i);
 	}
 	
 	/**
@@ -202,18 +208,25 @@ public class Inventory {
 	        ArrayList<Actor> safe = bag.checkIfOverlap();
     	    
     	    for(Actor a : itemGroup.getChildren()) 
-    	        if(safe.indexOf(a) == -1 && disposal.indexOf((InventoryItem)a) == -1) 
-    	            disposal.add((InventoryItem)a); //Cant dispose of it yet, will skip items
+    	        if(safe.indexOf(a) == -1 && remove.indexOf((InventoryItem)a) == -1) 
+    	            remove.add((InventoryItem)a); //Cant dispose of it yet, will skip items
     	            
     	    safe.clear();
     	    
-    	    if(!disposal.isEmpty()) {
-                for(InventoryItem i : disposal) { 
-                	GameScreen.player.getRoom().addDroppedItem(i);
+    	    if(!dispose.isEmpty()) { //Disposal queue for complete destruction
+                for(InventoryItem i : dispose) { 
                     itemGroup.removeActor(i);    
                     world.destroyBody(i.getBody());
                 }
-            disposal.clear();   
+            dispose.clear();   
+    	    }
+    	    
+    	    if(!remove.isEmpty()) { //Simply remove to use at a later date.
+                for(InventoryItem i : remove) { 
+                	GameScreen.player.getRoom().addDroppedItem(i);
+                    itemGroup.removeActor(i);    
+                }
+            remove.clear();   
     	    }
     	    
     	    toDispose = false;

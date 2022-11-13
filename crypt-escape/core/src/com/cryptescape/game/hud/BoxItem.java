@@ -42,7 +42,7 @@ public class BoxItem extends InventoryItem {
                 startAnimation = false; 
                 open = true;
                 if(box.getStoredItem() != null)
-                    Inventory.addItem(box.getStoredItem(), this);
+                    Inventory.addItemFromBox(box.getStoredItem(), this);
                 box.emptyStoredItem();
             }
         }

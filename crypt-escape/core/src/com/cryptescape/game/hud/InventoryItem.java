@@ -29,7 +29,6 @@ public class InventoryItem extends Actor{
     protected TextureRegion currentRegion;
     protected Animation<TextureRegion> animation = null;
 
-
     private float scale;
     private float[] bounds = new float[4];
 
@@ -73,20 +72,22 @@ public class InventoryItem extends Actor{
     
     /**
      * Copy constructor, useful for saving inventory items for later use. Be aware this will not add the item to the stage,
-     * therefor this will not be drawn by defaut. You are simply saving it for later.
+     * therefor this will not be drawn by defaut. You are simply saving it for later. OBSOLETE.....
      */
     public InventoryItem(InventoryItem item) {
         setName(item.getName());
-        this.currentRegion = item.getRegion();
-        this.scale = item.getScale();
-        this.checkBounds(getName());
-        super.setZIndex(item.getZIndex());
-               
         setWidth(item.getWidth());
         setHeight(item.getHeight());
-        
         setX(item.getX());
         setY(item.getX());
+        setZIndex(item.getZIndex()); 
+
+        this.fixture = item.fixture;
+    	this.interactionBody = item.interactionBody;
+    	this.currentRegion = item.currentRegion;
+       	this.animation = item.animation;
+        this.scale = item.scale;
+        this.bounds = item.bounds;
     }
     
     

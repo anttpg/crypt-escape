@@ -6,6 +6,7 @@ import com.badlogic.gdx.physics.box2d.ContactListener;
 import com.badlogic.gdx.physics.box2d.Manifold;
 import com.cryptescape.game.rooms.Box;
 import com.cryptescape.game.rooms.Door;
+import com.cryptescape.game.rooms.DroppedItem;
 import com.cryptescape.game.rooms.Freeform;
 import com.cryptescape.game.rooms.Interactable;
 
@@ -35,7 +36,7 @@ public class ContactManager {
 				}
 				
 				//Contact for items in room
-				for (Freeform item : GameScreen.player.getRoom().droppedItems()) {
+				for (DroppedItem item : GameScreen.player.getRoom().getDroppedItems()) {
 				    if (contact.getFixtureA().getBody() == GameScreen.player.getBody()
 				            && contact.getFixtureB().getBody() == item.getInteractionBody()) {
 				        item.setPlayerInRange(true);
@@ -66,7 +67,7 @@ public class ContactManager {
                 }
 				
 				//Contact for items in room.
-				for (Freeform item : GameScreen.player.getRoom().droppedItems()) {
+				for (DroppedItem item : GameScreen.player.getRoom().getDroppedItems()) {
 				    if (contact.getFixtureA().getBody() == GameScreen.player.getBody()
 				            && contact.getFixtureB().getBody() == item.getInteractionBody()) {
 				        item.setPlayerInRange(false);

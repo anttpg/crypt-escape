@@ -34,7 +34,9 @@ public class Room {
 	
 	//iItems stores all the interactable objects
 	private ArrayList<Interactable> iItems = new ArrayList<Interactable>();
-	private ArrayList<Freeform> droppedItems = new ArrayList<Freeform>();
+	private ArrayList<DroppedItem> droppedItems = new ArrayList<DroppedItem>();
+	private ArrayList<Freeform> disposalList = new ArrayList<Freeform>();
+	
 	private ArrayList<Door> doors = new ArrayList<Door>(Arrays.asList(null, null, null, null)); //Seperate from items
 	private ArrayList<Box> boxes = new ArrayList<Box>();
 	
@@ -144,8 +146,9 @@ public class Room {
 				i.draw(batch);
 		}
 		
+		disposeOfUnused();
 		//Finally render dropped items last (temp)
-		for(Freeform item : droppedItems) { 
+		for(DroppedItem item : droppedItems) { 
 			item.draw(batch);
 		}
 		
@@ -192,12 +195,31 @@ public class Room {
 	 */
 	public void addDroppedItem(InventoryItem item) {
 		DroppedItem droppedItem = new DroppedItem(item, this);
-		droppedItem.setItem(item);
 		droppedItems.add(droppedItem);
 	}
 	
-	public ArrayList<Freeform> droppedItems() {
+	public ArrayList<DroppedItem> getDroppedItems() {
 		return droppedItems;
+	}
+	
+	/**
+	 * Queues the removal of an item from play.
+	 */
+	public void queueForDisposal(Freeform item) {
+		disposalList.add(item);
+	}
+	
+	/**
+	 * Loops through and removes all to dispose
+	 */
+	public void disposeOfUnused() {
+		for(Freeform item : disposalList) {
+			item.destroyFixtures();
+			if(droppedItems.contains(item)) 
+				droppedItems.remove(item);
+		}
+		
+		disposalList.clear();
 	}
 	
 	public ArrayList<Box> getBoxes() {
