@@ -72,7 +72,8 @@ public class InventoryItem extends Actor{
     
     /**
      * Copy constructor, useful for saving inventory items for later use. Be aware this will not add the item to the stage,
-     * therefor this will not be drawn by defaut. You are simply saving it for later. OBSOLETE.....
+     * therefor this will not be drawn by defaut. You are simply saving it for later. Not that useful as fixtures are not
+     * copied.
      */
     public InventoryItem(InventoryItem item) {
         setName(item.getName());
@@ -82,8 +83,8 @@ public class InventoryItem extends Actor{
         setY(item.getX());
         setZIndex(item.getZIndex()); 
 
-        this.fixture = item.fixture;
-    	this.interactionBody = item.interactionBody;
+//        this.fixture = item.fixture;
+//    	this.interactionBody = item.interactionBody;
     	this.currentRegion = item.currentRegion;
        	this.animation = item.animation;
         this.scale = item.scale;
