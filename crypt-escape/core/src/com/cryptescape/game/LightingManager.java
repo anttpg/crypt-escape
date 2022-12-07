@@ -3,12 +3,14 @@ package com.cryptescape.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.Filter;
 
 import box2dLight.ConeLight;
 import box2dLight.PointLight;
 import box2dLight.RayHandler;
 
 public class LightingManager {
+    private static Filter blockLighting = null;
     private static RayHandler rayHandler;
     private static PointLight playerLight;
     private static ConeLight playerFlashlight;
@@ -16,6 +18,9 @@ public class LightingManager {
     private static Vector2 mousePosition = new Vector2(0, 0);
     
     public static void createLights() {
+        blockLighting = new Filter();
+        blockLighting.groupIndex = -2; //Objects with an index of -2 will NEVER collide
+        
         RayHandler.useDiffuseLight(true);
         rayHandler = new RayHandler(GameScreen.world);
         rayHandler.setAmbientLight(0f);
@@ -23,16 +28,19 @@ public class LightingManager {
         rayHandler.setBlur(true);
         
         
-        //rays, color, how far out to project 
+        //rays, color, how far out to project. This is the candle
         playerLight = new PointLight(rayHandler, 100, null, 2.5f, GameScreen.player.getX(), GameScreen.player.getY());
         playerLight.setSoftnessLength(2f);
         playerLight.setXray(true);
         
-        
+        //This is the flashlight
         playerFlashlight = new ConeLight(rayHandler, 300, Color.WHITE, 7f, GameScreen.player.getX(), GameScreen.player.getY(), 0, 20f);
         playerFlashlight.setSoftnessLength(2f);
         playerFlashlight.setXray(false);
+        playerFlashlight.setContactFilter(blockLighting);
+
     }
+    
     
     public static void updateLights() {
         mousePosition.x = (GameScreen.player.getX() - (Constants.VIEWPORT_WIDTH/2)) + (((float)InputHandler.relativeMousePosition.x/Gdx.graphics.getWidth()) * Constants.VIEWPORT_WIDTH);

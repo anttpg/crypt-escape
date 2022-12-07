@@ -1,4 +1,4 @@
-package com.cryptescape.game;
+package com.cryptescape.game.entities;
 
 import java.util.Random;
 
@@ -19,6 +19,9 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.cryptescape.game.Constants;
+import com.cryptescape.game.GameScreen;
+import com.cryptescape.game.InputHandler;
 import com.cryptescape.game.rooms.Box;
 import com.cryptescape.game.rooms.Door;
 import com.cryptescape.game.rooms.DroppedItem;

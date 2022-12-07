@@ -16,6 +16,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.cryptescape.game.Constants;
 import com.cryptescape.game.GameScreen;
+import com.cryptescape.game.LightingManager;
 
 public class Interactable extends Actor{
 	private Fixture fixture;
@@ -115,6 +116,7 @@ public class Interactable extends Actor{
 		box.setAsBox(hx, hy);
 		
 	    FixtureDef fixtureDef = new FixtureDef();
+	    fixtureDef.filter.groupIndex = -2;
 	    fixtureDef.shape = box;
 		fixtureDef.isSensor = true; //Makes sensor?
 		fixtureDef.density = 0f;

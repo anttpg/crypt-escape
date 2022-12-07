@@ -1,4 +1,4 @@
-package com.cryptescape.game;
+package com.cryptescape.game.entities;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ai.btree.decorator.Random;
@@ -14,6 +14,8 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.cryptescape.game.Constants;
+import com.cryptescape.game.GameScreen;
 
 public class Enemy extends Movables {
 	public boolean hasSwitched = false;

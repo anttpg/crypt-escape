@@ -3,7 +3,11 @@ package com.cryptescape.game;
 public class CustomFixtureData {
 	private boolean isMovable;
 //	private boolean mouseInRange;
-
+	
+	/**
+	 * Used for determining if a object can be moved
+	 * @param isMovable
+	 */
 	public CustomFixtureData(boolean isMovable) {
 		this.isMovable = isMovable;
 	}
@@ -16,7 +20,7 @@ public class CustomFixtureData {
 		return isMovable;
 	}
 	
-//	public boolean isMouseInRange() {
+//	public boolean interact() {
 //		return mouseInRange;
 //	}
 //	

@@ -166,7 +166,7 @@ public class Inventory {
 	}
 	
 	/**
-	 * Adds a new item to a box 
+	 * Adds a new item to a box, used on first time open.
 	 */
 	public static void addItemFromBox(String itemName, InventoryItem boxParent) {
 	    float x = boxParent.getX() + boxParent.getWidth()/2f;
@@ -223,7 +223,9 @@ public class Inventory {
     	    
     	    if(!remove.isEmpty()) { //Simply remove to use at a later date.
                 for(InventoryItem i : remove) { 
-                	GameScreen.player.getRoom().addDroppedItem(i);
+                    if(i.isDroppable()) 
+                        GameScreen.player.getRoom().addDroppedItem(i);
+                    
                     itemGroup.removeActor(i);    
                 }
             remove.clear();   

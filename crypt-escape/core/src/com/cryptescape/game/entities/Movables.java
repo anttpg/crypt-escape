@@ -1,4 +1,4 @@
-package com.cryptescape.game;
+package com.cryptescape.game.entities;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -12,6 +12,8 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.cryptescape.game.Constants;
+import com.cryptescape.game.GameScreen;
 import com.cryptescape.game.rooms.Room;
 
 

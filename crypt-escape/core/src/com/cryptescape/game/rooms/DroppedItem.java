@@ -23,10 +23,13 @@ public class DroppedItem extends Freeform {
 		
 		setItem(item);
 		
+
 		super.setTextureRegion(item.getRegion());
 		super.createInteractionRectangle(
 				Constants.TILESIZE/5f  * (item.getWidth()/item.getHeight()) * item.getScale(), 
 				Constants.TILESIZE/5f * item.getScale());
+		
+	    super.setLightingFilter(-2); //sets the item boundary to not interact with light
 	}
 
 	public void draw(SpriteBatch batch) {

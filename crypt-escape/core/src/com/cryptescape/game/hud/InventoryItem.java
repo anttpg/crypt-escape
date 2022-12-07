@@ -36,6 +36,8 @@ public class InventoryItem extends Actor{
     protected float countdown = 0;
     protected boolean mouseInRange = false;
     protected boolean startAnimation = false;
+    protected boolean isDroppable = true; 
+    //By default, it is droppable. For box or ect, change to false
     
     /**
      * Normal inventory item constructor
@@ -345,5 +347,9 @@ public class InventoryItem extends Actor{
 
     public Fixture getInteractionBody() {
         return interactionBody;
+    }
+
+    public boolean isDroppable() {
+        return isDroppable ;
     }	
 }
