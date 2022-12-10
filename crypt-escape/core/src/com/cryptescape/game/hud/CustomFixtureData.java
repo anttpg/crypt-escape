@@ -1,4 +1,4 @@
-package com.cryptescape.game;
+package com.cryptescape.game.hud;
 
 public class CustomFixtureData {
 	private boolean isMovable;
@@ -11,6 +11,14 @@ public class CustomFixtureData {
 	public CustomFixtureData(boolean isMovable) {
 		this.isMovable = isMovable;
 	}
+	
+	 /**
+     * Used for determining if a object should be saved from deletion
+     * @param deleteOnClose
+     */
+//	 public CustomFixtureData(boolean isMovable) {
+//	        this.isMovable = isMovable;
+//	 }
 	
 	public void setMovable(boolean s) {
 		isMovable = s;

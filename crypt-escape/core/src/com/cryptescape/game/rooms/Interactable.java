@@ -1,6 +1,7 @@
 package com.cryptescape.game.rooms;
 
 import java.util.HashMap;
+import java.util.Random;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -16,7 +17,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.cryptescape.game.Constants;
 import com.cryptescape.game.GameScreen;
-import com.cryptescape.game.LightingManager;
+import com.cryptescape.game.graphics.LightingManager;
 
 public class Interactable extends Actor{
 	private Fixture fixture;
@@ -46,6 +47,20 @@ public class Interactable extends Actor{
 	private void setItemLocation() {
 		setX(parent.getRoomLocation()[1] + (Constants.X_ROOM_METERS * (row/(float)Constants.X_TILES)));
 		setY(parent.getRoomLocation()[0] + (Constants.Y_ROOM_METERS * (col/(float)Constants.Y_TILES)));		
+	}
+	
+	/**
+	 * Gets a random textureregion super from all possible verisons 
+	 * (IE for different boxes)
+	 */
+	public static TextureRegion getRandomRegion(String name, int numOfTypes) {
+	    Random r = new Random();
+	    int l = r.nextInt(numOfTypes)+1; //Specifies number of possible box types (currently 6) 
+	    if(GameScreen.atlas.findRegion(name + l) != null) {
+	        return GameScreen.atlas.findRegion(name + l);
+	    }
+	    
+	    return null;
 	}
 	
 	public Vector2 getItemLocation() {

@@ -16,10 +16,14 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.cryptescape.game.Constants;
 import com.cryptescape.game.GameScreen;
+import com.cryptescape.game.entities.MobManager;
 import com.cryptescape.game.hud.InventoryItem;
 
 public class Room {
 	
+    private boolean smellsOfBlood = false;
+    private double smellsCounter = 0;
+    
 	private boolean discovered;
 	private int[] relativeLocation = new int[2]; // [Col, Row] on the map FROM THE TOP, NOT BOTTOM CORNER
 	private float[] roomCorner = new float[2]; // room [y, x] real relative locations 
@@ -35,6 +39,7 @@ public class Room {
 	//iItems stores all the interactable objects
 	private ArrayList<Interactable> iItems = new ArrayList<Interactable>();
 	private ArrayList<DroppedItem> droppedItems = new ArrayList<DroppedItem>();
+	private ArrayList<Floorstain> floorstains = new ArrayList<Floorstain>();
 	private ArrayList<Freeform> disposalList = new ArrayList<Freeform>();
 	
 	private ArrayList<Door> doors = new ArrayList<Door>(Arrays.asList(null, null, null, null)); //Seperate from items
@@ -120,16 +125,14 @@ public class Room {
 	 */
 	public void draw(SpriteBatch batch) {
 		batch.disableBlending();
-		for(float[] backGtile : background) { //Render background first, then
+		for(float[] backGtile : background)  //Render background first, then
 			batch.draw(BACKGROUND, backGtile[1], backGtile[0], Constants.TILESIZE, Constants.TILESIZE);
-		}
 		
 		batch.enableBlending();
 		
 		//Render all doors, above everything else.
-		for(Door door : doors) { 
+		for(Door door : doors) 
 			if(door != null) door.draw(batch);
-		}
 		
 		//This is for sprite ordering (by Z index), render lower level first.
 		for(Interactable i : getItems()) {
@@ -139,6 +142,7 @@ public class Room {
 		
 		//Then Render player
 		GameScreen.player.draw(batch);
+		MobManager.drawMobs(batch);
 		
 		//Then render interactable on top of the player
 		for(Interactable i : getItems()) {
@@ -147,15 +151,28 @@ public class Room {
 		}
 		
 		disposeOfUnused();
-		//Finally render dropped items last (temp)
-		for(DroppedItem item : droppedItems) { 
+		//render dropped items
+		for(DroppedItem item : droppedItems) 
 			item.draw(batch);
-		}
-		
-		
-	}
-
 	
+		//Finally, render floor effects below everything
+	    for(Floorstain fs : floorstains) 
+	        fs.draw(batch);
+	    
+	    updateEnemyFlags();
+	}
+	
+	/**
+	 * This method is VERY important! This is what will be used to help the AI determine
+	 * which rooms it should enter, by giving it readable information (such as where the
+	 * player bled last)
+	 */
+	public void updateEnemyFlags() {
+	    if(smellsOfBlood) 
+	        smellsCounter -= Constants.FRAME_SPEED;
+	    if(smellsCounter < 0)
+	        smellsOfBlood = false;  
+	}
 	
 	public void debugRoomSeed() {
 		System.out.println(" \nStart of template: " + roomType);
@@ -202,6 +219,12 @@ public class Room {
 		return droppedItems;
 	}
 	
+	/** Adds a new bloodstain at XY, with the default fade of 10s
+	 */
+	public void addBloodstain(float decayTime, float xpos, float ypos) {
+	    floorstains.add(new Floorstain(decayTime, xpos, ypos, "bloodstain", this, 25));
+	}
+	
 	/**
 	 * Queues the removal of an item from play.
 	 */
@@ -217,6 +240,9 @@ public class Room {
 			item.destroyFixtures();
 			if(droppedItems.contains(item)) 
 				droppedItems.remove(item);
+			
+	        if(floorstains.contains(item)) 
+	            floorstains.remove(item);
 		}
 		
 		disposalList.clear();
@@ -276,4 +302,16 @@ public class Room {
 		System.out.println("END OF Room col: " + relativeLocation[0] + "    and row: " + relativeLocation[1]);
 		System.out.println("Y meters: " + roomCorner[0] + "   X meters: " + roomCorner[1] + "\n");
 	}
+
+
+
+    public boolean doesRoomSmellOfBlood() {
+        return smellsOfBlood;
+    }
+
+
+
+    public void setRoomSmellsOfBlood(boolean smellsOfBlood) {
+        this.smellsOfBlood = smellsOfBlood;
+    }
 }

@@ -142,8 +142,11 @@ public class Freeform extends Actor{
 		return parent;
 	}
 
-
+	/**
+	 * Deletes this object
+	 */
 	public void destroyFixtures() {
-		interactionBody.destroyFixture(interactionFixture);
+	    if(interactionBody != null)
+	        interactionBody.destroyFixture(interactionFixture);
 	}
 }

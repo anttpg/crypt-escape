@@ -34,9 +34,7 @@ import box2dLight.RayHandler;
 
 public class Player extends Movables {
 	private static AnimationHandler playerAnimation;
-	private TextureAtlas textureAtlas; 
 	private float elapsedTime = 1f;
-	private static float fadeTimer = 0;
 	private float teleportCooldown = 0f;
 	private float scale;
 	
@@ -62,9 +60,6 @@ public class Player extends Movables {
 		super(x, y, maxVelocity, s, new float[] {8f,16f});
 		scale = t;
 		
-        //effects
-		textureAtlas = new TextureAtlas();
-		textureAtlas.addRegion("note",new TextureRegion(new Texture("Old Assets/notusable/note.png")));
 		
 		playerAnimation = new AnimationHandler(); //Adds all the animations for the player
 		playerAnimation.add("playerN", new Animation<TextureRegion>(Constants.FRAME_SPEED, GameScreen.atlas.findRegions("playerN")));
@@ -79,7 +74,6 @@ public class Player extends Movables {
 		playerAnimation.setCurrent("playerS");
 		
 		super.setZIndex(2);
-
 	}
 	
 		
@@ -111,6 +105,7 @@ public class Player extends Movables {
     	return currentRoom;
     }
     
+    
     /**
      * ONLY USE TO SET THE STARTING ROOM, WILL NOT GO THROUGH DOOR CHECK SEQUENCE
      */
@@ -134,6 +129,8 @@ public class Player extends Movables {
      * This deals with all interactions the player will be making, as well as setting the current animation
      */
 	public void update() {
+	    StatusManager.update();
+	    
         if(overrideAnimation) {
             overrideAnimationCounter -= Constants.FRAME_SPEED;
             if(overrideAnimationCounter < 0)
@@ -208,7 +205,7 @@ public class Player extends Movables {
 				playerAnimation.setCurrent("playerS");
 			}
 		}	 	
-	}          
+	}   
 	
 	/**
 	 * forces the current animation given to run its course.

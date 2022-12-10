@@ -41,7 +41,11 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.cryptescape.game.entities.Enemy;
+import com.cryptescape.game.entities.MobManager;
 import com.cryptescape.game.entities.Player;
+import com.cryptescape.game.entities.StatusManager;
+import com.cryptescape.game.graphics.LightingManager;
+import com.cryptescape.game.graphics.TransitionScreen;
 import com.cryptescape.game.hud.PlayerHud;
 import com.cryptescape.game.rooms.Interactable;
 import com.cryptescape.game.rooms.Room;
@@ -95,7 +99,7 @@ public class GameScreen implements Screen {
 	private Fixture BASE_FLOOR;
 	
 
-	private boolean debugPerspective = false;
+	public static boolean debugPerspective = true;
 	private boolean runOnceTempDebugVariable = true;
 	
 	public MusicManager music;
@@ -159,7 +163,9 @@ public class GameScreen implements Screen {
 		
 		LightingManager.createLights(); //Creates Lighting
 		player.toFront();
-	
+		
+		StatusManager.injurePlayer(10, true, 30); //Temp testing bleeding effects
+		MobManager.addBat(player.getX(), player.getY(), player.getRoom()); //Temp testing adding mobs.
 	}
 
 	
@@ -180,11 +186,12 @@ public class GameScreen implements Screen {
 		
 		game.batch.begin();
 		player.getRoom().draw(game.batch); //draw the room that the player is currently in. This will also draw the player.
-		
+		System.out.println("Player: " + player.getX() + " " + player.getY());
 		
 //		enemy.implementAction(); //decides what the enemy will do
 //		enemy.draw(game.batch);
-		game.batch.end();
+		MobManager.update();
+		game.batch.end(); 
 		
 		
 //        try {
@@ -193,10 +200,10 @@ public class GameScreen implements Screen {
 //            e.printStackTrace();
 //        }
         
-		debugRenderer.render(world, camera.combined);
-		//if(debugPerspective) 
-			
-		//else  //Else render lighting 
+		
+		if(debugPerspective) 
+		    debugRenderer.render(world, camera.combined);
+		else  //Else render lighting
 		    LightingManager.updateLights();
 		
 		
@@ -212,15 +219,14 @@ public class GameScreen implements Screen {
         //Update/Draw the game stage
         viewport.apply();
         stage.draw(); //Dont draw the stage to save on resources, sine that would draw EVERY sprite, instead room takes care of it.
-//       
+        
 //        System.out.println("PLAYER: " + (player.getX()-oldP[0]) + ", " + (player.getY()-oldP[1]));
 //        oldP[0] = player.getX();
 //        oldP[1] = player.getY();
-//        
+        
         //Update/Draw the Hud
         hud.update(delta, game.batch);
-       //  music.update();
-        
+        music.update();
         
         if(fade) //Apply fade out effect last
             TransitionScreen.render(game.batch, stage);
@@ -252,8 +258,7 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void show() {
-		//music.playRandomSong();
-		//log 
+		music.playRandomSong();
 		Gdx.app.log("MainScreen","show");
 	}
 

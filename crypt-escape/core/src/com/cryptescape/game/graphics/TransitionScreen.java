@@ -1,4 +1,4 @@
-package com.cryptescape.game;
+package com.cryptescape.game.graphics;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.cryptescape.game.GameScreen;
 
 public class TransitionScreen {
     private static Texture overlay = new Texture(Gdx.files.internal("TestOverlay.png"));
@@ -32,8 +33,7 @@ public class TransitionScreen {
             fadeDirection = false;
         } 
         
-        
-        if(fadeDirection)
+        if(fadeDirection) 
             alpha += 0.01f;
         
         else {

@@ -33,7 +33,7 @@ public abstract class Movables extends Actor{
 	public Room currentRoom; 
 	protected TextureRegion frame;
 	
-	private Fixture fixture;
+	protected Fixture fixture;
 	protected Body body;
 	protected Vector2 forceVector = new Vector2();
 	

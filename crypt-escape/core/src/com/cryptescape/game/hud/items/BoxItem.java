@@ -1,10 +1,12 @@
-package com.cryptescape.game.hud;
+package com.cryptescape.game.hud.items;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.cryptescape.game.GameScreen;
+import com.cryptescape.game.hud.Inventory;
+import com.cryptescape.game.hud.InventoryItem;
 import com.cryptescape.game.rooms.Box;
 
 public class BoxItem extends InventoryItem {

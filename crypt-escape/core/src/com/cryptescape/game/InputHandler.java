@@ -11,6 +11,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.QueryCallback;
 import com.badlogic.gdx.physics.box2d.joints.MouseJoint;
 import com.badlogic.gdx.utils.Array;
+import com.cryptescape.game.hud.CustomFixtureData;
 import com.cryptescape.game.hud.Inventory;
 
 public class InputHandler {
@@ -18,6 +19,7 @@ public class InputHandler {
     public static float sprint = 1; //changes when sprinting
     public static boolean e_pressed;
     public static boolean tab_pressed;
+    public static boolean lmouse_held;
     
     
     public static Vector2 relativeMousePosition = new Vector2(0, 0);
@@ -49,6 +51,7 @@ public class InputHandler {
     		System.out.println("fixture " + fixture.getUserData());
     		System.out.println();
     		
+    		Inventory.currentlyDragging = fixture;
     		Inventory.getMouseDef().bodyB = fixture.getBody();
     		Inventory.getMouseDef().target.set(relativeMouseInventory.x, relativeMouseInventory.y);
     		Inventory.getMouseDef().maxForce = 50000;
@@ -80,6 +83,8 @@ public class InputHandler {
                     e_pressed = true;
                 if (keycode == Input.Keys.TAB)
                     tab_pressed = !tab_pressed;
+                if (keycode == Input.Keys.GRAVE)
+                    GameScreen.debugPerspective = !GameScreen.debugPerspective;
                 if (keycode == Input.Keys.ESCAPE)
                     tab_pressed = false;
                 
@@ -106,7 +111,6 @@ public class InputHandler {
 
                 if (keycode == Input.Keys.E)
                     e_pressed = false;
-                
                 return false;
             }
 
@@ -124,24 +128,17 @@ public class InputHandler {
             public boolean touchDown(int screenX, int screenY, int pointer, int button) {
             	if (button != Input.Buttons.LEFT || pointer > 0) return false;
             	
-            	relativeMouseInventory.set((screenX/GameScreen.realWidth) * Inventory.getStage().getWidth(), 
-            			Inventory.getStage().getHeight() - (screenY/GameScreen.realHeight) * Inventory.getStage().getHeight(), 0);
-            	
-                Inventory.getWorld().QueryAABB(invCallback, relativeMouseInventory.x, relativeMouseInventory.y, relativeMouseInventory.x, relativeMouseInventory.y); 	
-                System.out.println("temp vector" + relativeMouseInventory);
-                //Finding fixtures inside of this rect (We make it a point, cheating a lil). Its a little innacurate for optimization
-                
-//                System.out.println(screenX + " " + GameScreen.stage.getWidth());
-//                System.out.println("stage inv: " + Inventory.getStage().getHeight() + " " + screenY + "/" + GameScreen.realHeight);
-//                System.out.println("stage inv: " + Inventory.getStage().getWidth() + " " + screenX + "/" + GameScreen.realWidth);              
-//              
-//                Array<Fixture> f = new Array<Fixture>();
-//                Inventory.getWorld().getFixtures(f);
-//                for(Fixture fix : f) {
-//                	System.out.println("fixture: " + fix.getBody().getPosition());
-//                }
-//                
-				return false;
+            	if(tab_pressed) {
+                	relativeMouseInventory.set((screenX/GameScreen.realWidth) * Inventory.getStage().getWidth(), 
+                			Inventory.getStage().getHeight() - (screenY/GameScreen.realHeight) * Inventory.getStage().getHeight(), 0);
+                    Inventory.getWorld().QueryAABB(invCallback, relativeMouseInventory.x, relativeMouseInventory.y, relativeMouseInventory.x, relativeMouseInventory.y); 	
+                    System.out.println("temp vector" + relativeMouseInventory);
+                    return false;
+            	}
+            	else {
+            	    InputHandler.lmouse_held = true;
+            	    return false;
+            	}
             }
             
             @Override
@@ -161,12 +158,14 @@ public class InputHandler {
             @Override
             public boolean touchUp(int screenX, int screenY, int pointer, int button) {
             	if (button != Input.Buttons.LEFT || pointer > 0) return false;
-            	
+
 				if(Inventory.getMouseJoint() == null) 
 					return false;
 				
+				Inventory.currentlyDragging = null;
 				Inventory.getWorld().destroyJoint(Inventory.getMouseJoint());
 				Inventory.setMouseJoint(null);
+				InputHandler.lmouse_held = false;
 				return true;
             }
         });

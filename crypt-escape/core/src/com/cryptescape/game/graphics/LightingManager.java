@@ -1,9 +1,12 @@
-package com.cryptescape.game;
+package com.cryptescape.game.graphics;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Filter;
+import com.cryptescape.game.Constants;
+import com.cryptescape.game.GameScreen;
+import com.cryptescape.game.InputHandler;
 
 import box2dLight.ConeLight;
 import box2dLight.PointLight;
@@ -34,8 +37,8 @@ public class LightingManager {
         playerLight.setXray(true);
         
         //This is the flashlight
-        playerFlashlight = new ConeLight(rayHandler, 300, Color.WHITE, 7f, GameScreen.player.getX(), GameScreen.player.getY(), 0, 20f);
-        playerFlashlight.setSoftnessLength(2f);
+        playerFlashlight = new ConeLight(rayHandler, 300, Color.WHITE, 7f, GameScreen.player.getX(), GameScreen.player.getY(), 0, 25f);
+        playerFlashlight.setSoftnessLength(1.5f);
         playerFlashlight.setXray(false);
         playerFlashlight.setContactFilter(blockLighting);
 

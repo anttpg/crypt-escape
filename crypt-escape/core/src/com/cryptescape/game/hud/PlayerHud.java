@@ -24,58 +24,20 @@ public class PlayerHud {
     private Stage overlayStage;
     private Stage inventoryStage;
     private Inventory inventory;
+    private Overlay overlay;
     
-    private Table table;
- 
-    private ArrayList<HudElement> overlayElements = new ArrayList<HudElement>();
-    private HudElement candle;
-    private CandleFlame flame;
-   
-    private static Label timer;
-    private Label timeLabel;
-        
-    private float BURN_SPEED = ((GameScreen.player.getMaxCandleLevel() / GameScreen.player.getBurnPerTick()) * Constants.FRAME_SPEED) -
-    		(1/Constants.FRAME_SPEED * GameScreen.player.getMaxCandleLevel() * GameScreen.player.getBurnPerTick());
-    private float burntime = BURN_SPEED;
+
     
     public PlayerHud(SpriteBatch spriteBatch) {
         overlayStage = new Stage(new ExtendViewport(GameScreen.stage.getWidth(), GameScreen.stage.getHeight()), spriteBatch); 
         inventoryStage = new Stage(new ExtendViewport(Constants.VIEWPORT_WIDTH, Constants.VIEWPORT_HEIGHT), spriteBatch); 
         inventory = new Inventory(inventoryStage);
-        
-        
-        candle = new HudElement(new Animation<TextureRegion>(1, GameScreen.atlas.findRegions("candle")));
-        candle.setDuration(BURN_SPEED);
-        overlayElements.add(candle);
-        
-        flame = new CandleFlame(new Animation<TextureRegion>(Constants.FRAME_SPEED*8, GameScreen.atlas.findRegions("candleFlame")));
-        overlayElements.add(flame);
-        
-        
-        table = new Table();
-        table.top();
-        table.setFillParent(true);
-        
-        timer = new Label(String.format("%06d", (int)BURN_SPEED), new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        timeLabel = new Label("TIME REMAINING: ", new Label.LabelStyle(new BitmapFont(), Color.WHITE));
-        
-        table.add(timeLabel).expandX().padTop(20);
-        table.row();
-        table.add(timer).expandX();
-        
-
-   
-        overlayStage.addActor(table);
-        overlayStage.addActor(candle);
-        overlayStage.addActor(flame);
+        overlay = new Overlay(overlayStage);
     }
     
     public void resize(int width, int height) {
         inventory.resize(width, height);
-        
-        overlayStage.getViewport().update(width, height, true);
-        for (HudElement e : overlayElements)
-            e.resize(width, height);
+        overlay.resize(width, height);
     }
 
     
@@ -101,17 +63,17 @@ public class PlayerHud {
             
             inventoryStage.act(delta);
             inventoryStage.draw();
-            //inventory.getDebugRenderer().render(Inventory.getWorld(), inventoryStage.getCamera().combined);
+            
+            if(GameScreen.debugPerspective)
+                inventory.getDebugRenderer().render(Inventory.getWorld(), inventoryStage.getCamera().combined);
         }
         
         else {
             Inventory.disposeUnusedItems();
             
             batch.setProjectionMatrix(overlayStage.getCamera().combined);
-            flame.updateFlame(candle);
-            burntime -= Gdx.graphics.getDeltaTime();
-            //timer.setText(String.format("%06d", (int)burntime));
-            timer.setText(Gdx.graphics.getFramesPerSecond());
+            overlay.update();
+            
             overlayStage.act(delta);
             overlayStage.draw();
         }

@@ -13,7 +13,6 @@ import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
 import com.badlogic.gdx.physics.box2d.ChainShape;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.cryptescape.game.Constants;
-import com.cryptescape.game.CustomFixtureData;
 import com.cryptescape.game.GameScreen;
 import com.cryptescape.game.InputHandler;
 import com.cryptescape.game.rooms.Interactable;
@@ -24,7 +23,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
 public class InventoryItem extends Actor{
-    private Fixture fixture;
+    protected Fixture fixture;
 	protected Fixture interactionBody;
     protected TextureRegion currentRegion;
     protected Animation<TextureRegion> animation = null;
@@ -40,7 +39,7 @@ public class InventoryItem extends Actor{
     //By default, it is droppable. For box or ect, change to false
     
     /**
-     * Normal inventory item constructor
+     * Normal inventory item constructor, with a single image used.
      */
     public InventoryItem(World world, String name, TextureRegion region, float x, float y, float scale, int zindex) {
         setName(name);
@@ -176,13 +175,33 @@ public class InventoryItem extends Actor{
     	getBody().setUserData(new CustomFixtureData(ans));
     }
     
-    public void setIsMovable(boolean ans) {
-    	((CustomFixtureData)(getBody().getUserData())).setMovable(ans);
+    public void setIsMovable(boolean isMovable) {
+    	((CustomFixtureData)(getBody().getUserData())).setMovable(isMovable);
     }
     
     public void setInRange() {
     	if(interactionBody != null)
     		mouseInRange = interactionBody.testPoint(InputHandler.relativeMouseInventory.x, InputHandler.relativeMouseInventory.y);
+    }
+    
+    /**
+     * Tests the interaction body for containment of an item
+     */
+    public boolean testForContainment(InventoryItem item) {
+        if(interactionBody != null)
+            return getInteractionBody().testPoint(item.getX() + item.getWidth()/2f, item.getY() + item.getHeight()/2f);
+            
+        return false;
+    }
+    
+    /**
+     * Tests the interaction body for containment of a fixture
+     */
+    public boolean testForContainment(Fixture item) {
+        if(interactionBody != null)
+            return getInteractionBody().testPoint(item.getBody().getPosition());
+            
+        return false;
     }
     
     public void makeCircleFixture(World world, float x, float y) {
@@ -325,9 +344,12 @@ public class InventoryItem extends Actor{
 		circle.dispose();
 	}
 	
+	 /**
+     * Creates an interaction square from relative position (x,y) with the half width and half height hx & hy 
+     */
 	public void createInteractionSquare(float x, float y, float hx, float hy) {
 	    PolygonShape box = new PolygonShape(); // Create a polygon shape
-        box.setAsBox(hx, hy);
+        box.setAsBox(hx, hy, new Vector2(x,y), 0);
         
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = box;
@@ -339,7 +361,17 @@ public class InventoryItem extends Actor{
         interactionBody.setUserData(new CustomFixtureData(false)); //This represents that this item is a interaction object, and is not movable, nor should be. 
         box.dispose();
     }
+	    
+	/**
+	 * Creates an interaction square with the default position (from 0,0)
+	 */
+	public void createInteractionSquare(float hx, float hy) {
+	    createInteractionSquare(0, 0, hx, hy);
+	}
 	
+	/**
+	 * Sets if the current item can be clicked on to move around
+	 */
 	public void setInteractable(boolean isTouchable) {
 	    fixture.getBody().setActive(isTouchable);
 
@@ -351,5 +383,16 @@ public class InventoryItem extends Actor{
 
     public boolean isDroppable() {
         return isDroppable ;
+    }
+
+    public boolean checkIfSameFixture(Fixture dragging) {
+        try {
+            if(dragging == fixture || dragging == interactionBody)
+                return true;
+        }
+        catch(Exception e) {   /* Yayyy bad coding :) */
+            System.out.println("Exception in InventoryItem");
+        }
+        return false;
     }	
 }

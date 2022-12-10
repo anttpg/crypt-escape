@@ -1,5 +1,6 @@
 package com.cryptescape.game.hud;
 
+import java.nio.channels.AcceptPendingException;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
@@ -26,8 +27,14 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.cryptescape.game.Constants;
-import com.cryptescape.game.CustomFixtureData;
 import com.cryptescape.game.GameScreen;
+import com.cryptescape.game.hud.items.BagItem;
+import com.cryptescape.game.hud.items.BatteryItem;
+import com.cryptescape.game.hud.items.BoxItem;
+import com.cryptescape.game.hud.items.CandleItem;
+import com.cryptescape.game.hud.items.CannedFoodItem;
+import com.cryptescape.game.hud.items.CrowbarItem;
+import com.cryptescape.game.hud.items.DrinkItem;
 import com.cryptescape.game.rooms.Box;
 
 public class Inventory {
@@ -38,16 +45,22 @@ public class Inventory {
     public static float tileSize;
     public static float oldWidth;
     public static float oldHeight;
+    
     public static MouseJointDef mouseDef;
     public static MouseJoint mouse;
+    public static Fixture currentlyDragging;
     
     private static ArrayList<InventoryItem> dispose = new ArrayList<InventoryItem>();
     private static ArrayList<InventoryItem> remove = new ArrayList<InventoryItem>();
+    private static ArrayList<InventoryItem> alwaysSafe = new ArrayList<InventoryItem>();
     private static BagItem bag;
     
     private static boolean toDispose = false;
     private Texture overlay = new Texture(Gdx.files.internal("TestOverlay.png"));
     private Fixture boundary;
+    
+    private static EquipmentSlot equipmentLeft;
+    private static EquipmentSlot equipmentRight;
     
     
     private static Group itemGroup = new Group();
@@ -72,12 +85,29 @@ public class Inventory {
 //        backItems.add(new BagItem(world, "briefcase", stage.getWidth()/2f, 1.3f, 1));
         
         //ALWAYS LEAVE BREIFCASE FIRST
-        bag = new BagItem(world, "briefcase", stage.getWidth()/2f, 1.3f, 2);
+        bag = new BagItem(world, "briefcase", stage.getWidth()/2f, 1.7f, 2, 12f);
         itemGroup.addActor(bag);
         
+        equipmentLeft = new EquipmentSlot(world, "equipmentLeft", stage.getWidth()/8f, stage.getHeight() - stage.getHeight()/6f, 2, 7f);
+        equipmentRight = new EquipmentSlot(world, "equipmentRight", stage.getWidth() - stage.getWidth()/8f, stage.getHeight()  - stage.getHeight()/6f, 2, 7f);
+        itemGroup.addActor(equipmentLeft);
+        itemGroup.addActor(equipmentRight);
+        alwaysSafe.add(equipmentLeft);
+        alwaysSafe.add(equipmentRight);
+        ArrayList<String> acceptedItemsL = new ArrayList<String>();
+        acceptedItemsL.add("spraypaint");
+        acceptedItemsL.add("water");
+        acceptedItemsL.add("crowbar");
+        equipmentLeft.setAcceptedItems(acceptedItemsL);
+        
+        ArrayList<String> acceptedItemsR = new ArrayList<String>();
+        acceptedItemsR.add("candlestick");
+        equipmentRight.setAcceptedItems(acceptedItemsR);
+        
+        itemGroup.addActor(new CrowbarItem(world, "crowbar", 5f, 1.2f, 3, 6f));
         itemGroup.addActor(new CandleItem(world, "candlestick", 5f, 1.2f, 3));
         itemGroup.addActor(new BatteryItem(world, "battery", 5.3f, 1.2f, 3));
-        itemGroup.addActor(new DrinkItem(world, "water", 5.9f, 1.2f, 3));
+        itemGroup.addActor(new DrinkItem(world, "water", 5.9f, 1.2f, 3, 3f));
         itemGroup.addActor(new CannedFoodItem(world, "beans", 5.7f, 1.2f, 3));
         itemGroup.addActor(new SpraypaintItem(world, "spraypaint", 5.5f, 1.2f, 3));
 
@@ -177,7 +207,7 @@ public class Inventory {
 	    else if(itemName.equals("battery"))
 	        itemGroup.addActorAt(3, new BatteryItem(world, "battery", x, y, 2));
 	    else if(itemName.equals("water"))
-	        itemGroup.addActorAt(3, new DrinkItem(world, "water", x, y, 2));
+	        itemGroup.addActorAt(3, new DrinkItem(world, "water", x, y, 2, 3f));
 	    else if(itemName.equals("beans"))
 	        itemGroup.addActorAt(3, new CannedFoodItem(world, "beans", x, y, 2));
 	    else if(itemName.equals("spraypaint"))
@@ -207,9 +237,11 @@ public class Inventory {
 	    if(toDispose) {
 	        ArrayList<Actor> safe = bag.checkIfOverlap();
     	    
+	        
     	    for(Actor a : itemGroup.getChildren()) 
-    	        if(safe.indexOf(a) == -1 && remove.indexOf((InventoryItem)a) == -1) 
-    	            remove.add((InventoryItem)a); //Cant dispose of it yet, will skip items
+    	        if(alwaysSafe.indexOf(a) == -1 && equipmentLeft.getEquippedItem() != ((InventoryItem)a) && equipmentRight.getEquippedItem() != ((InventoryItem)a))
+    	            if(safe.indexOf(a) == -1 && remove.indexOf((InventoryItem)a) == -1)
+    	                remove.add((InventoryItem)a); //Cant dispose of it yet, will skip items
     	            
     	    safe.clear();
     	    
@@ -234,6 +266,7 @@ public class Inventory {
     	    toDispose = false;
 	    }
 	}
+
 	
 	public static void setMouseJoint(MouseJoint createJoint) {
 		mouse = createJoint;

@@ -1,8 +1,9 @@
-package com.cryptescape.game.hud;
+package com.cryptescape.game.hud.items;
 
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.World;
 import com.cryptescape.game.GameScreen;
+import com.cryptescape.game.hud.InventoryItem;
 
 public class CannedFoodItem extends InventoryItem {
     public CannedFoodItem(World world, String name, float x, float y, int zindex) {

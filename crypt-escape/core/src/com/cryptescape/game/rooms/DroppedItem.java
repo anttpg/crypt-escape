@@ -47,6 +47,7 @@ public class DroppedItem extends Freeform {
 		savedItem.getBody().setActive(true);
 		Inventory.addItem(savedItem);
 		super.getParentRoom().queueForDisposal(this);
+		InputHandler.tab_pressed = true;
 		//InputHandler.tab_pressed = true;
 	}
 
