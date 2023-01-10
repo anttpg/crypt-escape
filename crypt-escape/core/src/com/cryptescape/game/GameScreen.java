@@ -224,7 +224,7 @@ public class GameScreen implements Screen {
         
         //Update/Draw the Hud
         hud.update(delta, game.batch);
-        music.update();
+        //music.update();
         
         if(fade) //Apply fade out effect last
             TransitionScreen.render(game.batch, stage);
@@ -256,7 +256,7 @@ public class GameScreen implements Screen {
 
 	@Override
 	public void show() {
-		music.playRandomSong();
+		//music.playRandomSong();
 		Gdx.app.log("MainScreen","show");
 	}
 

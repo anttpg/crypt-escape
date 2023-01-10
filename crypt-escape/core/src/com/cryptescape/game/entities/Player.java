@@ -28,6 +28,7 @@ import com.cryptescape.game.rooms.DroppedItem;
 import com.cryptescape.game.rooms.Freeform;
 import com.cryptescape.game.rooms.Interactable;
 import com.cryptescape.game.rooms.Room;
+import com.cryptescape.game.rooms.Table;
 
 import box2dLight.RayHandler;
 
@@ -151,6 +152,10 @@ public class Player extends Movables {
 		    for (Box box : currentRoom.getBoxes()) 
                 if (box.isPlayerInRange()) 
                     box.setAnimationPhase("opening");
+		    
+		    for (Table table : currentRoom.getTables())
+		        if (table.isPlayerInRange())
+		            table.setInteractionState("open");
 		    
 		    
 		    for (DroppedItem item : currentRoom.getDroppedItems()) 

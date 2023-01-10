@@ -15,7 +15,7 @@ public class BoxItem extends InventoryItem {
     private boolean runonce = true;
     
     public BoxItem(World world, Box box, float x, float y, int zindex) {
-        super(world, "boxOpening"+box.getL(), "boxOpening"+box.getL(), x, y, 9f, zindex, 0.2f); 
+        super(world, "boxOpening"+box.getSkin(), "boxOpening"+box.getSkin(), x, y, 9f, zindex, 0.2f); 
         this.box = box;
         super.isDroppable = false;
         Vector2[] vertices = new Vector2[] {new Vector2(0.2f,0.79f), new Vector2(0.59f,0.79f), new Vector2(0.65f,0.2f)};

@@ -356,9 +356,8 @@ public class RoomGeneration {
 				}
 				
                 if(col == startY && row == startX) {
-                    seed = clone2dArray(TEMPLATE.get(0)); 
-                    seed[7][10] = "boxUnlocked";
-                    seed[9][12] = "haystack";
+                    //seed = clone2dArray(TEMPLATE.get(0)); 
+                    addItemsToStartingRoom(seed);
                 }
 				
 				
@@ -369,7 +368,19 @@ public class RoomGeneration {
 	}
 	
 	
-	public static void repeat(String[][] s, ArrayList<String[][]> pregenTemplate) {
+	private static void addItemsToStartingRoom(String[][] seed) {
+	    //Y, X starting from 0, 0
+	    seed[7][10] = "boxUnlocked";
+        seed[9][12] = "haystack";
+        seed[9][14] = "table";
+        seed[9][15] = "empty";
+        
+    }
+
+
+
+
+    public static void repeat(String[][] s, ArrayList<String[][]> pregenTemplate) {
 		pregenTemplate.add(clone2dArray(s));
 		pregenTemplate.add(rotateArray(s, 1));
 		pregenTemplate.add(rotateArray(s, 2));

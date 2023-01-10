@@ -29,6 +29,7 @@ public class Interactable extends Actor{
 	private boolean playerInRange = false;
 	private int col;
 	private int row;
+    private int skinNumber;
 	
 	protected Animation<TextureRegion> animation;
 	public static HashMap<String, String> itemBounds;
@@ -49,16 +50,9 @@ public class Interactable extends Actor{
 	}
 	
 	public Interactable(int c, int r, String current, Room p, float width, float height) {
-	        parent = p;
-	        row = r;
-	        col = Math.abs(Constants.Y_TILES-c)-1;
-	        setItemLocation();
-	        setName(current);
+	        this(c, r, current, p);
 	        super.setWidth(width);
 	        super.setHeight(height);
-	        
-	        super.setZIndex(1);
-	        GameScreen.mainGroup.addActor(this);
 	}
 	
 	private void setItemLocation() {
@@ -82,9 +76,9 @@ public class Interactable extends Actor{
 	
 	public Vector2 getItemLocation() {
 		return new Vector2( // vectors are in x,y,z
-				parent.getRoomLocation()[1] + (Constants.X_ROOM_METERS * (row/(float)Constants.X_TILES)) + Constants.TILESIZE/2,
+				parent.getRoomLocation()[1] + (Constants.X_ROOM_METERS * (row/(float)Constants.X_TILES)) + getWidth()/2,
 				//Original corner        + Location at X tiles over          
-				parent.getRoomLocation()[0] + (Constants.Y_ROOM_METERS * (col/(float)Constants.Y_TILES)) + Constants.TILESIZE/2 
+				parent.getRoomLocation()[0] + (Constants.Y_ROOM_METERS * (col/(float)Constants.Y_TILES)) + getHeight()/2 
 				);
 	}
 	
@@ -102,18 +96,21 @@ public class Interactable extends Actor{
 		edge.dispose();	
 	}
 	
-	
-	public void createStaticBox(short groupIndex) {
+	/*
+	 * Creates a box around the texture (if given bounds), or a box around the tile,
+	 * (Default contant) that can interact/block other objects
+	 */
+	public void createStaticBox(int groupIndex) {
 		BodyDef bodyDef = new BodyDef(); 
 		
 		if (bounds == null) {
 			bodyDef.position.set(getItemLocation()); //Set its position 
 			Body bd = GameScreen.world.createBody(bodyDef);  
 			PolygonShape box = new PolygonShape();  // Create a polygon shape 
-			box.setAsBox(Constants.TILESIZE / 2f, Constants.TILESIZE / 2f);
+			box.setAsBox(getWidth() / 2f, getHeight() / 2f);
 			
 			FixtureDef fixtureDef = new FixtureDef();
-			fixtureDef.filter.groupIndex = groupIndex;
+			fixtureDef.filter.groupIndex = (short)groupIndex;
 		    fixtureDef.shape = box;
 		    fixtureDef.density = 0f;
 			fixture = bd.createFixture(fixtureDef);
@@ -122,10 +119,10 @@ public class Interactable extends Actor{
 		
 		else {
 			String[] b = bounds.split(",");
-			float hx = ((Constants.TILESIZE - ( Constants.TILESIZE * ( Float.valueOf(b[0]) / (float)texture.getRegionWidth()) ) - (Constants.TILESIZE - ( Constants.TILESIZE * ( Float.valueOf(b[2]) / (float)texture.getRegionWidth()) ))) / 2f);
-			float hy = ((Constants.TILESIZE - ( Constants.TILESIZE * ( Float.valueOf(b[1]) / (float)texture.getRegionHeight()) ) - (Constants.TILESIZE - ( Constants.TILESIZE * ( Float.valueOf(b[3]) / (float)texture.getRegionHeight())) )) / 2f);
-			Vector2 corner = new Vector2((getItemLocation().x - Constants.TILESIZE/2) + hx + ( Constants.TILESIZE * ( Float.valueOf(b[0]) / (float)texture.getRegionWidth())),
-					(getItemLocation().y - Constants.TILESIZE/2) + hy + ( Constants.TILESIZE * ( Float.valueOf(b[1]) / (float)texture.getRegionHeight())));  //Normalizes it based on current location
+			float hx = ((getWidth() - ( getWidth() * ( Float.valueOf(b[0]) / (float)texture.getRegionWidth()) ) - (getWidth() - ( getWidth() * ( Float.valueOf(b[2]) / (float)texture.getRegionWidth()) ))) / 2f);
+			float hy = ((getHeight() - ( getHeight() * ( Float.valueOf(b[1]) / (float)texture.getRegionHeight()) ) - (getHeight() - ( getHeight() * ( Float.valueOf(b[3]) / (float)texture.getRegionHeight())) )) / 2f);
+			Vector2 corner = new Vector2((getItemLocation().x - getWidth()/2) + hx + ( getWidth() * ( Float.valueOf(b[0]) / (float)texture.getRegionWidth())),
+					(getItemLocation().y - getHeight() /2) + hy + ( getHeight()  * ( Float.valueOf(b[1]) / (float)texture.getRegionHeight())));  //Normalizes it based on current location
 			
 			bodyDef.position.set(corner); //Set its position 
 			Body bd = GameScreen.world.createBody(bodyDef);  
@@ -133,7 +130,7 @@ public class Interactable extends Actor{
 			box.setAsBox(hx, hy);
 
             FixtureDef fixtureDef = new FixtureDef();
-            fixtureDef.filter.groupIndex = groupIndex;
+            fixtureDef.filter.groupIndex = (short)groupIndex;
             fixtureDef.shape = box;
             fixtureDef.density = 0f;
 			fixture = bd.createFixture(fixtureDef);
@@ -190,18 +187,12 @@ public class Interactable extends Actor{
 	}
 	
 	 /**
-     * Used to draw a 1x1 default interactable
+     * Used to draw a interactable object
      */
-	public void defaultDraw(SpriteBatch batch) {
-		batch.draw(texture, getX(), getY(), Constants.TILESIZE, Constants.TILESIZE);
+	public void draw(SpriteBatch batch) {
+		batch.draw(texture, getX(), getY(), getWidth(), getHeight());
 	}
 	
-	/**
-	 * Used to draw an interactable of custom size (Ie 2x1 table)
-	 */
-	public void customDraw(SpriteBatch batch) {
-	    batch.draw(texture, getX(), getY(), getWidth(), getHeight());
-	}
 	
 	public Body getInteractionBody() {
 		return interactionBody;
@@ -214,4 +205,34 @@ public class Interactable extends Actor{
 	public Room getParentRoom() {
 		return parent;
 	}
+	
+	/**
+	 * Sets the current skin version to a randomly chosen version, and finds it correspondign animation
+	 */
+    public void findRandomAnimation(int numOfSkins, String name, float animation_speed) {
+        findRandomSkin(numOfSkins, name);
+        this.animation = new Animation<TextureRegion>(animation_speed, GameScreen.atlas.findRegions(name + skinNumber));
+        
+    }
+    
+    /**
+     * Sets the current skin to a randomly chosen version.
+     */
+    public void findRandomSkin(int numOfSkins, String name) {
+        Random r = new Random();
+        skinNumber = r.nextInt(numOfSkins) + 1; // Specifies number of possible box types (currently 6)
+        setName(getName() + skinNumber);
+
+        if (GameScreen.atlas.findRegion(getName()) != null) {
+            this.setTextureRegion(GameScreen.atlas.findRegion(getName()));
+            this.checkBounds(getName());
+        } else {
+            System.out.println("NullBoxType; Could not find " + name + " of type '" + getName() + "" + skinNumber + "'. "
+                            + "Make sure all " + name + " have a correct version. ");
+        }
+    }
+    
+    public int getSkin() {
+        return skinNumber;
+    }
 }

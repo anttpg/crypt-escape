@@ -20,7 +20,6 @@ public class Box extends Interactable  {
     private String animationPhase = "idle";
     private String storedItem;
     private boolean isUnlocked = false;
-    private int l;
     private static final float ANIMATION_SPEED = Constants.FRAME_SPEED * 10;
     
 	public Box(int col, int row, String name, Room p) {
@@ -31,27 +30,15 @@ public class Box extends Interactable  {
 		
 		storedItem = itemGeneration.next();
 		
-		Random r = new Random();
-		l = r.nextInt(6)+1; //Specifies number of possible box types (currently 6)
-		setName(getName() + l);
+		super.findRandomAnimation(6, name, ANIMATION_SPEED); //Num of skins, name, ect
 		
-		if(GameScreen.atlas.findRegion(getName()) != null) {
-		    super.animation = new Animation<TextureRegion>(ANIMATION_SPEED, GameScreen.atlas.findRegions("boxOpening" + l));
-			super.setTextureRegion(GameScreen.atlas.findRegion(getName()));
-			super.checkBounds(getName());
-		}	
-		else {
-			System.out.println("NullBoxType; Could not find box of type '" + getName() + "" + l + "'. "
-			        + "Make sure all boxes have a boxUnlocked version. "); 
-		}
-		
-		super.createStaticBox((short)-3);
-		super.createInteractionRadius(Constants.TILESIZE*1.2f, Constants.TILESIZE*1.2f);
+		super.createStaticBox(-3);
+		super.createInteractionRadius(super.getWidth()*1.2f, super.getHeight()*1.2f);
 		
 	}
 	
     public void draw(SpriteBatch batch) {
-        update();
+        this.update();
         super.draw(batch);
     }
     
@@ -67,10 +54,6 @@ public class Box extends Interactable  {
     
     public void setAnimationPhase(String phase) {
         animationPhase = phase;
-    }
-    
-    public int getL() {
-        return l;
     }
     
     public String getStoredItem() {

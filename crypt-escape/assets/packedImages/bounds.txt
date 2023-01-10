@@ -10,3 +10,5 @@ boxUnlocked3:0,30,104,104
 boxUnlocked4:0,0,104,70
 boxUnlocked5:17,14,122,122
 boxUnlocked6:30,5,100,100
+table1:8,2,95,50
+table2:8,2,95,50

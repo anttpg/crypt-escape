@@ -36,6 +36,7 @@ import com.cryptescape.game.hud.items.CannedFoodItem;
 import com.cryptescape.game.hud.items.CrowbarItem;
 import com.cryptescape.game.hud.items.DrinkItem;
 import com.cryptescape.game.rooms.Box;
+import com.cryptescape.game.rooms.Table;
 
 public class Inventory {
     private static Stage stage;
@@ -193,6 +194,10 @@ public class Inventory {
 	public static void openBox(Box box) {
 	    itemGroup.addActorAt(1, new BoxItem(world, box, 
 	            stage.getWidth()/2f, stage.getHeight() - stage.getHeight()/5f, 1));
+	}
+	
+	public static void openTable(Table table) {
+	    
 	}
 	
 	/**

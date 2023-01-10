@@ -45,6 +45,7 @@ public class Room {
 	
 	private ArrayList<Door> doors = new ArrayList<Door>(Arrays.asList(null, null, null, null)); //Seperate from items
 	private ArrayList<Box> boxes = new ArrayList<Box>();
+    private ArrayList<Table> tables = new ArrayList<Table>();
 	
 	
 	/**
@@ -95,22 +96,23 @@ public class Room {
 				switch(current) {
 				    case "box":
 				        interactableObjects.add(new Box(col, row, current, this));
-	                    boxes.add((Box) interactableObjects.get(interactableObjects.size()-1));
+	                    boxes.add((Box) getRecent());
 				        break;
 				        
 				    case "boxUnlocked":
 				        interactableObjects.add(new Box(col, row, current, this));
-                        boxes.add((Box) interactableObjects.get(interactableObjects.size()-1));
+                        boxes.add((Box) getRecent());
                         break;
                         
 				    case "boxOpening":
 				        interactableObjects.add(new Box(col, row, current, this));
-                        boxes.add((Box) interactableObjects.get(interactableObjects.size()-1));
+                        boxes.add((Box) getRecent());
                         break;
                         
                         
 				    case "table":
 				        interactableObjects.add(new Table(col, row, current, this));
+				        tables.add((Table) getRecent());
 				        
 				        
 				    case "puddle":
@@ -135,48 +137,55 @@ public class Room {
 		}
 	}
 	
-
+	public Interactable getRecent() {
+	    return interactableObjects.get(interactableObjects.size()-1);
+	}
 	
 	/**
 	 * Draws each part of the room, including the player.
 	 */
 	public void draw(SpriteBatch batch) {
+	    
+	    //Render background lowest, then
 		batch.disableBlending();
-		for(float[] backGtile : background)  //Render background first, then
+		for(float[] backGtile : background) 
 			batch.draw(BACKGROUND, backGtile[1], backGtile[0], Constants.TILESIZE, Constants.TILESIZE);
-		
 		batch.enableBlending();
 		
 		//Render all doors, above everything else.
 		for(Door door : doors) 
-			if(door != null) door.defaultDraw(batch);
+			if(door != null) door.draw(batch);
+		
+	    //floor effects below everything
+        for(Floorstain fs : floorstains) 
+            fs.draw(batch);
 		
 		//This is for sprite ordering (by Z index), render lower level first.
-		for(Interactable i : getItems()) {
-			if(i.getZIndex() < GameScreen.player.getZIndex())
-				i.defaultDraw(batch);
+		for(Interactable lowerZInteractable : getItems()) {
+			if(lowerZInteractable.getZIndex() < GameScreen.player.getZIndex())
+				lowerZInteractable.draw(batch);
 		}
 		
+	    //render dropped items
+        disposeOfUnused();
+        for(DroppedItem item : droppedItems) 
+            item.draw(batch);
+		
+        
 		//Then Render player
 		GameScreen.player.draw(batch);
+		
+		//Then draw mobs
 		MobManager.drawMobs(batch, this);
 		
 		
-		//Then render interactable on top of the player
-		for(Interactable i : getItems()) {
-			if(i.getZIndex() > GameScreen.player.getZIndex())
-				i.defaultDraw(batch);
+		//Finally render higher Z index items interactable on top of the player
+		for(Interactable upperZInteractable : getItems()) {
+			if(upperZInteractable.getZIndex() > GameScreen.player.getZIndex())
+				upperZInteractable.draw(batch);
 		}
 		
-		disposeOfUnused();
-		//render dropped items
-		for(DroppedItem item : droppedItems) 
-			item.draw(batch);
-	
-		//Finally, render floor effects below everything
-	    for(Floorstain fs : floorstains) 
-	        fs.draw(batch);
-	    
+
 	    updateEnemyFlags();
 	}
 	
@@ -276,6 +285,10 @@ public class Room {
 	public ArrayList<Door> getDoors() {
 		return doors;
 	}
+	
+    public ArrayList<Table> getTables() {
+        return tables;
+    }
 
 	public String getRoomType() {
 		return roomType;
@@ -335,4 +348,5 @@ public class Room {
     public void setRoomSmellsOfBlood(boolean smellsOfBlood) {
         this.smellsOfBlood = smellsOfBlood;
     }
+
 }

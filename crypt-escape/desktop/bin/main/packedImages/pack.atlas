@@ -307,28 +307,28 @@ water
   index: -1
 equipmentLeft
   rotate: false
-  xy: 644, 432
+  xy: 750, 130
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
   index: 0
 equipmentRight
   rotate: false
-  xy: 644, 432
+  xy: 750, 130
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
   index: 0
 equipmentLeft
   rotate: false
-  xy: 696, 432
+  xy: 769, 78
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
   index: 1
 equipmentRight
   rotate: false
-  xy: 717, 50
+  xy: 769, 26
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
@@ -363,49 +363,49 @@ hole
   index: 1
 hole
   rotate: false
-  xy: 750, 148
+  xy: 719, 16
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 2
 hole
   rotate: false
-  xy: 750, 114
+  xy: 633, 662
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 3
 hole
   rotate: false
-  xy: 719, 16
+  xy: 633, 628
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 4
 hole
   rotate: false
-  xy: 784, 148
+  xy: 685, 715
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 5
 hole
   rotate: false
-  xy: 784, 114
+  xy: 719, 715
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 6
 hole
   rotate: false
-  xy: 769, 80
+  xy: 685, 681
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 7
 hole
   rotate: false
-  xy: 769, 46
+  xy: 719, 681
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -440,105 +440,105 @@ batWest
   index: 1
 playerFalling
   rotate: false
-  xy: 667, 681
+  xy: 821, 685
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 0
 playerW
   rotate: false
-  xy: 667, 681
+  xy: 821, 685
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 0
 playerFalling
   rotate: false
-  xy: 701, 681
+  xy: 855, 686
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 1
 playerFalling
   rotate: false
-  xy: 667, 647
+  xy: 837, 651
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 2
 playerFalling
   rotate: false
-  xy: 701, 647
+  xy: 871, 652
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 3
 playerFalling
   rotate: false
-  xy: 699, 613
+  xy: 983, 632
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 4
 playerFalling
   rotate: false
-  xy: 694, 579
+  xy: 724, 545
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 5
 playerFalling
   rotate: false
-  xy: 728, 579
+  xy: 724, 511
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 6
 playerFalling
   rotate: false
-  xy: 733, 613
+  xy: 762, 579
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 7
 playerFalling
   rotate: false
-  xy: 724, 545
+  xy: 758, 545
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 8
 playerFalling
   rotate: false
-  xy: 724, 511
+  xy: 758, 511
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 9
 playerE
   rotate: false
-  xy: 633, 680
+  xy: 733, 613
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 0
 playerE
   rotate: false
-  xy: 633, 646
+  xy: 728, 579
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 1
 playerE
   rotate: false
-  xy: 667, 715
+  xy: 769, 651
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 2
 playerE
   rotate: false
-  xy: 701, 715
+  xy: 803, 651
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -559,21 +559,21 @@ playerN
   index: 3
 playerNE
   rotate: false
-  xy: 762, 579
+  xy: 767, 613
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 0
 playerNE
   rotate: false
-  xy: 758, 545
+  xy: 801, 617
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 1
 playerNE
   rotate: false
-  xy: 758, 511
+  xy: 835, 617
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -713,21 +713,21 @@ playerSW
   index: 3
 playerW
   rotate: false
-  xy: 792, 545
+  xy: 802, 171
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 1
 playerW
   rotate: false
-  xy: 792, 511
+  xy: 802, 137
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 2
 playerW
   rotate: false
-  xy: 816, 477
+  xy: 821, 103
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -909,49 +909,49 @@ eastDoor
   index: -1
 northDoor
   rotate: false
-  xy: 803, 80
+  xy: 753, 685
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 0
 northDoor
   rotate: false
-  xy: 803, 46
+  xy: 787, 685
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 1
 northDoor
   rotate: false
-  xy: 753, 12
+  xy: 667, 647
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 2
 northDoor
   rotate: false
-  xy: 787, 12
+  xy: 701, 647
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 3
 northDoor
   rotate: false
-  xy: 821, 12
+  xy: 699, 613
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 4
 northDoor
   rotate: false
-  xy: 983, 632
+  xy: 694, 579
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 5
 northDoor
   rotate: false
-  xy: 633, 714
+  xy: 735, 647
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -972,21 +972,21 @@ westDoor
   index: -1
 westDoorLeft
   rotate: false
-  xy: 829, 253
+  xy: 792, 517
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: 0
 westDoorRight
   rotate: false
-  xy: 848, 445
+  xy: 828, 522
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: 0
 bloodstain1
   rotate: false
-  xy: 104, 13
+  xy: 592, 432
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
@@ -1063,7 +1063,7 @@ bloodstain19
   index: -1
 bloodstain2
   rotate: false
-  xy: 156, 13
+  xy: 644, 432
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
@@ -1119,21 +1119,21 @@ bloodstain26
   index: -1
 bloodstain3
   rotate: false
-  xy: 208, 13
+  xy: 696, 432
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
   index: -1
 bloodstain4
   rotate: false
-  xy: 260, 13
+  xy: 717, 50
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
   index: -1
 bloodstain5
   rotate: false
-  xy: 592, 432
+  xy: 750, 182
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
@@ -1222,6 +1222,20 @@ puddle2
   orig: 100, 100
   offset: 0, 0
   index: -1
+table1
+  rotate: false
+  xy: 104, 13
+  size: 100, 50
+  orig: 100, 50
+  offset: 0, 0
+  index: -1
+table2
+  rotate: false
+  xy: 206, 13
+  size: 100, 50
+  orig: 100, 50
+  offset: 0, 0
+  index: -1
 eastWall1
   rotate: false
   xy: 254, 446
@@ -1238,14 +1252,14 @@ eastWall2
   index: -1
 eastWall3
   rotate: false
-  xy: 816, 445
+  xy: 821, 71
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
 eastWall4
   rotate: false
-  xy: 829, 413
+  xy: 821, 39
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
@@ -1259,84 +1273,84 @@ northWall1
   index: -1
 northWall2
   rotate: false
-  xy: 861, 286
+  xy: 821, 8
   size: 30, 29
   orig: 30, 29
   offset: 0, 0
   index: -1
 northWall3
   rotate: false
-  xy: 861, 255
+  xy: 828, 554
   size: 30, 29
   orig: 30, 29
   offset: 0, 0
   index: -1
 northWall4
   rotate: false
-  xy: 836, 222
+  xy: 860, 554
   size: 30, 29
   orig: 30, 29
   offset: 0, 0
   index: -1
 southWall1
   rotate: false
-  xy: 829, 381
+  xy: 796, 581
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
 southWall2
   rotate: false
-  xy: 829, 349
+  xy: 828, 585
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
 southWall3
   rotate: false
-  xy: 829, 317
+  xy: 860, 585
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
 southWall4
   rotate: false
-  xy: 829, 285
+  xy: 796, 549
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
 westWall1
   rotate: false
-  xy: 861, 413
+  xy: 860, 522
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
 westWall2
   rotate: false
-  xy: 861, 381
+  xy: 853, 71
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
 westWall3
   rotate: false
-  xy: 861, 349
+  xy: 853, 39
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
 westWall4
   rotate: false
-  xy: 861, 317
+  xy: 853, 7
   size: 30, 30
   orig: 30, 30
   offset: 0, 0
   index: -1
 stone
   rotate: false
-  xy: 750, 182
+  xy: 633, 696
   size: 50, 50
   orig: 50, 50
   offset: 0, 0
