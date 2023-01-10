@@ -293,7 +293,6 @@ public class RoomGeneration {
 		RandomCollection<String> roomSkinGenerator = new RandomCollection<String>();
 		for(int skinprob = 0; skinprob < skinProbability[roomNumDoors][finalIndex].length; skinprob++) {
 			roomSkinGenerator.add(skinProbability[roomNumDoors][finalIndex][skinprob], skinTypes[roomNumDoors][finalIndex][skinprob]);
-			System.out.println(skinTypes[roomNumDoors][finalIndex][skinprob]);
 		}	
 		
 		stoppingPoint = 0;

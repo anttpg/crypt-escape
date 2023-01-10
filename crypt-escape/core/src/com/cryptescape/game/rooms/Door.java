@@ -16,7 +16,7 @@ public class Door extends Interactable {
 	private boolean TEMPVARIABLEhasAnimation = false;
 	
 	private String animationPhase = "finished";
-	private int counter = 0;
+	private float counter = 0;
 	private final String type;
 	private static final float ANIMATION_SPEED = Constants.FRAME_SPEED * 10;
 
@@ -90,6 +90,7 @@ public class Door extends Interactable {
 					animation.setPlayMode(PlayMode.NORMAL);
 				}
 			}
+			
 			timer += Gdx.graphics.getDeltaTime();
 			counter += Gdx.graphics.getDeltaTime();
 		}

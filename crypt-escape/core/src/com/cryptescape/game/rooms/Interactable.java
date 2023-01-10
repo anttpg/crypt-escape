@@ -40,7 +40,7 @@ public class Interactable extends Actor{
 		parent = p;
 		row = r;
 		col = Math.abs(Constants.Y_TILES-c)-1;
-		setItemLocation();
+		setItemLocation(row, col);
 		setName(current);
 		super.setWidth(Constants.TILESIZE);
 		super.setHeight(Constants.TILESIZE);
@@ -49,13 +49,16 @@ public class Interactable extends Actor{
 		GameScreen.mainGroup.addActor(this);
 	}
 	
-	public Interactable(int c, int r, String current, Room p, float width, float height) {
-	        this(c, r, current, p);
-	        super.setWidth(width);
-	        super.setHeight(height);
-	}
+    public Interactable(int col, int row, String current, Room p, float width, float height) {
+        this(col, row, current, p);
+        super.setWidth(width);
+        super.setHeight(height);
+//        this.setItemLocation(
+//                Math.round(this.row + ((width / Constants.TILESIZE) - 1)),
+//                Math.round(this.col + ((height / Constants.TILESIZE) - 1)));
+    }
 	
-	private void setItemLocation() {
+	private void setItemLocation(float row, float col) {
 		setX(parent.getRoomLocation()[1] + (Constants.X_ROOM_METERS * (row/(float)Constants.X_TILES)));
 		setY(parent.getRoomLocation()[0] + (Constants.Y_ROOM_METERS * (col/(float)Constants.Y_TILES)));		
 	}
