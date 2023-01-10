@@ -56,11 +56,6 @@ public class Freeform extends Actor{
 		batch.draw(texture, getX(), getY(), width, height);
 	}
 	
-	public void setLightingFilter(int filterValue) {
-	    Filter blockLighting = new Filter();
-        blockLighting.groupIndex = (short)filterValue;
-	    interactionFixture.setFilterData(blockLighting);
-	}
 	
 	
 //	public void createStaticEdge(int c) {         
@@ -96,7 +91,7 @@ public class Freeform extends Actor{
 	 * hx: the half-width of the rect.
 	 * hy: the half-height of the rect.   
 	 */
-	public void createInteractionRectangle(float hx, float hy) {
+	public void createInteractionRectangle(float hx, float hy, short groupIndex) {
 		BodyDef bodyDef = new BodyDef();
 		bodyDef.position.set(getItemLocation()); // Set its position
 		interactionBody = GameScreen.world.createBody(bodyDef);
@@ -105,6 +100,7 @@ public class Freeform extends Actor{
 		box.setAsBox(hx, hy);
 		
 	    FixtureDef fixtureDef = new FixtureDef();
+	    fixtureDef.filter.groupIndex = groupIndex;
 	    fixtureDef.shape = box;
 		fixtureDef.isSensor = true; //Makes sensor?
 		fixtureDef.density = 0f;

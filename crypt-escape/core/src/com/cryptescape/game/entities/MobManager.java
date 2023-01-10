@@ -41,8 +41,9 @@ public class MobManager {
         deadMobs.clear();
     }
 
-    public static void drawMobs(SpriteBatch batch) {
+    public static void drawMobs(SpriteBatch batch, Room targetRoom) {
         for(Mob mob : mobs)
-            mob.draw(batch);    
+            if(mob.getRoom() == targetRoom)
+                mob.draw(batch);    
     }
 }

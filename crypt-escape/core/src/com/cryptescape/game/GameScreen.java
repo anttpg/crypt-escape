@@ -100,7 +100,6 @@ public class GameScreen implements Screen {
 	
 
 	public static boolean debugPerspective = true;
-	private boolean runOnceTempDebugVariable = true;
 	
 	public MusicManager music;
 	public static SfxManager sounds;
@@ -164,8 +163,9 @@ public class GameScreen implements Screen {
 		LightingManager.createLights(); //Creates Lighting
 		player.toFront();
 		
+		TimedEventManager.createEvents();
 		StatusManager.injurePlayer(10, true, 30); //Temp testing bleeding effects
-		MobManager.addBat(player.getX(), player.getY(), player.getRoom()); //Temp testing adding mobs.
+		
 	}
 
 	
@@ -184,13 +184,14 @@ public class GameScreen implements Screen {
 		player.setAcceleration((InputHandler.wasd[3]-InputHandler.wasd[1]), (InputHandler.wasd[0]-InputHandler.wasd[2]), InputHandler.sprint); //handles player movement
 		player.update();
 		
+		
 		game.batch.begin();
 		player.getRoom().draw(game.batch); //draw the room that the player is currently in. This will also draw the player.
-		System.out.println("Player: " + player.getX() + " " + player.getY());
+		
 		
 //		enemy.implementAction(); //decides what the enemy will do
 //		enemy.draw(game.batch);
-		MobManager.update();
+		MobManager.update(); // Updates the decisions for each mob, and removes dead
 		game.batch.end(); 
 		
 		
@@ -207,22 +208,19 @@ public class GameScreen implements Screen {
 		    LightingManager.updateLights();
 		
 		
-  
         accumulator += delta;
         while (accumulator+0.01f >= Constants.FRAME_SPEED) { //Do physics step until up to date
             accumulator -= Constants.FRAME_SPEED;
             stage.act();
             world.step(Constants.FRAME_SPEED, 6, 2);
             TransitionScreen.update();
+            TimedEventManager.update();
         }
         
         //Update/Draw the game stage
         viewport.apply();
-        stage.draw(); //Dont draw the stage to save on resources, sine that would draw EVERY sprite, instead room takes care of it.
-        
-//        System.out.println("PLAYER: " + (player.getX()-oldP[0]) + ", " + (player.getY()-oldP[1]));
-//        oldP[0] = player.getX();
-//        oldP[1] = player.getY();
+        //stage.draw(); //Dont draw the stage to save on resources, sine that would draw EVERY sprite, instead room takes care of it.
+        //New soltuion is to
         
         //Update/Draw the Hud
         hud.update(delta, game.batch);

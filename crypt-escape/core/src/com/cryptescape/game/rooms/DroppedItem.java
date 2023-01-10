@@ -3,6 +3,7 @@ package com.cryptescape.game.rooms;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.cryptescape.game.Constants;
+import com.cryptescape.game.Filters;
 import com.cryptescape.game.GameScreen;
 import com.cryptescape.game.InputHandler;
 import com.cryptescape.game.hud.Inventory;
@@ -27,10 +28,9 @@ public class DroppedItem extends Freeform {
 		super.setTextureRegion(item.getRegion());
 		super.createInteractionRectangle(
 				Constants.TILESIZE/5f  * (item.getWidth()/item.getHeight()) * item.getScale(), 
-				Constants.TILESIZE/5f * item.getScale());
+				Constants.TILESIZE/5f * item.getScale(), (short) -2);
 		
-	    super.setLightingFilter(-2); //sets the item boundary to not interact with light
-	}
+	  }
 
 	public void draw(SpriteBatch batch) {
 		super.draw(batch);

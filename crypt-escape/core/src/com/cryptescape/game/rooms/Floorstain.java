@@ -14,6 +14,9 @@ public class Floorstain extends Freeform{
     /**
      * Creates new effect with default width and height parameters (tilesize). NumOfVersions means how many
      * different versions of the effect there are (bloodstain1, bloodstain2, ect.)
+     * 
+     * TODO setup so it doesnt rely on image w/h for floor position, instead randomize position and rotation
+     * to allow reuse of textures.
      */
     public Floorstain(float decayTime, float xpos, float ypos, String name, Room room, int numOfVersions) {
         super(xpos, ypos, Constants.TILESIZE, Constants.TILESIZE, name, room);

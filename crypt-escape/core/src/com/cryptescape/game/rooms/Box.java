@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.cryptescape.game.Constants;
+import com.cryptescape.game.Filters;
 import com.cryptescape.game.GameScreen;
 import com.cryptescape.game.InputHandler;
 import com.cryptescape.game.hud.Inventory;
@@ -44,8 +45,9 @@ public class Box extends Interactable  {
 			        + "Make sure all boxes have a boxUnlocked version. "); 
 		}
 		
-		super.createStaticBox();
+		super.createStaticBox((short)-3);
 		super.createInteractionRadius(Constants.TILESIZE*1.2f, Constants.TILESIZE*1.2f);
+		
 	}
 	
     public void draw(SpriteBatch batch) {

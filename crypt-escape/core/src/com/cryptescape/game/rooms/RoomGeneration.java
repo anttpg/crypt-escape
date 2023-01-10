@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Random;
 
 import com.cryptescape.game.Constants;
+import com.cryptescape.game.Filters;
 import com.cryptescape.game.GameScreen;
 
 public class RoomGeneration {
@@ -26,6 +27,8 @@ public class RoomGeneration {
 	private static int stoppingPoint = 0;
 	
 	public static void generateTemplates() {
+	    Filters.setupFilters(); // Defines filter values
+	    
 		// ROOM GENERATION BELOW
 		int[] p = new int[] {92, 3, 3, 2}; // Probability of a interactable type
 		String[] key = new String[] {"empty", "box", "boxUnlocked", "puddle"}; //The cooresponding type
@@ -290,6 +293,7 @@ public class RoomGeneration {
 		RandomCollection<String> roomSkinGenerator = new RandomCollection<String>();
 		for(int skinprob = 0; skinprob < skinProbability[roomNumDoors][finalIndex].length; skinprob++) {
 			roomSkinGenerator.add(skinProbability[roomNumDoors][finalIndex][skinprob], skinTypes[roomNumDoors][finalIndex][skinprob]);
+			System.out.println(skinTypes[roomNumDoors][finalIndex][skinprob]);
 		}	
 		
 		stoppingPoint = 0;
@@ -352,7 +356,7 @@ public class RoomGeneration {
 				}
 				
                 if(col == startY && row == startX) {
-                    //seed = clone2dArray(TEMPLATE.get(0)); 
+                    seed = clone2dArray(TEMPLATE.get(0)); 
                     seed[7][10] = "boxUnlocked";
                     seed[9][12] = "haystack";
                 }

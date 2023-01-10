@@ -17,6 +17,7 @@ import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.cryptescape.game.Constants;
 import com.cryptescape.game.GameScreen;
 import com.cryptescape.game.entities.MobManager;
+import com.cryptescape.game.entities.Movables;
 import com.cryptescape.game.hud.InventoryItem;
 
 public class Room {
@@ -142,7 +143,8 @@ public class Room {
 		
 		//Then Render player
 		GameScreen.player.draw(batch);
-		MobManager.drawMobs(batch);
+		MobManager.drawMobs(batch, this);
+		
 		
 		//Then render interactable on top of the player
 		for(Interactable i : getItems()) {
@@ -174,6 +176,9 @@ public class Room {
 	        smellsOfBlood = false;  
 	}
 	
+	/** 
+	 * Prints the room seed for debugging to the console
+	 */
 	public void debugRoomSeed() {
 		System.out.println(" \nStart of template: " + roomType);
 		for(int yn = 0; yn < seed.length; yn++) {

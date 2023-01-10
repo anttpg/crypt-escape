@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Filter;
 import com.cryptescape.game.Constants;
+import com.cryptescape.game.Filters;
 import com.cryptescape.game.GameScreen;
 import com.cryptescape.game.InputHandler;
 
@@ -13,7 +14,7 @@ import box2dLight.PointLight;
 import box2dLight.RayHandler;
 
 public class LightingManager {
-    private static Filter blockLighting = null;
+    
     private static RayHandler rayHandler;
     private static PointLight playerLight;
     private static ConeLight playerFlashlight;
@@ -21,9 +22,7 @@ public class LightingManager {
     private static Vector2 mousePosition = new Vector2(0, 0);
     
     public static void createLights() {
-        blockLighting = new Filter();
-        blockLighting.groupIndex = -2; //Objects with an index of -2 will NEVER collide
-        
+
         RayHandler.useDiffuseLight(true);
         rayHandler = new RayHandler(GameScreen.world);
         rayHandler.setAmbientLight(0f);
@@ -40,7 +39,7 @@ public class LightingManager {
         playerFlashlight = new ConeLight(rayHandler, 300, Color.WHITE, 7f, GameScreen.player.getX(), GameScreen.player.getY(), 0, 25f);
         playerFlashlight.setSoftnessLength(1.5f);
         playerFlashlight.setXray(false);
-        playerFlashlight.setContactFilter(blockLighting);
+        playerFlashlight.setContactFilter(Filters.doNotBlockLighting);
 
     }
     

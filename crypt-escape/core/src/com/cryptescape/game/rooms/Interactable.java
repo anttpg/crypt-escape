@@ -11,11 +11,13 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.EdgeShape;
+import com.badlogic.gdx.physics.box2d.Filter;
 import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.cryptescape.game.Constants;
+import com.cryptescape.game.Filters;
 import com.cryptescape.game.GameScreen;
 import com.cryptescape.game.graphics.LightingManager;
 
@@ -86,7 +88,7 @@ public class Interactable extends Actor{
 	}
 	
 	
-	public void createStaticBox() {
+	public void createStaticBox(short groupIndex) {
 		BodyDef bodyDef = new BodyDef(); 
 		
 		if (bounds == null) {
@@ -94,7 +96,12 @@ public class Interactable extends Actor{
 			Body bd = GameScreen.world.createBody(bodyDef);  
 			PolygonShape box = new PolygonShape();  // Create a polygon shape 
 			box.setAsBox(Constants.TILESIZE / 2f, Constants.TILESIZE / 2f);
-			fixture = bd.createFixture(box, 0.0f);
+			
+			FixtureDef fixtureDef = new FixtureDef();
+			fixtureDef.filter.groupIndex = groupIndex;
+		    fixtureDef.shape = box;
+		    fixtureDef.density = 0f;
+			fixture = bd.createFixture(fixtureDef);
 			box.dispose();
 		}
 		
@@ -110,7 +117,11 @@ public class Interactable extends Actor{
 			PolygonShape box = new PolygonShape();  // Create a polygon shape
 			box.setAsBox(hx, hy);
 
-			fixture = bd.createFixture(box, 0.0f);
+            FixtureDef fixtureDef = new FixtureDef();
+            fixtureDef.filter.groupIndex = groupIndex;
+            fixtureDef.shape = box;
+            fixtureDef.density = 0f;
+			fixture = bd.createFixture(fixtureDef);
 			box.dispose();
 		}
 	}
@@ -140,6 +151,7 @@ public class Interactable extends Actor{
 		fixture = interactionBody.createFixture(fixtureDef);
 		box.dispose();
 	}
+	
 
 	public boolean isPlayerInRange() {
 		return playerInRange;
