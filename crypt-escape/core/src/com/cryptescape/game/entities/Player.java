@@ -90,7 +90,6 @@ public class Player extends Movables {
     @Override
     public void act(float delta) {
         this.defaultAct();
-        this.update();
         body.applyForceToCenter(forceVector, true);
     }
     
@@ -139,6 +138,7 @@ public class Player extends Movables {
         }
 	
 		if (InputHandler.e_pressed && !InputHandler.tab_pressed) {
+		    
 		    if(teleportCooldown < 0) {
     			for (Door door : currentRoom.getDoors()) {
     				if (door != null && door.isPlayerInRange()) {
@@ -161,8 +161,8 @@ public class Player extends Movables {
 		    for (DroppedItem item : currentRoom.getDroppedItems()) 
                 if (item.isPlayerInRange()) 
                     item.pickup();
- 
 		}
+		
 		teleportCooldown -= Gdx.graphics.getDeltaTime();
 		
 		if (elapsedTime > 0.3 && !overrideAnimation) {

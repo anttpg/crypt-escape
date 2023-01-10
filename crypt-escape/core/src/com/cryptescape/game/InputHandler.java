@@ -77,7 +77,7 @@ public class InputHandler {
                     wasd[3] = 1;
                 
                 if (keycode == Input.Keys.SHIFT_LEFT || keycode == Input.Keys.SHIFT_RIGHT)
-                    sprint = 1.7f; // Except here since its a multiplier
+                    sprint = 3.7f; // Except here since its a multiplier
 
                 if (keycode == Input.Keys.E)
                     e_pressed = true;

@@ -13,7 +13,9 @@ public class TimedEventManager {
      * Instead of a constructor, call this to create and start all timed events. 
      */
     public static void createEvents() {
-        events.add(new Event(2f, new Runnable() { public void run() { generateMob(); } }));
+        events.add(new Event(1f, new Runnable() { public void run() { generateMob(); } }));
+        events.add(new Event(1f, new Runnable() { public void run() { debugPlayerRoom(); } }));
+        
     }
     
     
@@ -21,6 +23,9 @@ public class TimedEventManager {
         MobManager.addBat(GameScreen.player.getX() + 0.5f, GameScreen.player.getY() + 0.5f, GameScreen.player.getRoom()); //Temp testing adding mobs.
     }
 
+    protected static void debugPlayerRoom() {
+        GameScreen.player.getRoom().debugRoomSeed();
+    }
 
     /* 
      * Updates all timers and runs events that have reahed 0, before removing them

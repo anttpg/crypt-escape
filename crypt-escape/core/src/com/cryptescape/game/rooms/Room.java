@@ -113,6 +113,7 @@ public class Room {
 				    case "table":
 				        interactableObjects.add(new Table(col, row, current, this));
 				        tables.add((Table) getRecent());
+				        break;
 				        
 				        
 				    case "puddle":
