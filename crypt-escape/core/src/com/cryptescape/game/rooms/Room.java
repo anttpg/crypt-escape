@@ -89,31 +89,44 @@ public class Room {
 					if( current.equals(w) ) iItems.add(new Wall(col, row, current, this, counter));
 					counter++;
 				} 
+                counter = 0;                
 				
 				
-				counter = 0;
-				if( current.equals("box") || current.equals("boxUnlocked")  || current.equals("boxOpening") ) { //Of Type Box
-					iItems.add(new Box(col, row, current, this));
-					boxes.add((Box) iItems.get(iItems.size()-1));
-				} 
-				
-				if( current.equals("puddle") ) { //Of Type Box
-					iItems.add(new Puddle(col, row, current, this));
+				switch(current) {
+				    case "box":
+				        iItems.add(new Box(col, row, current, this));
+	                    boxes.add((Box) iItems.get(iItems.size()-1));
+				        break;
+				        
+				    case "boxUnlocked":
+				        iItems.add(new Box(col, row, current, this));
+                        boxes.add((Box) iItems.get(iItems.size()-1));
+                        break;
+                        
+				    case "boxOpening":
+				        iItems.add(new Box(col, row, current, this));
+                        boxes.add((Box) iItems.get(iItems.size()-1));
+                        break;
+                        
+                        
+				        
+				    case "puddle":
+				        iItems.add(new Puddle(col, row, current, this));
+				        break;
+				    
+				    case "haystack":
+				        iItems.add(new Haystack(col, row, current, this));
+				        break;
+				    
+				    case "empty":
+				        break;
 				}
-				
-                if( current.equals("haystack") ) { //Of Type Box
-                    iItems.add(new Haystack(col, row, current, this));
-                }
-				
+			
 				if ( !current.equals("blocked") ) { //If NOT BLOCKED, then add to background
 					float xCorner = getRoomLocation()[1] + (Constants.X_ROOM_METERS * (row/(float)Constants.X_TILES));
 					float yCorner = getRoomLocation()[0] + (Constants.Y_ROOM_METERS * ((Math.abs(Constants.Y_TILES-col)-1)/(float)Constants.Y_TILES));
 					background.add(new float[] {yCorner, xCorner});
 				}
-				
-				if ( current.equals("empty") ) {
-					//doNothing
-				} 
 				
 			}
 		}
