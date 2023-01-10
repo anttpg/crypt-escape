@@ -38,7 +38,7 @@ public class Room {
 	private String[][] seed;
 	
 	//iItems stores all the interactable objects
-	private ArrayList<Interactable> iItems = new ArrayList<Interactable>();
+	private ArrayList<Interactable> interactableObjects = new ArrayList<Interactable>();
 	private ArrayList<DroppedItem> droppedItems = new ArrayList<DroppedItem>();
 	private ArrayList<Floorstain> floorstains = new ArrayList<Floorstain>();
 	private ArrayList<Freeform> disposalList = new ArrayList<Freeform>();
@@ -86,7 +86,7 @@ public class Room {
 				counter = 0;
 				//Checking if the current item should be a static object
 				for(String w : Constants.WALLTYPES) { //Of type wall
-					if( current.equals(w) ) iItems.add(new Wall(col, row, current, this, counter));
+					if( current.equals(w) ) interactableObjects.add(new Wall(col, row, current, this, counter));
 					counter++;
 				} 
                 counter = 0;                
@@ -94,28 +94,30 @@ public class Room {
 				
 				switch(current) {
 				    case "box":
-				        iItems.add(new Box(col, row, current, this));
-	                    boxes.add((Box) iItems.get(iItems.size()-1));
+				        interactableObjects.add(new Box(col, row, current, this));
+	                    boxes.add((Box) interactableObjects.get(interactableObjects.size()-1));
 				        break;
 				        
 				    case "boxUnlocked":
-				        iItems.add(new Box(col, row, current, this));
-                        boxes.add((Box) iItems.get(iItems.size()-1));
+				        interactableObjects.add(new Box(col, row, current, this));
+                        boxes.add((Box) interactableObjects.get(interactableObjects.size()-1));
                         break;
                         
 				    case "boxOpening":
-				        iItems.add(new Box(col, row, current, this));
-                        boxes.add((Box) iItems.get(iItems.size()-1));
+				        interactableObjects.add(new Box(col, row, current, this));
+                        boxes.add((Box) interactableObjects.get(interactableObjects.size()-1));
                         break;
                         
                         
+				    case "table":
+				        
 				        
 				    case "puddle":
-				        iItems.add(new Puddle(col, row, current, this));
+				        interactableObjects.add(new Puddle(col, row, current, this));
 				        break;
 				    
 				    case "haystack":
-				        iItems.add(new Haystack(col, row, current, this));
+				        interactableObjects.add(new Haystack(col, row, current, this));
 				        break;
 				    
 				    case "empty":
@@ -287,7 +289,7 @@ public class Room {
 	}
 
 	public ArrayList<Interactable> getItems() {
-		return iItems;
+		return interactableObjects;
 	}
 	
 	
@@ -299,13 +301,13 @@ public class Room {
 	
 	//IMPLETMENT THESE LATER
 	public void sleepRoom() {
-		for(Interactable i : iItems) {
+		for(Interactable i : interactableObjects) {
 			//Does nothing currently, bodies automatically sleep 
 		}
 	}
 	
 	public void wakeRoom() {
-		for(Interactable i : iItems) {
+		for(Interactable i : interactableObjects) {
 			//Does nothing currently, bodies automatically sleep 
 		}
 	}
