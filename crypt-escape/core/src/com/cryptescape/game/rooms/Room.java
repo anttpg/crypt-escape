@@ -110,6 +110,7 @@ public class Room {
                         
                         
 				    case "table":
+				        interactableObjects.add(new Table(col, row, current, this));
 				        
 				        
 				    case "puddle":
@@ -148,12 +149,12 @@ public class Room {
 		
 		//Render all doors, above everything else.
 		for(Door door : doors) 
-			if(door != null) door.draw(batch);
+			if(door != null) door.defaultDraw(batch);
 		
 		//This is for sprite ordering (by Z index), render lower level first.
 		for(Interactable i : getItems()) {
 			if(i.getZIndex() < GameScreen.player.getZIndex())
-				i.draw(batch);
+				i.defaultDraw(batch);
 		}
 		
 		//Then Render player
@@ -164,7 +165,7 @@ public class Room {
 		//Then render interactable on top of the player
 		for(Interactable i : getItems()) {
 			if(i.getZIndex() > GameScreen.player.getZIndex())
-				i.draw(batch);
+				i.defaultDraw(batch);
 		}
 		
 		disposeOfUnused();

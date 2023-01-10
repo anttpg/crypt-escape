@@ -41,9 +41,24 @@ public class Interactable extends Actor{
 		col = Math.abs(Constants.Y_TILES-c)-1;
 		setItemLocation();
 		setName(current);
+		super.setWidth(Constants.TILESIZE);
+		super.setHeight(Constants.TILESIZE);
 		
 		super.setZIndex(1);
 		GameScreen.mainGroup.addActor(this);
+	}
+	
+	public Interactable(int c, int r, String current, Room p, float width, float height) {
+	        parent = p;
+	        row = r;
+	        col = Math.abs(Constants.Y_TILES-c)-1;
+	        setItemLocation();
+	        setName(current);
+	        super.setWidth(width);
+	        super.setHeight(height);
+	        
+	        super.setZIndex(1);
+	        GameScreen.mainGroup.addActor(this);
 	}
 	
 	private void setItemLocation() {
@@ -174,8 +189,18 @@ public class Interactable extends Actor{
 		texture = t;
 	}
 	
-	public void draw(SpriteBatch batch) {
+	 /**
+     * Used to draw a 1x1 default interactable
+     */
+	public void defaultDraw(SpriteBatch batch) {
 		batch.draw(texture, getX(), getY(), Constants.TILESIZE, Constants.TILESIZE);
+	}
+	
+	/**
+	 * Used to draw an interactable of custom size (Ie 2x1 table)
+	 */
+	public void customDraw(SpriteBatch batch) {
+	    batch.draw(texture, getX(), getY(), getWidth(), getHeight());
 	}
 	
 	public Body getInteractionBody() {
