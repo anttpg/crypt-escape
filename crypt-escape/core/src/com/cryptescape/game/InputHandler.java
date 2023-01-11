@@ -16,7 +16,7 @@ import com.cryptescape.game.hud.Inventory;
 
 public class InputHandler {
     public static int[] wasd = new int[] {0,0,0,0};
-    public static float sprint = 1; //changes when sprinting
+    public static float sprint = 1.6f; //changes when sprinting
     public static boolean e_pressed;
     public static boolean tab_pressed;
     public static boolean lmouse_held;
@@ -77,7 +77,7 @@ public class InputHandler {
                     wasd[3] = 1;
                 
                 if (keycode == Input.Keys.SHIFT_LEFT || keycode == Input.Keys.SHIFT_RIGHT)
-                    sprint = 3.7f; // Except here since its a multiplier
+                    sprint = 2.5f; // Except here since its a multiplier
 
                 if (keycode == Input.Keys.E)
                     e_pressed = true;
@@ -107,7 +107,7 @@ public class InputHandler {
                     wasd[3] = 0;
                 
                 if (keycode == Input.Keys.SHIFT_LEFT || keycode == Input.Keys.SHIFT_RIGHT)
-                    sprint = 1;
+                    sprint = 1.6f;
 
                 if (keycode == Input.Keys.E)
                     e_pressed = false;
