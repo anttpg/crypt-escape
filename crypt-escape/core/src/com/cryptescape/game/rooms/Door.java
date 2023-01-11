@@ -16,7 +16,7 @@ public class Door extends Interactable {
 	private boolean TEMPVARIABLEhasAnimation = false;
 	
 	private String animationPhase = "finished";
-	private float counter = 0;
+	private short counter = 0;
 	private final String type;
 	private static final float ANIMATION_SPEED = Constants.FRAME_SPEED * 10;
 
@@ -48,51 +48,54 @@ public class Door extends Interactable {
 	
 	public void update() {
 		if (TEMPVARIABLEhasAnimation && !animationPhase.equals("finished")) {
-			
-			//FOR SHAKING DOOR (NO TRANSPORT)
-			if(animationPhase.equals("blocked")) {
-				if(counter == 0)
-					GameScreen.sounds.playSound("Rattle", 0.8f);
-			}
-			
-			
-			//FOR OPENING DOOR
-			else if (animationPhase.equals("opening")) {
-				if(counter == 0)
-					GameScreen.sounds.playSound("MinecraftDoor", 0.6f);
-				
-				super.setTextureRegion(animation.getKeyFrame(timer));
-				
-				if (timer > animation.getAnimationDuration() + 0.2f) {
-					timer = 0;
-					animationPhase = "walkIn";
-				}
-			}
+            switch (animationPhase) {
 
-			else if (animationPhase.equals("walkIn")) {
+                // FOR SHAKING DOOR (NO TRANSPORT)
+                case ("blocked"):
+                    GameScreen.sounds.playSound("Rattle", 0.8f);
+                    animationPhase = "finished";
+                    break;
 
-				if (timer > animation.getAnimationDuration() + 0.4f) {
-					Vector2 exitPos = new Vector2(getExitPosition());
-					GameScreen.player.currentRoom = getPartnerRoom();
-					GameScreen.player.setPos(exitPos.x, exitPos.y);
-					timer = 0;
+                // FOR OPENING DOOR
+                case ("opening"):
+                    if (counter == 0)
+                        GameScreen.sounds.playSound("MinecraftDoor", 0.6f);
 
-					animationPhase = "walkOut";
-				}
-			}
+                    super.setTextureRegion(animation.getKeyFrame(timer));
 
-			else if (animationPhase == "walkOut") {
-				animation.setPlayMode(PlayMode.REVERSED); // reverse animation
-				partner.setTextRegion(animation.getKeyFrame(timer));
+                    if (timer > animation.getAnimationDuration() + 0.2f) {
+                        timer = 0;
+                        animationPhase = "walkIn";
+                    }
+                    break;
 
-				if (timer > animation.getAnimationDuration()*2 + 0.6f) {
-					animationPhase = "finished";
-					animation.setPlayMode(PlayMode.NORMAL);
-				}
-			}
+                // TELEPORT N WALK ANIMATION
+                case ("walkIn"):
+                    if (timer > animation.getAnimationDuration() + 0.4f) {
+                        Vector2 exitPos = new Vector2(getExitPosition());
+                        GameScreen.player.currentRoom = getPartnerRoom();
+                        GameScreen.player.setPos(exitPos.x, exitPos.y);
+                        timer = 0;
+
+                        animationPhase = "walkOut";
+                    }
+                    break;
+
+                // LEAVE ANIMATION AND CLODE DOOR
+                case ("walkOut"):
+                    animation.setPlayMode(PlayMode.REVERSED); 
+                    partner.setTextRegion(animation.getKeyFrame(timer));
+
+                    if (timer > animation.getAnimationDuration() * 2 + 0.6f) {
+                        animationPhase = "finished";
+                        animation.setPlayMode(PlayMode.NORMAL);
+                    }
+                    
+                    break;
+		    }
 			
 			timer += Gdx.graphics.getDeltaTime();
-			counter += Gdx.graphics.getDeltaTime();
+			counter++;
 		}
 	}
 
