@@ -7,7 +7,7 @@ import com.cryptescape.game.Filters;
 import com.cryptescape.game.GameScreen;
 import com.cryptescape.game.InputHandler;
 import com.cryptescape.game.hud.Inventory;
-import com.cryptescape.game.hud.InventoryItem;
+import com.cryptescape.game.hud.items.InventoryItem;
 
 public class DroppedItem extends Freeform {
 	InventoryItem savedItem;

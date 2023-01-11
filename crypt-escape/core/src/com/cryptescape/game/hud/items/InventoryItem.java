@@ -1,4 +1,4 @@
-package com.cryptescape.game.hud;
+package com.cryptescape.game.hud.items;
 
 import java.util.ArrayList;
 
@@ -15,6 +15,8 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.cryptescape.game.Constants;
 import com.cryptescape.game.GameScreen;
 import com.cryptescape.game.InputHandler;
+import com.cryptescape.game.hud.CustomFixtureData;
+import com.cryptescape.game.hud.Inventory;
 import com.cryptescape.game.rooms.Interactable;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.Fixture;

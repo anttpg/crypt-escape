@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.physics.box2d.World;
 import com.cryptescape.game.GameScreen;
-import com.cryptescape.game.hud.InventoryItem;
 
 public class CandleItem extends InventoryItem {
     

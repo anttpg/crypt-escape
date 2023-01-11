@@ -1,4 +1,4 @@
-package com.cryptescape.game.hud;
+package com.cryptescape.game.hud.items;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
