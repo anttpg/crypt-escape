@@ -59,7 +59,7 @@ public abstract class Movables extends Actor implements Steerable<Vector2> {
 	 * maxV is the maximum X OR Y velocity, not combinded.  Only use for the PLAYER. 
 	 * boundsSize is XY the collision box will be divided by to get where on the object to register action from
 	 */
-	public Movables(float x, float y, float maxV, Room startRoom, float[] boundsSize) {
+	public Movables(float x, float y, float maxV, Room startRoom, float[] boundsSize, short groupIndex) {
 		setX(x);
 		setY(y);
 		this.maxSpeed = maxV;
