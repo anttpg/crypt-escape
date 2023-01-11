@@ -3,7 +3,9 @@ package com.cryptescape.game.rooms;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -279,16 +281,23 @@ public class Room {
 		disposalList.clear();
 	}
 	
-	public ArrayList<Box> getBoxes() {
-	    return boxes;
-	}
-
 	public ArrayList<Door> getDoors() {
-		return doors;
+	        return doors;
 	}
 	
-    public ArrayList<Table> getTables() {
-        return tables;
+	public List<Box> getBoxes() {
+	    return (List<Box>)(Object)findByType("Box");
+	}
+	
+    public List<Table> getTables() {
+        return (List<Table>)(Object)findByType("Table");
+    }
+    
+    public List<Interactable> findByType(String type) {
+        List<Interactable> results = interactableObjects.stream()
+                .filter(i -> i.getClass().getSimpleName().equals(type))
+                .collect(Collectors.toList());
+        return results;
     }
 
 	public String getRoomType() {

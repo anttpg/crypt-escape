@@ -55,6 +55,7 @@ public class Door extends Interactable {
                     GameScreen.sounds.playSound("Rattle", 0.8f);
                     animationPhase = "finished";
                     break;
+                    
 
                 // FOR OPENING DOOR
                 case ("opening"):

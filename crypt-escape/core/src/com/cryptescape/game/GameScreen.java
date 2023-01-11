@@ -178,12 +178,10 @@ public class GameScreen implements Screen {
 		camera.update();
 		
 		
-		
 		//IMPORTANT <<< DO ALL RENDERING IN THE ORDER OF WHICH YOU WANT IT TO APPEAR. 
 		// Ie: Enemy on top of Player on top of Room.
 		player.setAcceleration((InputHandler.wasd[3]-InputHandler.wasd[1]), (InputHandler.wasd[0]-InputHandler.wasd[2]), InputHandler.sprint); //handles player movement
-		player.update();
-		
+
 		
 		game.batch.begin();
 		player.getRoom().draw(game.batch); //draw the room that the player is currently in. This will also draw the player.
@@ -191,7 +189,7 @@ public class GameScreen implements Screen {
 		
 //		enemy.implementAction(); //decides what the enemy will do
 //		enemy.draw(game.batch);
-		MobManager.update(); // Updates the decisions for each mob, and removes dead
+		
 		game.batch.end(); 
 		
 		
@@ -211,16 +209,16 @@ public class GameScreen implements Screen {
         accumulator += delta;
         while (accumulator+0.01f >= Constants.FRAME_SPEED) { //Do physics step until up to date
             accumulator -= Constants.FRAME_SPEED;
+            player.update();
             stage.act();
             world.step(Constants.FRAME_SPEED, 6, 2);
+            MobManager.update(); // Updates the decisions for each mob, and removes dead
             TransitionScreen.update();
             TimedEventManager.update();
         }
         
         //Update/Draw the game stage
-        viewport.apply();
-        //stage.draw(); //Dont draw the stage to save on resources, sine that would draw EVERY sprite, instead room takes care of it.
-        //New soltuion is to
+        //viewport.apply();
         
         //Update/Draw the Hud
         hud.update(delta, game.batch);

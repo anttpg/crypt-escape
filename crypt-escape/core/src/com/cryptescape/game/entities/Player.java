@@ -115,10 +115,10 @@ public class Player extends Movables {
     
     
     public boolean changeRoom(Door d) {
+        teleportCooldown = 2.2f;
     	if(d.getPartner() != null) {
     		d.startAnimation();
     		GameScreen.fade = true;
-    		teleportCooldown = 3f;
     		return true;
     	}
     	

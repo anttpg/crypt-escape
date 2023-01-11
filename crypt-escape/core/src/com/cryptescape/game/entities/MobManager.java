@@ -41,6 +41,9 @@ public class MobManager {
         deadMobs.clear();
     }
 
+    /**
+     * Draws all the mobs with the target room as their current room
+     */
     public static void drawMobs(SpriteBatch batch, Room targetRoom) {
         for(Mob mob : mobs)
             if(mob.getRoom() == targetRoom)
