@@ -18,7 +18,7 @@ import com.cryptescape.game.Constants;
 import com.cryptescape.game.GameScreen;
 import com.cryptescape.game.entities.MobManager;
 import com.cryptescape.game.entities.Movables;
-import com.cryptescape.game.hud.InventoryItem;
+import com.cryptescape.game.hud.items.InventoryItem;
 
 public class Room {
 	
@@ -176,7 +176,7 @@ public class Room {
 		//Then Render player
 		GameScreen.player.draw(batch);
 		
-		//Then draw mobs
+		//Then draw mobs in this room
 		MobManager.drawMobs(batch, this);
 		
 		

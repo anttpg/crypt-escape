@@ -7,6 +7,7 @@ import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.cryptescape.game.GameScreen;
+import com.cryptescape.game.hud.items.InventoryItem;
 
 public class EquipmentSlot extends InventoryItem {
     private InventoryItem equippedItem = null;

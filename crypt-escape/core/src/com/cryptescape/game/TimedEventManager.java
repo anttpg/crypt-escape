@@ -15,7 +15,6 @@ public class TimedEventManager {
     public static void createEvents() {
         events.add(new Event(1f, new Runnable() { public void run() { generateMob(); } }));
         events.add(new Event(1f, new Runnable() { public void run() { debugPlayerRoom(); } }));
-        
     }
     
     
@@ -26,6 +25,7 @@ public class TimedEventManager {
     protected static void debugPlayerRoom() {
         GameScreen.player.getRoom().debugRoomSeed();
     }
+    
 
     /* 
      * Updates all timers and runs events that have reahed 0, before removing them

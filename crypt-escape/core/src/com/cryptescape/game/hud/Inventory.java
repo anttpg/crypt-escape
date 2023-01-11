@@ -35,6 +35,8 @@ import com.cryptescape.game.hud.items.CandleItem;
 import com.cryptescape.game.hud.items.CannedFoodItem;
 import com.cryptescape.game.hud.items.CrowbarItem;
 import com.cryptescape.game.hud.items.DrinkItem;
+import com.cryptescape.game.hud.items.InventoryItem;
+import com.cryptescape.game.hud.items.SpraypaintItem;
 import com.cryptescape.game.rooms.Box;
 import com.cryptescape.game.rooms.Table;
 
