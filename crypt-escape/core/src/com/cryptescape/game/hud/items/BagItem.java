@@ -12,7 +12,6 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.cryptescape.game.GameScreen;
 import com.cryptescape.game.hud.CustomFixtureData;
 import com.cryptescape.game.hud.Inventory;
-import com.cryptescape.game.hud.InventoryItem;
 
 public class BagItem extends InventoryItem{
     private ArrayList<Actor> hiddenItems;
