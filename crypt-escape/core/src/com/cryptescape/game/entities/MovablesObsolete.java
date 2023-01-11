@@ -98,7 +98,7 @@ public abstract class MovablesObsolete extends Actor{
 	public void updateTick() {
 		if(-maxVel*speed < xVel+xAcc && xVel+xAcc < maxVel*speed) xVel += xAcc;
 		if(-maxVel*speed < yVel+yAcc && yVel+yAcc < maxVel*speed) yVel += yAcc;
-		if(!(-maxVel*speed < xVel && xVel < maxVel*speed) && jolt[1] == 0) xVel -= xVel/10; //Checks for fucky problem when switching sides
+		if(!(-maxVel*speed < xVel && xVel < maxVel*speed) && jolt[1] == 0) xVel -= xVel/10; //Checks for wucky problem when switching sides
 		if(!(-maxVel*speed < yVel && yVel < maxVel*speed) && jolt[3] == 0) yVel -= yVel/10; // If maxspeed eclipsed, and not deaccell do this
 		
 		xVel = xVel + jolt[0];
