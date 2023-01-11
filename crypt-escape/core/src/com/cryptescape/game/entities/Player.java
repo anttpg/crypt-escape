@@ -44,7 +44,6 @@ public class Player extends Movables {
 	public float maxCandleLevel = 3.5f;
 	private float candleLevel = maxCandleLevel;
 	public float burnPerTick = Constants.FRAME_SPEED/(15f*maxCandleLevel); //15 is exactly 5 minutes to get to 0.
-	private float offset;
 	
 	private Random rand = new Random();
 	private static boolean overrideAnimation;
@@ -58,7 +57,7 @@ public class Player extends Movables {
 	* to meters, not pixels. 
 	*/
 	public Player(float x, float y, float t, Room s, float maxVelocity) {
-		super(x, y, maxVelocity, s, new float[] {8f,16f});
+		super(x, y, maxVelocity, s, new float[] {8f,16f}, (short)-2);
 		scale = t;
 		
 		
@@ -73,6 +72,7 @@ public class Player extends Movables {
 		playerAnimation.add("playerSW", new Animation<TextureRegion>(Constants.FRAME_SPEED, GameScreen.atlas.findRegions("playerSW")));
 		playerAnimation.add("error", new Animation<TextureRegion>(Constants.FRAME_SPEED, GameScreen.atlas.findRegions("error")));
 		playerAnimation.setCurrent("playerS");
+		playerAnimation.setAnimationDuration(0.35f);
 		
 		super.setZIndex(2);
 	}
@@ -118,6 +118,7 @@ public class Player extends Movables {
     	if(d.getPartner() != null) {
     		d.startAnimation();
     		GameScreen.fade = true;
+    		teleportCooldown = 3f;
     		return true;
     	}
     	
@@ -139,15 +140,9 @@ public class Player extends Movables {
 	
 		if (InputHandler.e_pressed && !InputHandler.tab_pressed) {
 		    
-		    if(teleportCooldown < 0) {
-    			for (Door door : currentRoom.getDoors()) {
-    				if (door != null && door.isPlayerInRange()) {
-    					GameScreen.player.changeRoom(door);
-    					teleportCooldown = 3f;
-    				}
-    			}
-		    }
-	
+            for (Door door : currentRoom.getDoors()) 
+                if (teleportCooldown < 0 && door != null && door.isPlayerInRange()) 
+                    this.changeRoom(door);
 		    
 		    for (Box box : currentRoom.getBoxes()) 
                 if (box.isPlayerInRange()) 
@@ -157,7 +152,6 @@ public class Player extends Movables {
 		        if (table.isPlayerInRange())
 		            table.setInteractionState("open");
 		    
-		    
 		    for (DroppedItem item : currentRoom.getDroppedItems()) 
                 if (item.isPlayerInRange()) 
                     item.pickup();
@@ -165,22 +159,15 @@ public class Player extends Movables {
 		
 		teleportCooldown -= Gdx.graphics.getDeltaTime();
 		
-		if (elapsedTime > 0.3 && !overrideAnimation) {
-			offset = rand.nextFloat()*0.2f;
-			elapsedTime = 0;
-			//System.out.println(super.getBody().getLinearVelocity());
+		if (!overrideAnimation) {
 			
-			if(Math.abs(xVel) > 0.001) { //A weird function made to control animation speed
-				playerAnimation.setAnimationDuration(0.4f); //Sets frame duration
-				playerAnimation.addTime((Math.abs(xVel/5f) - 0.13f)*2f);
-			}
-			else if(Math.abs(yVel) > 0.001 && Math.abs(yVel) > Math.abs(xVel)) {
-				playerAnimation.setAnimationDuration(0.4f); //Sets frame duration
-				playerAnimation.addTime((Math.abs(yVel/5f) - 0.13f)*2f);
-			}
-			else {
-				playerAnimation.setAnimationDuration(10000);
-			}
+			if(body.getLinearVelocity().len() > 0.1) 
+			    playerAnimation.setAnimationDuration(0.35f);
+			else if(InputHandler.sprint > 2f && body.getLinearVelocity().len() > 0.1)
+			    playerAnimation.setAnimationDuration(0.25f);
+			else
+			    playerAnimation.setAnimationDuration(10000);
+			
 			
 			if ((xVel >= (1/scale)) && ((yVel <= (1/scale)) && (yVel >= -(1/scale))) ) { // East
 				playerAnimation.setCurrent("playerE");
@@ -223,7 +210,7 @@ public class Player extends Movables {
 
     public float getCandleLevel() {
     	candleLevel -= (burnPerTick);
-    	return candleLevel + offset;
+    	return candleLevel + rand.nextFloat()*0.2f;
     }
     
     public float getBatteryLevel() {
