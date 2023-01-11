@@ -27,7 +27,9 @@ public class Overlay {
     private Label timer;
     private Label health;
     private Label fps;
-
+    private Label hunger;
+    private Label thirst;
+    private Label vel;
     
     public Overlay(Stage overlayStage) {
         candle = new HudElement(new Animation<TextureRegion>(1, GameScreen.atlas.findRegions("candle")));
@@ -39,13 +41,17 @@ public class Overlay {
         
         debugTable = new Table();
         debugTable.right().top();
+        debugTable.padRight(10);
         debugTable.setFillParent(true);
         
         Label.LabelStyle style = new Label.LabelStyle(new BitmapFont(), Color.WHITE);
         float fontScale = 1;
         
-        timer = new Label(String.format("%06d", (int)flame.burntime), style);
+        timer = new Label(String.format("%.1f", flame.burntime), style);
         health = new Label(String.format("%.2f", StatusManager.health), style);
+        hunger = new Label(String.format("%.2f", StatusManager.food), style);
+        thirst = new Label(String.format("%.2f", StatusManager.water), style);
+        vel = new Label(String.format("%.2f", GameScreen.player.getLinearVelocity().len()), style);
         fps = new Label(String.format("%03d", (int)Gdx.graphics.getFramesPerSecond()), style);
         
 //        timer.setFontScale(fontScale);
@@ -62,6 +68,18 @@ public class Overlay {
         
         debugTable.add(new Label("Health: ", style)).right().padTop(10);
         debugTable.add(health).padTop(10);
+        debugTable.row();
+        
+        debugTable.add(new Label("Hunger: ", style)).right().padTop(10);
+        debugTable.add(hunger).padTop(10);
+        debugTable.row();
+        
+        debugTable.add(new Label("Thirst: ", style)).right().padTop(10);
+        debugTable.add(thirst).padTop(10);
+        debugTable.row();
+        
+        debugTable.add(new Label("Velocity: ", style)).right().padTop(10);
+        debugTable.add(vel).padTop(10);
         debugTable.row();
         
         
@@ -81,9 +99,11 @@ public class Overlay {
 
     public void update() {
         flame.updateFlame(candle);
-        
-        timer.setText (String.format("%06d", (int)flame.burntime));
+        vel.setText   (String.format("%.1f", GameScreen.player.getLinearVelocity().len()));
+        timer.setText (String.format("%.1f", flame.burntime));
         health.setText(String.format("%.2f", StatusManager.health));
+        hunger.setText(String.format("%.2f", StatusManager.food));
+        thirst.setText(String.format("%.2f", StatusManager.water));
         fps.setText(Gdx.graphics.getFramesPerSecond());
         
         if(GameScreen.debugPerspective) {
