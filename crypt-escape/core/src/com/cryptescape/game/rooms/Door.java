@@ -8,33 +8,35 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.cryptescape.game.Constants;
 import com.cryptescape.game.GameScreen;
+import com.cryptescape.game.graphics.TransitionScreen;
 
 public class Door extends Interactable {
 	
 	private Door partner = null;
 	
-	private boolean TEMPVARIABLEhasAnimation = false;
-	
-	private String animationPhase = "finished";
-	private short counter = 0;
+
 	private final String type;
-	private static final float ANIMATION_SPEED = Constants.FRAME_SPEED * 10;
+	
+	public static final float ANIMATION_SPEED = Constants.FRAME_SPEED * 10;
+	
+	private Phase animationPhase = Phase.FINISHED;
+    enum Phase {
+        OPENING,
+        WALKIN,
+        WALKOUT,
+        CLOSING,
+        FINISHED,
+        RATTLE,
+        CREAK
+    }
 
 	
-	public Door(int col, int row, String current, Room p, int c) {
-		super(col, row, current, p);
-		type = current;
+	public Door(int col, int row, String name, Room p, int c) {
+		super(col, row, name, p);
+		type = name;
 		
-
-		animation = new Animation<TextureRegion>(ANIMATION_SPEED, GameScreen.atlas.findRegions(current));
-		
-		if(animation.getKeyFrames().length == 0) { 
-			super.setTextureRegion(GameScreen.atlas.findRegion(current));
-		}
-		else {
-			super.setTextureRegion(animation.getKeyFrame(0f));
-			TEMPVARIABLEhasAnimation = true ;
-		}
+		animation = new Animation<TextureRegion>(ANIMATION_SPEED, GameScreen.atlas.findRegions(name));
+		super.setTextureRegion(animation.getKeyFrame(0f));
 
 		super.createStaticEdge(c);
 		super.createInteractionRadius(Constants.TILESIZE*1.2f, Constants.TILESIZE*1.2f);
@@ -46,58 +48,65 @@ public class Door extends Interactable {
 		super.draw(batch);
 	}
 	
+	
 	public void update() {
-		if (TEMPVARIABLEhasAnimation && !animationPhase.equals("finished")) {
-            switch (animationPhase) {
+        switch (this.animationPhase) {
+            
+            //Do nothing
+            case FINISHED:
+                break;
 
-                // FOR SHAKING DOOR (NO TRANSPORT)
-                case ("blocked"):
-                    GameScreen.sounds.playSound("Rattle", 0.8f);
-                    animationPhase = "finished";
-                    break;
+            // FOR SHAKING DOOR (NO TRANSPORT)
+            case RATTLE:
+                GameScreen.sounds.playSound("Rattle", 0.8f);
+                this.animationPhase = Phase.FINISHED;
+                break;
+                
+            case CREAK:
+                GameScreen.sounds.playSound("MinecraftDoor", 0.6f);
+                this.animationPhase = Phase.OPENING;
+                break;
+
+            // FOR OPENING DOOR
+            case OPENING:
+                if (timer > animation.getAnimationDuration() + 0.2f) {
+                    timer = 0;
+                    this.animationPhase = Phase.WALKIN;
+                }
+                super.setTextureRegion(animation.getKeyFrame(timer));
+                break;
+
+            // TELEPORT N WALK ANIMATION
+            case WALKIN:
+                if (timer > animation.getAnimationDuration() + 0.4f) {
+                    Vector2 exitPos = new Vector2(getExitPosition());
+                    TransitionScreen.fadeIn = true;
+                    GameScreen.player.currentRoom = getPartnerRoom();
+                    GameScreen.player.setPos(exitPos.x, exitPos.y);
                     
-
-                // FOR OPENING DOOR
-                case ("opening"):
-                    if (counter == 0)
-                        GameScreen.sounds.playSound("MinecraftDoor", 0.6f);
-
-                    super.setTextureRegion(animation.getKeyFrame(timer));
-
-                    if (timer > animation.getAnimationDuration() + 0.2f) {
-                        timer = 0;
-                        animationPhase = "walkIn";
-                    }
-                    break;
-
-                // TELEPORT N WALK ANIMATION
-                case ("walkIn"):
-                    if (timer > animation.getAnimationDuration() + 0.4f) {
-                        Vector2 exitPos = new Vector2(getExitPosition());
-                        GameScreen.player.currentRoom = getPartnerRoom();
-                        GameScreen.player.setPos(exitPos.x, exitPos.y);
-                        timer = 0;
-
-                        animationPhase = "walkOut";
-                    }
-                    break;
-
-                // LEAVE ANIMATION AND CLODE DOOR
-                case ("walkOut"):
-                    animation.setPlayMode(PlayMode.REVERSED); 
-                    partner.setTextRegion(animation.getKeyFrame(timer));
-
-                    if (timer > animation.getAnimationDuration() * 2 + 0.6f) {
-                        animationPhase = "finished";
-                        animation.setPlayMode(PlayMode.NORMAL);
-                    }
+                    super.setTextureRegion(animation.getKeyFrame(0));
+                    this.animationPhase = Phase.FINISHED;
                     
-                    break;
-		    }
-			
-			timer += Gdx.graphics.getDeltaTime();
-			counter++;
-		}
+                    this.partner.animation.setPlayMode(PlayMode.REVERSED);
+                    this.partner.setPhase(Phase.WALKOUT);
+                }
+                break;
+
+            // LEAVE ANIMATION AND CLODE DOOR
+            case WALKOUT:
+                if (timer > animation.getAnimationDuration() + 0.6f) {
+                    this.animationPhase = Phase.FINISHED;
+                    animation.setPlayMode(PlayMode.NORMAL);
+                    timer = 0;
+                }
+                this.setTextRegion(animation.getKeyFrame(timer));
+                break;
+        }
+
+        if (this.animationPhase != Phase.FINISHED) 
+            timer += Gdx.graphics.getDeltaTime(); // Fine because only called on draw
+        
+		
 	}
 
 
@@ -110,6 +119,10 @@ public class Door extends Interactable {
 	
 	public void setPartner(Door p) {
 		partner = p;
+	}
+	
+	private void setPhase(Phase phase) {
+	    animationPhase = phase;
 	}
 	
 	public void setFrame(int frame) {
@@ -150,17 +163,14 @@ public class Door extends Interactable {
 
 
 	public void startAnimation() {
-		animationPhase = "opening";
-		counter = 0;
+		this.animationPhase = Phase.CREAK;
 		timer = 0;
 	}
 	
 	public void blockedDoorAnimation() {
-		animationPhase = "blocked";
-		counter = 0;
+		this.animationPhase = Phase.RATTLE;
 		timer = 0;
 	}
 	
 
-	
 }

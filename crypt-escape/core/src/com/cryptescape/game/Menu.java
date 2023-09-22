@@ -78,7 +78,7 @@ public class Menu implements Screen {
 //			fallTimer = 15;
 //		}
 		
-		pressed = true;
+//		pressed = true;
 		fallTimer = 15;
 		
 		GameScreen.atlas = new TextureAtlas(Gdx.files.internal("packedImages/pack.atlas")); //loads images for later

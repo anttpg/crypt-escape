@@ -52,7 +52,12 @@ public class AnimationHandler {
  
     public TextureRegion getFrame(){
         timer += Gdx.graphics.getDeltaTime();
-        return animations.get(current).getKeyFrame(timer, looping);
+        try {
+            return animations.get(current).getKeyFrame(timer, looping);
+        } catch(java.lang.ArithmeticException e) {
+            System.err.println("Divide by 0 error. likely file name issues, animation has no frames.");
+            return null;
+        }
     }
     
     public void addTime(float time) {

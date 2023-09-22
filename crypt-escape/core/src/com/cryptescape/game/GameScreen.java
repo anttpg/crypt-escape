@@ -99,7 +99,7 @@ public class GameScreen implements Screen {
 	private Fixture BASE_FLOOR;
 	
 
-	public static boolean debugPerspective = true;
+	public static boolean debugPerspective = false;
 	
 	public MusicManager music;
 	public static SfxManager sounds;
@@ -123,8 +123,8 @@ public class GameScreen implements Screen {
 		if(debugPerspective) {
 			float scale = 1;
 			maxPV = 10f;
-			viewport = new ExtendViewport(Constants.VIEWPORT_WIDTH*scale, Constants.VIEWPORT_HEIGHT*scale, camera);
-			//viewport = new ExtendViewport(Constants.VIEWPORT_WIDTH*15, Constants.VIEWPORT_HEIGHT*15, camera);
+			//viewport = new ExtendViewport(Constants.VIEWPORT_WIDTH*scale, Constants.VIEWPORT_HEIGHT*scale, camera);
+			viewport = new ExtendViewport(Constants.VIEWPORT_WIDTH*15, Constants.VIEWPORT_HEIGHT*15, camera);
 		}
 		else
 			viewport = new ExtendViewport(Constants.VIEWPORT_WIDTH, Constants.VIEWPORT_HEIGHT, camera);
@@ -213,8 +213,8 @@ public class GameScreen implements Screen {
             stage.act();
             world.step(Constants.FRAME_SPEED, 6, 2);
             MobManager.update(); // Updates the decisions for each mob, and removes dead
-            TransitionScreen.update();
             TimedEventManager.update();
+            TransitionScreen.update(); //Finally update overlay trans screen
         }
         
         //Update/Draw the game stage
@@ -224,8 +224,7 @@ public class GameScreen implements Screen {
         hud.update(delta, game.batch);
         //music.update();
         
-        if(fade) //Apply fade out effect last
-            TransitionScreen.render(game.batch, stage);
+        TransitionScreen.render(game.batch, stage);
         
 	}
 	

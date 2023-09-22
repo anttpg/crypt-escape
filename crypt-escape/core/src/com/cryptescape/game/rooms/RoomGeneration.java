@@ -249,12 +249,13 @@ public class RoomGeneration {
 		String best = "WuckyErrorThisShouldntBePossible";
 		float bestScore = 0f;
 		int totalTries = 0; //Just brute force guesses for a bit, otherwise give up and use the best solution.
+		int maxTries = 3; //Changes number of recursive attemps to connect. More == more connection, less mazelike
 		float numCorrect = 0f;
 		int finalIndex = 0;
 		int trueConnected = 0;
 		
 		
-		while(totalTries < 3) {
+		while(totalTries < maxTries) {
 			numCorrect = 0;
 			trueConnected = 0;
 			
@@ -284,8 +285,8 @@ public class RoomGeneration {
 			totalTries++;
 		}
 		
-		//If nowhere connected, try once recursivly.
-		if(trueConnected == 0 && stoppingPoint < 2)
+		//If nowhere connected, try recursivly.
+		if(trueConnected == 0 && stoppingPoint < maxTries-1)
 			return determineRoomType(col, row);
 		
 		
@@ -306,54 +307,66 @@ public class RoomGeneration {
 		//Called once all the templates are generated, create and fill all the rooms 
 		setupDoorProbabilities();
 		
-		String item;
 		String roomType;
-		int index;
 		for(int col = 0; col < Constants.NUM_OF_ROOMS_Y; col++) {
 			GameScreen.rooms.add(new ArrayList<Room>());  //instantiate all columns in the 2d array
 			
 			for(int row = 0; row < Constants.NUM_OF_ROOMS_X; row++) {
+			    
+			    
 				//For each room in an NxN grid, that will make up the playfield...
 				//DETERMINE: Room type, and what its filled with.
 				roomType = determineRoomType(col, row);
 				String[][] seed;
-				
-				if(col == startY && row == startX) {
-					seed = clone2dArray(TEMPLATE.get(0)); 
+				boolean hasTemplate = false;
+
+				// Check if skin-Excel tempalte exists.
+				if(RoomTemplates.templateList.contains(roomType)) {
+				    seed = RoomTemplates.getSkin(roomType);
+				    hasTemplate = true;
 				}
 				
-				else {
-					seed = clone2dArray(TEMPLATE.get(key2.indexOf(roomType))); 
-				}
+                //Else if starting room... use starting room.
+				else if(col == startY && row == startX) 
+                    seed = clone2dArray(TEMPLATE.get(0));
+				
+				//Else just use regular template of that room
+				else 
+				    seed = clone2dArray(TEMPLATE.get(key2.indexOf(roomType))); 
 				
 				
-				
+			
 				
 //				System.out.println(index); //TRYING TO DEBUG
 //				for(String t : key2) System.out.println(t);  
 //				printSeedArray(seed, roomType);			
 				for(int y = 1; y < Constants.Y_TILES-1; y++) { //Loop through and fill the seed (Excluding boundaries)
 					for(int x = 1; x < Constants.X_TILES-1; x++) {
-						if(seed[y][x].equals("empty")) {
-							seed[y][x] = roomItemGen.next();
-						}
-						
-						if(!seed[y][x].equals("blocked")) { //Exceptions are, if in front of door
-							if(x == (Constants.X_TILES/2) || x == (Constants.X_TILES/2)-1) { //North-South
-								if(y == 1 || y == Constants.Y_TILES-2) {
-									seed[y][x] = "empty";
-								}
-							}
-							
-							if(y == (Constants.Y_TILES/2) || y == (Constants.Y_TILES/2)-1) { //East-West
-								if(x == 1 || x == Constants.X_TILES-2) {
-									seed[y][x] = "empty";
-								}
-							}
-						}			
+					    
+					    if(!hasTemplate || seed[y][x].equals("DEF")) {
+    						if(seed[y][x].equals("empty")) {
+    							seed[y][x] = roomItemGen.next();
+    						}
+    						
+    						if(!seed[y][x].equals("blocked")) { //Exceptions are, if in front of door
+    							if(x == (Constants.X_TILES/2) || x == (Constants.X_TILES/2)-1) { //North-South
+    								if(y == 1 || y == Constants.Y_TILES-2) {
+    									seed[y][x] = "empty";
+    								}
+    							}
+    							
+    							if(y == (Constants.Y_TILES/2) || y == (Constants.Y_TILES/2)-1) { //East-West
+    								if(x == 1 || x == Constants.X_TILES-2) {
+    									seed[y][x] = "empty";
+    								}
+    							}
+    						}	
+					    }
+				
 					}
 				}
 				
+				//Add items to starting room.
                 if(col == startY && row == startX) {
                     //seed = clone2dArray(TEMPLATE.get(0)); 
                     addItemsToStartingRoom(seed);
@@ -517,7 +530,6 @@ public class RoomGeneration {
 	 * matrix
 	 * matrix rotated 90 degrees clockwise
 	 */
-	
 	private static String[][] rotateClockWise90(String[][] matrix) {
 		int sizeY = matrix.length;
 		int sizeX = matrix[1].length;

@@ -22,6 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.cryptescape.game.Constants;
 import com.cryptescape.game.GameScreen;
 import com.cryptescape.game.InputHandler;
+import com.cryptescape.game.graphics.TransitionScreen;
 import com.cryptescape.game.rooms.Box;
 import com.cryptescape.game.rooms.Door;
 import com.cryptescape.game.rooms.DroppedItem;
@@ -70,6 +71,7 @@ public class Player extends Movables {
 		playerAnimation.add("playerNW", new Animation<TextureRegion>(Constants.FRAME_SPEED, GameScreen.atlas.findRegions("playerNW")));
 		playerAnimation.add("playerSE", new Animation<TextureRegion>(Constants.FRAME_SPEED, GameScreen.atlas.findRegions("playerSE")));
 		playerAnimation.add("playerSW", new Animation<TextureRegion>(Constants.FRAME_SPEED, GameScreen.atlas.findRegions("playerSW")));
+		playerAnimation.add("idle", new Animation<TextureRegion>(Constants.FRAME_SPEED, GameScreen.atlas.findRegions("playerIdle")));
 		playerAnimation.add("error", new Animation<TextureRegion>(Constants.FRAME_SPEED, GameScreen.atlas.findRegions("error")));
 		playerAnimation.setCurrent("playerS");
 		playerAnimation.setAnimationDuration(0.35f);
@@ -77,13 +79,28 @@ public class Player extends Movables {
 		super.setZIndex(2);
 	}
 	
+	
+    /**
+     * Used to describe the animation for the current mob. 
+     * Created in the constructor of each individual mob
+     */
+    public void addAnimation(String animationName) {
+        playerAnimation.add(animationName, new Animation<TextureRegion>(Constants.FRAME_SPEED, GameScreen.atlas.findRegions(animationName)));
+    }
+	
 		
 	@Override
 	public void draw(SpriteBatch batch) {
 	    //debugPlayer();
         elapsedTime += Gdx.graphics.getDeltaTime();
 		frame = playerAnimation.getFrame();
-		batch.draw(frame, getX() - (Constants.TILESIZE/1.8f), getY() - (Constants.TILESIZE/3.8f), Constants.TILESIZE*1.1f, Constants.TILESIZE*1.1f);
+		try {
+		    batch.draw(frame, getX() - (Constants.TILESIZE/1.8f), getY() - (Constants.TILESIZE/3.8f), Constants.TILESIZE*1.1f, Constants.TILESIZE*1.1f); 
+		}
+		catch(Exception e) {
+            System.err.println("Error drawing frame");
+        }
+		
 	}
 	
 	
@@ -118,7 +135,7 @@ public class Player extends Movables {
         teleportCooldown = 2.2f;
     	if(d.getPartner() != null) {
     		d.startAnimation();
-    		GameScreen.fade = true;
+    		TransitionScreen.fadeOut = true;
     		return true;
     	}
     	
@@ -166,7 +183,7 @@ public class Player extends Movables {
 			else if(InputHandler.sprint > 2f && body.getLinearVelocity().len() > 0.1)
 			    playerAnimation.setAnimationDuration(0.25f);
 			else
-			    playerAnimation.setAnimationDuration(10000);
+			    playerAnimation.setCurrent("idle");
 			
 			
 			if ((xVel >= (1/scale)) && ((yVel <= (1/scale)) && (yVel >= -(1/scale))) ) { // East

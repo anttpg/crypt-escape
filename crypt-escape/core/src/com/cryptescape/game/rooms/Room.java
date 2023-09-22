@@ -46,8 +46,6 @@ public class Room {
 	private ArrayList<Freeform> disposalList = new ArrayList<Freeform>();
 	
 	private ArrayList<Door> doors = new ArrayList<Door>(Arrays.asList(null, null, null, null)); //Seperate from items
-	private ArrayList<Box> boxes = new ArrayList<Box>();
-    private ArrayList<Table> tables = new ArrayList<Table>();
 	
 	
 	/**
@@ -98,23 +96,19 @@ public class Room {
 				switch(current) {
 				    case "box":
 				        interactableObjects.add(new Box(col, row, current, this));
-	                    boxes.add((Box) getRecent());
 				        break;
 				        
 				    case "boxUnlocked":
 				        interactableObjects.add(new Box(col, row, current, this));
-                        boxes.add((Box) getRecent());
                         break;
                         
 				    case "boxOpening":
 				        interactableObjects.add(new Box(col, row, current, this));
-                        boxes.add((Box) getRecent());
                         break;
                         
                         
 				    case "table":
 				        interactableObjects.add(new Table(col, row, current, this));
-				        tables.add((Table) getRecent());
 				        break;
 				        
 				        

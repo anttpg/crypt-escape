@@ -23,7 +23,8 @@ public class TimedEventManager {
     }
 
     protected static void debugPlayerRoom() {
-        GameScreen.player.getRoom().debugRoomSeed();
+        System.err.println("Temporarily not debugging template. Check timedEvents to turn on.");
+        //GameScreen.player.getRoom().debugRoomSeed();
     }
     
 

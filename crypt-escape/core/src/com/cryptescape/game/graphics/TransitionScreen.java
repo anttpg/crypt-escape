@@ -15,35 +15,51 @@ public class TransitionScreen {
     
     // Once this reaches 1.0f the next scene is shown
     private static float alpha = 0;
-    // true if fade in, false if fade out
-    private static boolean fadeDirection = true;
+    private static float alphaChange = 0.01f;
+    // Should be fading current
+    public static boolean fadeOut = false;
+    public static boolean fadeIn = false;
     
 
     public static void render(SpriteBatch batch, Stage stage) {
-        batch.setColor(1, 1, 1, alpha);
-        batch.begin();
-        batch.draw(overlay, 0, 0, stage.getWidth(), stage.getHeight());
-        batch.end(); 
-        batch.setColor(1, 1, 1, 1);
+        if(alpha != 0) {
+            batch.setColor(1, 1, 1, alpha);
+            batch.begin();
+            batch.draw(overlay, 0, 0, GameScreen.realWidth, GameScreen.realHeight);
+            batch.end(); 
+            batch.setColor(1, 1, 1, 1);
+        }
     }
     
     
     public static void update() {
-        if (alpha >= 1) {
-            fadeDirection = false;
-        } 
-        
-        if(fadeDirection) 
-            alpha += 0.01f;
-        
-        else {
-            alpha -= 0.01f;
-            
-            if(alpha <= 0) {
-                fadeDirection = true;
-                GameScreen.fade = false;
-            }   
+        if(fadeOut)
+            fadeOut();
+        if(fadeIn)
+            fadeIn();
+    }
+    
+    
+    
+    
+    public static void fadeOut() {
+        if (alpha >= (1-alphaChange)) { 
+            fadeOut = false;
+            return;
         }
+        alpha += alphaChange;
+    }
+    
+    public static void fadeIn() {
+        if(fadeOut)
+            fadeOut = false;
+        
+        if (alpha <= (0+alphaChange))  {
+            fadeIn  = false;
+            alpha = 0;
+            return;
+        }
+        alpha -= alphaChange;
     }
     
 }

@@ -3,6 +3,7 @@ package com.cryptescape.game.entities;
 import com.badlogic.gdx.Gdx;
 import com.cryptescape.game.Constants;
 import com.cryptescape.game.GameScreen;
+import com.cryptescape.game.InputHandler;
 
 public class StatusManager {
    
@@ -64,8 +65,8 @@ public class StatusManager {
      * Updates the status of the player. 
      */
     public static void update() {
-        food -= Constants.FRAME_SPEED;
-        water -= Constants.FRAME_SPEED;
+        food  -= 0.001f + (GameScreen.player.body.getLinearVelocity().len()/750f);
+        water -= 0.001f + (GameScreen.player.body.getLinearVelocity().len()/750f);
         
         if(bleeding) {
             if(!GameScreen.player.getRoom().doesRoomSmellOfBlood())

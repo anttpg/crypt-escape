@@ -63,6 +63,7 @@ public class LightingManager {
 	        
         rayHandler.setCombinedMatrix(GameScreen.camera);
         rayHandler.updateAndRender();
+        
     }
     
     
